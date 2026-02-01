@@ -1,11 +1,12 @@
- /**
+/**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.1 (REVISED: Simplified PDF Generation Logic)
+ * VERSION: 4.2 (FINAL FIX: Absolute Positioning for PDF Capture)
  * DESCRIPTION: 
- *    - PDF Generation logic rewritten to be simpler and more reliable.
- *    - Relies on CSS for layout and dimensions, removing complex JS workarounds.
- *    - All other functionalities (FAB, Toast, Preloader) preserved.
+ *    - PDF generation logic now uses absolute positioning to ensure the element
+ *      is captured from the top-left (0,0) of the viewport, solving vertical alignment issues.
+ *    - This provides a stable and final solution for layout problems.
+ *    - All other functionalities preserved.
  */
 
 'use strict';
@@ -253,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - Simplified)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - Final Fix)
     // =======================================================
     window.generateFullPDF = function() {
         const btn = document.getElementById('btn-download-cv');
@@ -262,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
         btn.disabled = true;
 
-        // 1. Get the element to print
         const element = document.getElementById('pdf-template-root');
         if (!element) {
             showToast('خطا: قالب PDF یافت نشد.', 'error');
@@ -270,17 +270,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. Temporarily make it visible for html2pdf to capture it correctly
+        // --- START: CRITICAL FIX ---
+        // Store original styles to restore them later
+        const originalStyles = {
+            display: element.style.display,
+            position: element.style.position,
+            top: element.style.top,
+            left: element.style.left,
+            zIndex: element.style.zIndex
+        };
+
+        // Temporarily apply styles to force top-left alignment for capture
         element.style.display = 'block';
+        element.style.position = 'absolute';
+        element.style.top = '0';
+        element.style.left = '0';
+        element.style.zIndex = '-1'; // Place it behind everything
+        // --- END: CRITICAL FIX ---
 
         const options = {
             margin: 0,
             filename: 'Dr-Sara-Radmanesh-CV.pdf',
             image: { type: 'jpeg', quality: 1.0 },
             html2canvas: {
-                scale: 2, // For better quality
+                scale: 2,
                 useCORS: true,
-                logging: false
+                logging: false,
+                scrollY: -window.scrollY // Ensure capture starts from the very top
             },
             jsPDF: {
                 unit: 'mm',
@@ -289,15 +305,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // 3. Run html2pdf and cleanup afterwards
-        html2pdf().from(element).set(options).save().then(() => {
-            element.style.display = 'none'; // Hide it back
+        // Cleanup function to restore original styles
+        const cleanup = () => {
+            element.style.display = originalStyles.display;
+            element.style.position = originalStyles.position;
+            element.style.top = originalStyles.top;
+            element.style.left = originalStyles.left;
+            element.style.zIndex = originalStyles.zIndex;
             resetPdfButton(btn, originalContent);
+        };
+
+        html2pdf().from(element).set(options).save().then(() => {
+            cleanup();
             showToast('رزومه با موفقیت دانلود شد.', 'success');
         }).catch(err => {
             console.error("PDF Generation Error:", err);
-            element.style.display = 'none'; // Hide it back on error
-            resetPdfButton(btn, originalContent);
+            cleanup();
             showToast('خطا در تولید فایل.', 'error');
         });
     };
