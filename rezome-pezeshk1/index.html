@@ -5,24 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <!-- اطلاعات سئو و متادیتاهای حرفه‌ای -->
     <title>دکتر سارا رادمنش | متخصص قلب و عروق | پورتال جامع رزومه</title>
     <meta name="description" content="رزومه رسمی و پورتال نوبت‌دهی دکتر سارا رادمنش، متخصص قلب و عروق، فلوشیپ اینترونشنال. مشاهده سوابق، مهارت‌ها و تالیفات.">
     <meta name="keywords" content="دکتر سارا رادمنش, متخصص قلب, رزومه پزشکی, آنژیوپلاستی, نظام پزشکی 134567, متخصص تهران">
     <meta name="author" content="Dr. Sara Radmanesh">
     <meta name="theme-color" content="#0e7490">
     
-    <!-- فونت‌های اصلاح شده و آیکون‌های حرفه‌ای -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/misc/Farsi-Digits/font-face.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- انیمیشن‌های AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <!-- فایل استایل -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- متادیتای شبکه اجتماعی (Open Graph) -->
     <meta property="og:title" content="دکتر سارا رادمنش - متخصص قلب">
     <meta property="og:description" content="وب‌سایت رسمی و رزومه دیجیتال دکتر سارا رادمنش">
     <meta property="og:image" content="assets/img/og-cover.jpg">
@@ -31,7 +26,7 @@
 
 <body class="loading-active">
 
-    <!-- 1. لودینگ بسیار پیشرفته و مدرن -->
+    <!-- 1. لودینگ پیشرفته -->
     <div id="preloader-overlay">
         <div class="loader-container">
             <div class="heartbeat-icon">
@@ -39,7 +34,6 @@
             </div>
             <div class="loader-text-box">
                 <h2 class="loader-name">Dr. Radmanesh</h2>
-                <!-- [دستور جدید 4] اضافه شدن نام فارسی در لودینگ -->
                 <h3 class="loader-name-fa">دکتر سارا رادمنش</h3>
                 <span class="loader-status">Loading Portal Data...</span>
             </div>
@@ -49,27 +43,39 @@
         </div>
     </div>
 
-    <!-- دکمه‌های شناور (Floating Action Buttons) -->
-    <div class="fab-container">
-        <!-- دکمه واتساپ - [دستور جدید 1] اضافه شدن کلاس has-tooltip و اسپن پیام -->
-        <a href="https://wa.me/989010000000" class="fab-btn fab-whatsapp has-tooltip" title="ارسال پیام در واتساپ" target="_blank">
-            <i class="fa-brands fa-whatsapp"></i>
-            <span class="fab-tooltip-text">نوبت دهی واتساپ</span>
-        </a>
-        
-        <!-- دکمه نقشه - [دستور جدید 1 و 2] تغییر لینک به نشان و اضافه شدن پیام -->
-        <a href="https://nshn.ir/2bvW1g_xRBFT" class="fab-btn fab-map has-tooltip" title="مسیریابی مطب روی نقشه" target="_blank">
-            <i class="fa-solid fa-location-dot"></i>
-            <span class="fab-tooltip-text">آدرس مطب (نشان)</span>
-        </a>
+    <!-- [دستور جدید 1] ساختار جدید دکمه شناور چندمنظوره (FAB Menu System) -->
+    <div class="fab-menu-wrapper">
+        <!-- منوی بازشونده -->
+        <div class="fab-options" id="fab-menu-container">
+            <!-- 1. نوبت دهی واتساپ -->
+            <a href="https://wa.me/989010000000" class="fab-option-item" target="_blank">
+                <span class="fab-label">اخذ نوبت در واتساپ</span>
+                <div class="fab-icon-small whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
+            </a>
+            
+            <!-- 2. تماس با مطب -->
+            <a href="tel:02100000000" class="fab-option-item">
+                <span class="fab-label">تماس با مطب</span>
+                <div class="fab-icon-small call"><i class="fa-solid fa-phone"></i></div>
+            </a>
+            
+            <!-- 3. آدرس مطب (نشان) -->
+            <a href="https://nshn.ir/2bvW1g_xRBFT" class="fab-option-item" target="_blank">
+                <span class="fab-label">آدرس مطب (نشان)</span>
+                <div class="fab-icon-small map"><i class="fa-solid fa-location-dot"></i></div>
+            </a>
+        </div>
 
-        <!-- دکمه بازگشت به بالا -->
-        <button id="fab-top" class="fab-btn hidden" title="بازگشت به بالا">
-            <i class="fa-solid fa-chevron-up"></i>
+        <!-- دکمه اصلی شناور -->
+        <button id="fab-main-toggle" class="fab-main-btn" title="ارتباط سریع">
+            <!-- آیکون پیش‌فرض هدست است، با کلیک ضربدر میشود -->
+            <i class="fa-solid fa-headset fab-main-icon"></i>
+            <!-- بج اعلان پیام (بعد از 10 ثانیه ظاهر میشود) -->
+            <span class="fab-notification-badge" id="fab-notification-badge">1</span>
         </button>
     </div>
 
-    <!-- 2. هدر و نویگیشن بار شیشه‌ای -->
+    <!-- 2. هدر و نویگیشن بار -->
     <header class="main-header glass-effect">
         <div class="container header-inner">
             <div class="logo-area">
@@ -125,7 +131,7 @@
     <!-- کانتینر اصلی محتوا -->
     <main class="site-main-wrapper">
 
-        <!-- 3. بخش هیرو (Hero) -->
+        <!-- 3. بخش هیرو -->
         <section id="hero-section" class="hero-area">
             <div class="background-shapes">
                 <div class="shape shape-1"></div>
@@ -161,7 +167,7 @@
                     </div>
 
                     <div class="hero-actions">
-                        <button class="btn btn-primary-glow" onclick="generateFullPDF()">
+                        <button id="btn-download-cv" class="btn btn-primary-glow" onclick="generateFullPDF()">
                             <i class="fa-solid fa-download"></i> دانلود رزومه (PDF)
                         </button>
                         <button class="btn btn-visible-dark" onclick="downloadVCard()">
@@ -476,7 +482,6 @@
                                 <div class="c-icon"><i class="fa-solid fa-map-location-dot"></i></div>
                                 <div class="c-text">
                                     <strong>آدرس مطب:</strong>
-                                    <!-- [دستور جدید 2] لینک شدن آدرس به نشان -->
                                     <a href="https://nshn.ir/2bvW1g_xRBFT" target="_blank" style="color: rgba(255,255,255,0.7); display: block; transition: 0.3s; text-decoration: underline;">
                                         تهران، خیابان جردن، بالاتر از میرداماد، برج پزشکی نگین، طبقه 5، واحد 502
                                     </a>
@@ -508,7 +513,6 @@
                 </div>
             </div>
 
-            <!-- [دستور جدید 5] نقشه گوگل تمام عرض (مستطیلی و چسبیده به اطراف) -->
             <div class="contact-map-panel glass-panel" data-aos="fade-up">
                 <div class="map-frame-wrapper">
                     <iframe 
@@ -537,7 +541,6 @@
                 </div>
                 <div class="footer-col center-col">
                     <i class="fa-solid fa-heart-pulse footer-logo-icon"></i>
-                    <!-- [دستور جدید 6] تغییر متن فوتر -->
                     <p>طراحی Tosite</p>
                 </div>
                 <div class="footer-col">
@@ -554,7 +557,7 @@
 
     </main>
 
-    <!-- 11. قالب PDF اختصاصی و مخفی -->
+    <!-- [دستور جدید 2] قالب PDF اصلاح شده برای جلوگیری از بهم‌ریختگی -->
     <div id="pdf-template-root" style="display: none;">
         <div class="pdf-a4-page">
             <div class="pdf-head">
@@ -588,11 +591,6 @@
                             <li>زبان انگلیسی (عالی)</li>
                             <li>زبان آلمانی (خوب)</li>
                         </ul>
-                    </div>
-
-                    <div class="pdf-sect">
-                        <h3 class="pdf-h3"><i class="fa-solid fa-users"></i> ارجاعات</h3>
-                        <p class="pdf-txt">قابل ارائه در صورت درخواست.</p>
                     </div>
                 </div>
 
