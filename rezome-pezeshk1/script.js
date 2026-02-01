@@ -1,11 +1,11 @@
 /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 5.0 (CRITICAL FIX: RTL CANVAS CLIPPING & MOBILE VIEWPORT)
+ * VERSION: 5.0 (FINAL FIX: RTL & LAYOUT SHIFT)
  * DESCRIPTION: 
- *    - Solves the issue where 3cm of the right side is cut off in PDF.
- *    - Forces absolute positioning (0,0) specifically for RTL layouts.
- *    - All functionalities preserved.
+ *    - PDF Generation Logic completely rewritten to solve the right-side cut-off issue.
+ *    - Implemented "Fixed Position + LTR Wrapper" trick to handle html2canvas RTL bug.
+ *    - All previous functionalities (FAB, Toast, Preloader) preserved.
  */
 
 'use strict';
@@ -13,7 +13,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // =======================================================
-    // 1. انتخابگرهای DOM
+    // 1. انتخابگرهای DOM (DOM Selectors)
     // =======================================================
     const preloader = document.getElementById('preloader-overlay');
     const header = document.querySelector('.main-header');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 2. تابع اصلی راه‌اندازی
+    // 2. تابع اصلی راه‌اندازی (Main Initializer)
     // =======================================================
     function initializePortal() {
         handleGuaranteedPreloader();
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 3. منطق لودینگ
+    // 3. منطق لودینگ (Preloader Logic)
     // =======================================================
     function handleGuaranteedPreloader() {
         if (!preloader) {
@@ -75,11 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 4. منطق دکمه شناور
+    // 4. منطق دکمه شناور چندمنظوره (FAB Logic)
     // =======================================================
     function setupFabMenuBehavior() {
         if (!fabMainBtn || !fabMenuContainer) return;
 
+        // نمایش بج (عدد) بعد از 10 ثانیه
         setTimeout(() => {
             if (fabBadge) {
                 fabBadge.classList.add('show');
@@ -87,11 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 10000); 
 
+        // کلیک روی دکمه برای باز/بسته کردن منو
         fabMainBtn.addEventListener('click', (e) => {
             e.preventDefault();
             toggleFabMenu();
         });
 
+        // بستن منو با کلیک بیرون
         document.addEventListener('click', (e) => {
             if (!fabMenuContainer.contains(e.target) && !fabMainBtn.contains(e.target)) {
                 fabMenuContainer.classList.remove('active');
@@ -139,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 5. مدیریت رویدادها
+    // 5. مدیریت رویدادها (Event Listeners)
     // =======================================================
     function setupEventListeners() {
         if (mobileToggle) mobileToggle.addEventListener('click', openMobileMenu);
@@ -157,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 6. رفتار اسکرول
+    // 6. رفتار اسکرول (Scroll Behavior)
     // =======================================================
     function setupScrollBehavior() {
         window.addEventListener('scroll', () => {
@@ -195,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 7. منوی موبایل
+    // 7. منوی موبایل (Mobile Menu Functions)
     // =======================================================
     function openMobileMenu() {
         if (mobileMenuOverlay) {
@@ -213,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 8. انیمیشن‌ها
+    // 8. انیمیشن‌ها (Animations Logic)
     // =======================================================
     function setupAnimations() {
         if (typeof AOS !== 'undefined') {
@@ -250,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (اصلاح شده برای مشکل برش سمت راست)
+    // 9. تولید PDF (REWRITTEN: FIXED POSITION + LTR WRAPPER TRICK)
     // =======================================================
     window.generateFullPDF = function() {
         const fabBtn = document.getElementById('btn-download-cv'); 
@@ -258,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (fabBtn) {
             originalIcon = fabBtn.innerHTML;
-            fabBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال تولید PDF...';
+            fabBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
             fabBtn.disabled = true;
         }
 
@@ -271,53 +274,50 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. ساخت کانتینر ایزوله با تنظیمات سخت‌گیرانه برای RTL
+        // 2. ساخت کانتینر اصلی
+        // نکته مهم: استفاده از LTR برای کانتینر مادر تا مختصات به هم نریزد
         const cloneContainer = document.createElement('div');
         
-        // تنظیمات حیاتی CSS برای جلوگیری از جابجایی در موبایل
-        cloneContainer.style.cssText = `
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 794px; 
-            min-width: 794px; 
-            margin: 0; 
-            padding: 0; 
-            z-index: -9999; 
-            background: #ffffff; 
-            direction: rtl;
-            overflow: visible;
-        `;
+        // استایل‌های حیاتی برای رفع باگ شیفت خوردن
+        cloneContainer.style.position = 'fixed'; // فیکس کردن در 0،0
+        cloneContainer.style.top = '0';
+        cloneContainer.style.left = '0';
+        cloneContainer.style.width = '794px'; // عرض دقیق A4
+        cloneContainer.style.zIndex = '-9999'; // پشت همه المان‌ها
+        cloneContainer.style.direction = 'ltr'; // ترفند: اجبار به LTR برای محاسبه صحیح مختصات
+        cloneContainer.style.margin = '0';
+        cloneContainer.style.padding = '0';
+        cloneContainer.style.background = '#ffffff';
 
-        // کپی محتوا
+        // کپی کردن محتوا درون کانتینر
         cloneContainer.innerHTML = originalTemplate.innerHTML;
         
-        // اضافه کردن به بادی
+        // اضافه کردن به body
         document.body.appendChild(cloneContainer);
 
-        // تنظیم المان داخلی
+        // تنظیم المان داخلی برای نمایش صحیح RTL
         const elementToPrint = cloneContainer.querySelector('.pdf-wrapper-modern');
         if(elementToPrint) {
             elementToPrint.style.display = 'block'; 
-            elementToPrint.style.width = '794px'; 
-            elementToPrint.style.margin = '0'; // حذف هرگونه margin auto
+            elementToPrint.style.width = '100%';
+            elementToPrint.style.direction = 'rtl'; // محتوای داخلی راست‌چین باقی بماند
         }
 
-        // 3. تنظیمات html2pdf با مختصات دقیق
+        // 3. تنظیمات html2pdf برای حذف کامل مارجین‌ها و تطبیق عرض
         const options = {
-            margin: 0,
+            margin: 0, // حذف مارجین‌های اضافی
             filename: 'Dr-Sara-Radmanesh-CV.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
-                scale: 2, // کیفیت بالا
-                useCORS: true, // برای لود تصاویر خارجی
+                scale: 2, 
+                useCORS: true,
                 logging: false,
-                scrollY: 0, // شروع اسکرول از بالا
-                scrollX: 0, // شروع اسکرول از چپ (جلوگیری از برش)
-                x: 0,       // مختصات شروع عکس برداری X
-                y: 0,       // مختصات شروع عکس برداری Y
-                width: 794, // عرض دقیق عکس برداری
-                windowWidth: 794 // عرض پنجره مجازی (حیاتی برای موبایل)
+                scrollY: 0,
+                scrollX: 0,
+                windowWidth: 794, // اجبار به عرض دسکتاپ
+                width: 794,       // محدود کردن عرض کپچر
+                x: 0,             // شروع دقیق از مختصات صفر
+                y: 0
             },
             jsPDF: {
                 unit: 'mm',
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof html2pdf !== 'undefined') {
             html2pdf().set(options).from(cloneContainer).save().then(() => {
                 showToast('رزومه با موفقیت دانلود شد.', 'success');
-                // پاکسازی کامل
+                // پاکسازی
                 document.body.removeChild(cloneContainer);
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             }).catch(err => {
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 10. دانلود کارت ویزیت
+    // 10. دانلود کارت ویزیت (vCard Generation)
     // =======================================================
     window.downloadVCard = function() {
         const vCardString = [
@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 11. مدیریت فرم تماس
+    // 11. مدیریت فرم تماس (Contact Form Handler)
     // =======================================================
     function handleFormSubmit(event) {
         event.preventDefault();
@@ -423,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 12. سیستم نوتیفیکیشن
+    // 12. سیستم نوتیفیکیشن (Toast Notifications)
     // =======================================================
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
