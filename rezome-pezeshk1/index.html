@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- اطلاعات سئو و متادیتاهای حرفه‌ای -->
+    <title>دکتر سارا رادمنش | متخصص قلب و عروق | پورتال جامع رزومه</title>
+    <meta name="description" content="رزومه رسمی و پورتال نوبت‌دهی دکتر سارا رادمنش، متخصص قلب و عروق، فلوشیپ اینترونشنال. مشاهده سوابق، مهارت‌ها و تالیفات.">
+    <meta name="keywords" content="دکتر سارا رادمنش, متخصص قلب, رزومه پزشکی, آنژیوپلاستی, نظام پزشکی 134567, متخصص تهران">
+    <meta name="author" content="Dr. Sara Radmanesh">
+    <meta name="theme-color" content="#0e7490">
+    
+    <!-- فونت‌های اصلاح شده و آیکون‌های حرفه‌ای -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/misc/Farsi-Digits/font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- انیمیشن‌های AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- فایل استایل (که در مرحله بعد ارسال می‌شود) -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- متادیتای شبکه اجتماعی (Open Graph) -->
+    <meta property="og:title" content="دکتر سارا رادمنش - متخصص قلب">
+    <meta property="og:description" content="وب‌سایت رسمی و رزومه دیجیتال دکتر سارا رادمنش">
+    <meta property="og:image" content="assets/img/og-cover.jpg">
+    <meta property="og:type" content="website">
+</head>
+
+<body class="loading-active">
+
+    <!-- 1. لودینگ بسیار پیشرفته و مدرن (اصلاح شده) -->
+    <div id="preloader-overlay">
+        <div class="loader-container">
+            <div class="heartbeat-icon">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <div class="loader-text-box">
+                <h2 class="loader-name">Dr. Radmanesh</h2>
+                <span class="loader-status">Loading Portal Data...</span>
+            </div>
+            <div class="progress-bar-wrapper">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- دکمه‌های شناور (Floating Action Buttons) -->
+    <div class="fab-container">
+        <button id="fab-pdf" class="fab-btn" title="دانلود سریع PDF" onclick="generateFullPDF()">
+            <i class="fa-solid fa-file-pdf"></i>
+        </button>
+        <button id="fab-top" class="fab-btn hidden" title="بازگشت به بالا">
+            <i class="fa-solid fa-chevron-up"></i>
+        </button>
+    </div>
+
+    <!-- 2. هدر و نویگیشن بار شیشه‌ای -->
+    <header class="main-header glass-effect">
+        <div class="container header-inner">
+            <div class="logo-area">
+                <div class="logo-symbol">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <div class="logo-details">
+                    <h1>دکتر سارا رادمنش</h1>
+                    <span>متخصص و جراح قلب</span>
+                </div>
+            </div>
+
+            <nav class="desktop-navigation">
+                <ul class="nav-list">
+                    <li><a href="#hero-section" class="nav-link active">خانه</a></li>
+                    <li><a href="#about-section" class="nav-link">بیوگرافی</a></li>
+                    <li><a href="#skills-section" class="nav-link">مهارت‌ها</a></li>
+                    <li><a href="#experience-section" class="nav-link">سوابق شغلی</a></li>
+                    <li><a href="#education-section" class="nav-link">تحصیلات</a></li>
+                    <li><a href="#publications-section" class="nav-link">تالیفات</a></li>
+                    <li><a href="#contact-section" class="nav-link">تماس</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-controls">
+                <a href="tel:02188888888" class="btn-call">
+                    <i class="fa-solid fa-phone-volume"></i> تماس فوری
+                </a>
+                <div class="mobile-toggle">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- منوی موبایل تمام صفحه -->
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-content">
+            <div class="menu-header">
+                <h3>منوی دسترسی</h3>
+                <button class="close-menu-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="#hero-section"><i class="fa-solid fa-house"></i> خانه</a></li>
+                <li><a href="#about-section"><i class="fa-solid fa-address-card"></i> درباره من</a></li>
+                <li><a href="#experience-section"><i class="fa-solid fa-briefcase-medical"></i> سوابق</a></li>
+                <li><a href="#skills-section"><i class="fa-solid fa-stethoscope"></i> مهارت‌ها</a></li>
+                <li><a href="#contact-section"><i class="fa-solid fa-envelope"></i> تماس</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- کانتینر اصلی محتوا -->
+    <main class="site-main-wrapper">
+
+        <!-- 3. بخش هیرو (Hero) - معرفی با جزئیات کامل -->
+        <section id="hero-section" class="hero-area">
+            <div class="background-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+
+            <div class="container hero-grid">
+                <div class="hero-text-col" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="status-badge">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>پزشک تایید شده | بورد تخصصی</span>
+                    </div>
+
+                    <h1 class="main-title">دکتر سارا رادمنش</h1>
+                    <h2 class="sub-title">فلوشیپ فوق تخصصی اینترونشنال کاردیولوژی</h2>
+                    
+                    <p class="bio-intro">
+                        با بیش از 15 سال تجربه در تشخیص و درمان بیماری‌های قلبی عروقی.
+                        تخصص من در انجام آنژیوپلاستی‌های پیچیده و مدیریت نارسایی‌های پیشرفته قلبی است.
+                        عضو رسمی انجمن قلب اروپا (ESC) و آمریکا (ACC).
+                    </p>
+
+                    <!-- شماره نظام پزشکی با لینک استعلام -->
+                    <div class="medical-reg-box">
+                        <a href="https://membersearch.irimc.org/" target="_blank" class="reg-link">
+                            <div class="icon-reg"><i class="fa-solid fa-id-card-clip"></i></div>
+                            <div class="text-reg">
+                                <span class="label">شماره نظام پزشکی:</span>
+                                <span class="number">134567</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square external-icon"></i>
+                        </a>
+                    </div>
+
+                    <div class="hero-actions">
+                        <button class="btn btn-primary-glow" onclick="generateFullPDF()">
+                            <i class="fa-solid fa-download"></i> دانلود رزومه (PDF)
+                        </button>
+                        <button class="btn btn-outline-glass" onclick="downloadVCard()">
+                            <i class="fa-regular fa-address-book"></i> ذخیره کارت ویزیت
+                        </button>
+                    </div>
+
+                    <div class="social-hero-row">
+                        <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                </div>
+
+                <div class="hero-image-col" data-aos="zoom-in" data-aos-duration="1200">
+                    <div class="image-wrapper-modern">
+                        <!-- تصویر دکتر -->
+                        <img src="https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg" alt="دکتر سارا رادمنش" class="doctor-img">
+                        
+                        <!-- باکس‌های شناور روی تصویر -->
+                        <div class="float-box exp-box">
+                            <span class="num">15+</span>
+                            <span class="txt">سال تجربه<br>موفق</span>
+                        </div>
+                        <div class="float-box patients-box">
+                            <span class="num">5K+</span>
+                            <span class="txt">بیمار<br>درمان شده</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scroll-down-indicator">
+                <a href="#about-section">
+                    <span class="mouse">
+                        <span class="wheel"></span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4. بخش درباره من (کامل) -->
+        <section id="about-section" class="section about-area">
+            <div class="container">
+                <div class="section-head text-center" data-aos="fade-up">
+                    <span class="tag-line">بیوگرافی</span>
+                    <h2 class="section-title">درباره دکتر رادمنش</h2>
+                    <div class="separator-line"></div>
+                </div>
+
+                <div class="about-content-wrapper">
+                    <div class="about-text-full" data-aos="fade-up">
+                        <p>
+                            اینجانب دکتر سارا رادمنش، فارغ‌التحصیل ممتاز دانشگاه علوم پزشکی تهران در مقطع پزشکی عمومی و تخصص قلب و عروق هستم. پس از اخذ بورد تخصصی با رتبه برتر، دوره فلوشیپ فوق تخصصی اینترونشنال کاردیولوژی (آنژیوپلاستی) را در مرکز قلب تهران با موفقیت گذراندم.
+                        </p>
+                        <p>
+                            تمرکز اصلی فعالیت‌های بالینی و پژوهشی من بر روی روش‌های نوین درمان گرفتگی عروق کرونر، پیشگیری از سکته‌های قلبی و کنترل فشار خون‌های مقاوم به درمان است. همواره کوشیده‌ام تا با بهره‌گیری از تکنولوژی‌های روز دنیا و اخلاق حرفه‌ای، بهترین خدمات را به بیماران گرامی ارائه دهم.
+                        </p>
+                    </div>
+
+                    <div class="info-grid-modern">
+                        <div class="info-item" data-aos="flip-up" data-aos-delay="100">
+                            <i class="fa-solid fa-cake-candles"></i>
+                            <div class="meta">
+                                <span>سن</span>
+                                <strong>42 سال</strong>
+                            </div>
+                        </div>
+                        <div class="info-item" data-aos="flip-up" data-aos-delay="200">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div class="meta">
+                                <span>محل فعالیت</span>
+                                <strong>تهران، جردن</strong>
+                            </div>
+                        </div>
+                        <div class="info-item" data-aos="flip-up" data-aos-delay="300">
+                            <i class="fa-solid fa-language"></i>
+                            <div class="meta">
+                                <span>زبان‌ها</span>
+                                <strong>فارسی، انگلیسی، آلمانی</strong>
+                            </div>
+                        </div>
+                        <div class="info-item" data-aos="flip-up" data-aos-delay="400">
+                            <i class="fa-solid fa-at"></i>
+                            <div class="meta">
+                                <span>ایمیل</span>
+                                <strong>info@drsara.com</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. بخش مهارت‌ها (Skills) - تفکیک شده -->
+        <section id="skills-section" class="section skills-area bg-pattern">
+            <div class="container">
+                <div class="section-head" data-aos="fade-right">
+                    <span class="tag-line">توانمندی‌ها</span>
+                    <h2 class="section-title">مهارت‌های تخصصی و فردی</h2>
+                </div>
+
+                <div class="skills-wrapper-grid">
+                    <!-- ستون مهارت‌های فنی (Progress Bars) -->
+                    <div class="skills-col technical-skills" data-aos="fade-left">
+                        <h3 class="col-title"><i class="fa-solid fa-laptop-medical"></i> مهارت‌های بالینی</h3>
+                        
+                        <div class="skill-bar-item">
+                            <div class="sb-info">
+                                <span>آنژیوپلاستی و استنت‌گذاری</span>
+                                <span>98%</span>
+                            </div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width: 98%"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-bar-item">
+                            <div class="sb-info">
+                                <span>اکوکاردیوگرافی (TTE & TEE)</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-bar-item">
+                            <div class="sb-info">
+                                <span>تست ورزش و هولتر مانیتورینگ</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-bar-item">
+                            <div class="sb-info">
+                                <span>مدیریت نارسایی قلبی (Heart Failure)</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ستون مهارت‌های نرم (Circular Charts) -->
+                    <div class="skills-col soft-skills" data-aos="fade-right">
+                        <h3 class="col-title"><i class="fa-solid fa-brain"></i> مهارت‌های فردی</h3>
+                        <div class="circles-container">
+                            <div class="circle-item">
+                                <div class="circle-chart" data-percent="95">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="meter" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="95, 100" />
+                                    </svg>
+                                    <span class="percent-text">95%</span>
+                                </div>
+                                <span class="circle-label">ارتباط با بیمار</span>
+                            </div>
+
+                            <div class="circle-item">
+                                <div class="circle-chart" data-percent="90">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="meter" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="90, 100" />
+                                    </svg>
+                                    <span class="percent-text">90%</span>
+                                </div>
+                                <span class="circle-label">مدیریت بحران</span>
+                            </div>
+
+                            <div class="circle-item">
+                                <div class="circle-chart" data-percent="100">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="meter" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="100, 100" />
+                                    </svg>
+                                    <span class="percent-text">100%</span>
+                                </div>
+                                <span class="circle-label">تعهد اخلاقی</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. بخش سوابق شغلی (Timeline جداگانه) -->
+        <section id="experience-section" class="section experience-area">
+            <div class="container">
+                <div class="section-head text-center" data-aos="fade-up">
+                    <span class="tag-line">مسیر حرفه‌ای</span>
+                    <h2 class="section-title">سوابق شغلی و اجرایی</h2>
+                    <div class="separator-line"></div>
+                </div>
+
+                <div class="timeline-box">
+                    <!-- آیتم 1 -->
+                    <div class="timeline-row right" data-aos="fade-left">
+                        <div class="tl-content">
+                            <div class="tl-date">1398 - اکنون</div>
+                            <h3 class="tl-role">پزشک متخصص و اتندینگ</h3>
+                            <h4 class="tl-place">بیمارستان قلب شهید رجایی</h4>
+                            <p>مسئول بخش آنژیوگرافی، آموزش رزیدنت‌های تخصصی، ویزیت روزانه بیماران در کلینیک تخصصی.</p>
+                            <span class="tl-badge">سمت فعلی</span>
+                        </div>
+                    </div>
+                    <!-- آیتم 2 -->
+                    <div class="timeline-row left" data-aos="fade-right">
+                        <div class="tl-content">
+                            <div class="tl-date">1396 - 1398</div>
+                            <h3 class="tl-role">مدیر بخش CCU</h3>
+                            <h4 class="tl-place">بیمارستان خصوصی کسری</h4>
+                            <p>مدیریت پرستاری بخش، نظارت بر پروتکل‌های درمانی و ویزیت بیماران بدحال.</p>
+                        </div>
+                    </div>
+                    <!-- آیتم 3 -->
+                    <div class="timeline-row right" data-aos="fade-left">
+                        <div class="tl-content">
+                            <div class="tl-date">1394 - 1396</div>
+                            <h3 class="tl-role">همکار پژوهشی (Research Fellow)</h3>
+                            <h4 class="tl-place">مرکز تحقیقات قلب و عروق</h4>
+                            <p>مشارکت در طرح‌های تحقیقاتی ملی در زمینه استنت‌های جذبی.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. بخش تحصیلات (Education) - کاملاً جداگانه -->
+        <section id="education-section" class="section education-area bg-light">
+            <div class="container">
+                <div class="section-head" data-aos="fade-up">
+                    <span class="tag-line">دانش آکادمیک</span>
+                    <h2 class="section-title">سوابق تحصیلی</h2>
+                </div>
+
+                <div class="edu-grid">
+                    <div class="edu-card" data-aos="zoom-in-up">
+                        <div class="edu-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div class="edu-body">
+                            <span class="year">1394 - 1396</span>
+                            <h3>فلوشیپ اینترونشنال کاردیولوژی</h3>
+                            <h4>دانشگاه علوم پزشکی تهران</h4>
+                            <p>رتبه اول بورد فلوشیپ - پایان‌نامه ممتاز</p>
+                        </div>
+                    </div>
+
+                    <div class="edu-card" data-aos="zoom-in-up" data-aos-delay="100">
+                        <div class="edu-icon"><i class="fa-solid fa-certificate"></i></div>
+                        <div class="edu-body">
+                            <span class="year">1388 - 1392</span>
+                            <h3>تخصص قلب و عروق</h3>
+                            <h4>دانشگاه علوم پزشکی شهید بهشتی</h4>
+                            <p>رتبه برتر بورد تخصصی ناسیونال</p>
+                        </div>
+                    </div>
+
+                    <div class="edu-card" data-aos="zoom-in-up" data-aos-delay="200">
+                        <div class="edu-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="edu-body">
+                            <span class="year">1379 - 1386</span>
+                            <h3>دکتری عمومی پزشکی</h3>
+                            <h4>دانشگاه علوم پزشکی تهران</h4>
+                            <p>عضو استعدادهای درخشان</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. بخش تالیفات و افتخارات -->
+        <section id="publications-section" class="section pub-area">
+            <div class="container">
+                <div class="section-head text-center">
+                    <span class="tag-line">پژوهش</span>
+                    <h2 class="section-title">کتب، مقالات و افتخارات</h2>
+                    <div class="separator-line"></div>
+                </div>
+
+                <div class="pub-slider-wrapper">
+                    <!-- کارت 1 -->
+                    <div class="pub-card" data-aos="flip-right">
+                        <div class="pub-type">کتاب</div>
+                        <h4>اصول پیشگیری در بیماری‌های قلبی</h4>
+                        <p class="pub-desc">چاپ توسط انتشارات دانشگاه تهران - 1400</p>
+                        <a href="#" class="pub-link">مشاهده جزئیات <i class="fa-solid fa-arrow-left"></i></a>
+                    </div>
+                    <!-- کارت 2 -->
+                    <div class="pub-card" data-aos="flip-right" data-aos-delay="100">
+                        <div class="pub-type">مقاله ISI</div>
+                        <h4>Novel Stent Technologies</h4>
+                        <p class="pub-desc">منتشر شده در مجله European Heart Journal - 2023</p>
+                        <a href="#" class="pub-link">لینک مقاله <i class="fa-solid fa-arrow-left"></i></a>
+                    </div>
+                    <!-- کارت 3 -->
+                    <div class="pub-card" data-aos="flip-right" data-aos-delay="200">
+                        <div class="pub-type">افتخار</div>
+                        <h4>پزشک نمونه سال</h4>
+                        <p class="pub-desc">انتخاب شده توسط سازمان نظام پزشکی - 1402</p>
+                        <span class="pub-badge"><i class="fa-solid fa-medal"></i> برگزیده</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. بخش تماس با فرم مدرن و نقشه -->
+        <section id="contact-section" class="section contact-area bg-dark-blue">
+            <div class="container">
+                <div class="contact-grid-layout">
+                    <!-- اطلاعات تماس -->
+                    <div class="contact-info-panel" data-aos="fade-left">
+                        <h3>ارتباط با دکتر</h3>
+                        <p>جهت دریافت نوبت یا مشاوره می‌توانید از راه‌های زیر اقدام نمایید.</p>
+                        
+                        <ul class="contact-list-detailed">
+                            <li>
+                                <div class="c-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                                <div class="c-text">
+                                    <strong>آدرس مطب:</strong>
+                                    <span>تهران، خیابان جردن، بالاتر از میرداماد، برج پزشکی نگین، طبقه 5، واحد 502</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="c-icon"><i class="fa-solid fa-phone-flip"></i></div>
+                                <div class="c-text">
+                                    <strong>تلفن‌های تماس:</strong>
+                                    <span>021-88888888</span>
+                                    <span>0912-0000000 (فقط واتساپ)</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="c-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+                                <div class="c-text">
+                                    <strong>پست الکترونیک:</strong>
+                                    <span>info@drsara-radmanesh.com</span>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="social-footer">
+                            <a href="#" class="sf-item"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#" class="sf-item"><i class="fa-brands fa-telegram"></i></a>
+                            <a href="#" class="sf-item"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- فرم تماس -->
+                    <div class="contact-form-panel glass-panel" data-aos="fade-right">
+                        <form id="main-contact-form">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label>نام و نام خانوادگی</label>
+                                    <input type="text" placeholder="مثال: علی احمدی" required>
+                                </div>
+                                <div class="input-group">
+                                    <label>شماره تماس</label>
+                                    <input type="tel" placeholder="0912..." required>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>موضوع پیام</label>
+                                <select>
+                                    <option>درخواست نوبت</option>
+                                    <option>مشاوره پزشکی</option>
+                                    <option>همکاری</option>
+                                    <option>سایر</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>متن پیام</label>
+                                <textarea rows="4" placeholder="پیام خود را بنویسید..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-full submit-btn">
+                                ارسال پیام <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. فوتر حرفه‌ای -->
+        <footer class="main-footer">
+            <div class="container footer-content">
+                <div class="footer-col">
+                    <h4>دسترسی سریع</h4>
+                    <ul>
+                        <li><a href="#hero-section">خانه</a></li>
+                        <li><a href="#about-section">درباره ما</a></li>
+                        <li><a href="#contact-section">تماس</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col center-col">
+                    <i class="fa-solid fa-heart-pulse footer-logo-icon"></i>
+                    <p>طراحی شده با استانداردهای پزشکی ۲۰۲۶</p>
+                </div>
+                <div class="footer-col">
+                    <h4>قوانین</h4>
+                    <ul>
+                        <li><a href="#">حریم خصوصی</a></li>
+                        <li><a href="#">شرایط استفاده</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copy-right">
+                <p>© 2026 تمامی حقوق برای دکتر سارا رادمنش محفوظ است.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- =======================================================
+         11. قالب PDF اختصاصی و مخفی (بسیار مهم و دقیق)
+         این بخش در سایت دیده نمی‌شود اما هنگام پرینت استفاده می‌شود
+         ======================================================= -->
+    <div id="pdf-template-root" style="display: none;">
+        <div class="pdf-a4-page">
+            <!-- هدر PDF -->
+            <div class="pdf-head">
+                <div class="pdf-head-info">
+                    <h1 class="pdf-name">دکتر سارا رادمنش</h1>
+                    <h2 class="pdf-job">متخصص قلب و عروق | فلوشیپ اینترونشنال</h2>
+                    <div class="pdf-reg-id">شماره نظام پزشکی: 134567</div>
+                </div>
+                <div class="pdf-head-img">
+                    <img src="https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg" alt="Photo">
+                </div>
+            </div>
+
+            <div class="pdf-content-body">
+                <!-- ستون چپ PDF -->
+                <div class="pdf-sidebar-left">
+                    <div class="pdf-sect">
+                        <h3 class="pdf-h3"><i class="fa-solid fa-address-book"></i> تماس</h3>
+                        <p class="pdf-txt">0912-000-0000</p>
+                        <p class="pdf-txt">021-88888888</p>
+                        <p class="pdf-txt">info@drsara.com</p>
+                        <p class="pdf-txt">تهران، جردن، برج نگین</p>
+                    </div>
+
+                    <div class="pdf-sect">
+                        <h3 class="pdf-h3"><i class="fa-solid fa-list-check"></i> مهارت‌ها</h3>
+                        <ul class="pdf-ul">
+                            <li>آنژیوپلاستی</li>
+                            <li>اکوکاردیوگرافی</li>
+                            <li>تست ورزش</li>
+                            <li>مدیریت CCU</li>
+                            <li>زبان انگلیسی (عالی)</li>
+                            <li>زبان آلمانی (خوب)</li>
+                        </ul>
+                    </div>
+
+                    <div class="pdf-sect">
+                        <h3 class="pdf-h3"><i class="fa-solid fa-users"></i> ارجاعات</h3>
+                        <p class="pdf-txt">قابل ارائه در صورت درخواست.</p>
+                    </div>
+                </div>
+
+                <!-- ستون راست PDF (اصلی) -->
+                <div class="pdf-main-right">
+                    <div class="pdf-block">
+                        <h3 class="pdf-block-title">خلاصه رزومه</h3>
+                        <p class="pdf-justify">
+                            پزشک متخصص با بیش از 15 سال تجربه در زمینه بیماری‌های قلبی عروقی. دارای بورد تخصصی و فلوشیپ از دانشگاه علوم پزشکی تهران. متعهد به درمان بیمار-محور و استفاده از تکنیک‌های کم‌تهاجمی.
+                        </p>
+                    </div>
+
+                    <div class="pdf-block">
+                        <h3 class="pdf-block-title">سوابق شغلی</h3>
+                        
+                        <div class="pdf-item-row">
+                            <div class="pdf-date-col">1398 - اکنون</div>
+                            <div class="pdf-info-col">
+                                <strong>پزشک متخصص و اتندینگ</strong>
+                                <span>بیمارستان قلب شهید رجایی</span>
+                                <p>مدیریت بیماران اینترونشنال و آموزش دستیاران.</p>
+                            </div>
+                        </div>
+
+                        <div class="pdf-item-row">
+                            <div class="pdf-date-col">1396 - 1398</div>
+                            <div class="pdf-info-col">
+                                <strong>مدیر بخش CCU</strong>
+                                <span>بیمارستان خصوصی کسری</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pdf-block">
+                        <h3 class="pdf-block-title">سوابق تحصیلی</h3>
+                        
+                        <div class="pdf-item-row">
+                            <div class="pdf-date-col">1396</div>
+                            <div class="pdf-info-col">
+                                <strong>فلوشیپ اینترونشنال</strong>
+                                <span>دانشگاه علوم پزشکی تهران (رتبه 1)</span>
+                            </div>
+                        </div>
+
+                        <div class="pdf-item-row">
+                            <div class="pdf-date-col">1392</div>
+                            <div class="pdf-info-col">
+                                <strong>تخصص قلب و عروق</strong>
+                                <span>دانشگاه شهید بهشتی</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pdf-foot">
+                Generated via Dr. Sara Radmanesh Official Portal - 2026
+            </div>
+        </div>
+    </div>
+
+    <!-- اسکریپت‌ها -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
