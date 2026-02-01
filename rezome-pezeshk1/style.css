@@ -1,7 +1,7 @@
 /*
     FILENAME: style.css
     PROJECT: Dr. Radmanesh - Ultimate Professional Portal
-    VERSION: 5.0 (FINAL FIX: PDF LAYOUT & RTL)
+    VERSION: 4.0 (FINAL: AMIRI FONT & PURE BLACK)
     DESCRIPTION: Fixed Styles with Desktop-Style PDF on Mobile.
 */
 
@@ -439,11 +439,11 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .pdf-wrapper-modern {
-    width: 210mm; /* عرض ثابت A4 */
+    width: 210mm;
     background-color: white;
     font-family: 'Amiri', 'Times New Roman', serif !important; /* فونت امیری */
     color: #000000; /* مشکی خالص */
-    margin: 0;
+    margin: 0 auto; /* تغییر: این دستور باعث وسط‌چین شدن در صفحه می‌شود */
     padding: 0;
     box-sizing: border-box;
     text-align: right;
