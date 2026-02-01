@@ -1,7 +1,7 @@
 /*
     FILENAME: style.css
     PROJECT: Dr. Radmanesh - Ultimate Professional Portal
-    VERSION: 3.8 (FINAL: PDF GEOMETRY FIX)
+    VERSION: 4.0 (FINAL: PDF GEOMETRY FIX)
     DESCRIPTION: Comprehensive style with FAB positioning fix and Brand New PDF Layout.
 */
 
@@ -436,21 +436,23 @@ button { font-family: inherit; border: none; cursor: pointer; }
    ======================================================= */
 #pdf-template-root { 
     display: none; 
-    /* این بخش در DOM اصلی مخفی است و فقط با JS کپی و نمایش داده می‌شود */
+    /* این بخش در DOM اصلی مخفی است */
 }
 
+/* این کلاس زمانی که PDF تولید میشود به wrapper اضافه میشود 
+   ما در جاوااسکریپت wrapper اصلی را LTR میکنیم، 
+   و این بخش را RTL میکنیم تا مختصات درست شود */
 .pdf-wrapper-modern {
     width: 210mm;
-    /* ارتفاع اتوماتیک برای قرارگیری درست در صفحات */
     background-color: white;
     font-family: 'Vazirmatn', sans-serif;
     color: #333;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* ریست کردن استایل‌های بادی */
+    /* این بخش بسیار مهم است برای فیکس کردن باگ html2canvas */
     text-align: right;
-    direction: rtl;
+    direction: rtl; 
 }
 
 /* کانتینر هر صفحه PDF */
@@ -477,6 +479,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 /* برای سایدبار صفحه دوم */
