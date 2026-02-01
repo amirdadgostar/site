@@ -1,8 +1,8 @@
 /*
     FILENAME: style.css
     PROJECT: Dr. Radmanesh - Ultimate Professional Portal
-    VERSION: 4.0 (FINAL: AMIRI FONT & PURE BLACK)
-    DESCRIPTION: Fixed Styles with Desktop-Style PDF on Mobile.
+    VERSION: 4.2 (FINAL FIX: VERTICAL & HORIZONTAL ALIGNMENT)
+    DESCRIPTION: Fixed PDF Generation Layout (No top whitespace, centered horizontally).
 */
 
 /* =======================================================
@@ -443,12 +443,12 @@ button { font-family: inherit; border: none; cursor: pointer; }
     background-color: white;
     font-family: 'Amiri', 'Times New Roman', serif !important; /* فونت امیری */
     color: #000000; /* مشکی خالص */
-    margin: 0 auto; /* تغییر: این دستور باعث وسط‌چین شدن در صفحه می‌شود */
+    margin: 0 auto; /* مرکزچین افقی - بسیار مهم */
     padding: 0;
     box-sizing: border-box;
     text-align: right;
     direction: rtl;
-    line-height: 1.6; /* افزایش فاصله خطوط برای جلوگیری از تداخل */
+    line-height: 1.6;
 }
 
 /* کانتینر هر صفحه PDF */
@@ -466,11 +466,11 @@ button { font-family: inherit; border: none; cursor: pointer; }
 
 /* سایدبار سمت راست (در RTL) - تیره */
 .pdf-sidebar-modern {
-    width: 75mm; /* کمی عریض‌تر */
+    width: 75mm;
     height: 100%;
     background-color: var(--color-bg-dark);
     color: white;
-    padding: 10mm 8mm; /* افزایش پدینگ */
+    padding: 10mm 8mm;
     text-align: center;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -525,9 +525,9 @@ button { font-family: inherit; border: none; cursor: pointer; }
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    margin-bottom: 5mm; /* فاصله بیشتر */
+    margin-bottom: 5mm;
     font-size: 10pt;
-    color: #ffffff; /* سفید خالص */
+    color: #ffffff;
     font-family: 'Amiri', serif;
 }
 .pdf-contact-list .icon {
@@ -547,7 +547,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
     list-style: disc;
     color: #ffffff;
     font-size: 10pt;
-    line-height: 2; /* فاصله خطوط زیاد */
+    line-height: 2;
     margin: 0;
     font-family: 'Amiri', serif;
 }
@@ -583,7 +583,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
     background-color: white;
     height: 100%;
     box-sizing: border-box;
-    color: #000000; /* متن مشکی */
+    color: #000000;
 }
 
 .pdf-header-modern {
@@ -593,9 +593,9 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .pdf-name-modern {
-    font-size: 26pt; /* بزرگتر */
+    font-size: 26pt;
     font-weight: 900;
-    color: #000000; /* مشکی */
+    color: #000000;
     margin-bottom: 2mm;
     line-height: 1.2;
     font-family: 'Amiri', serif;
@@ -604,7 +604,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pdf-job-modern {
     font-size: 14pt;
     font-weight: bold;
-    color: #333333; /* خاکستری خیلی تیره */
+    color: #333333;
     margin-bottom: 3mm;
     font-family: 'Amiri', serif;
 }
@@ -629,7 +629,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pdf-section-title {
     font-size: 16pt;
     font-weight: 900;
-    color: var(--color-primary-dark); /* تیره‌تر */
+    color: var(--color-primary-dark);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -646,13 +646,13 @@ button { font-family: inherit; border: none; cursor: pointer; }
     text-align: justify;
     font-size: 11pt;
     line-height: 1.9;
-    color: #000000; /* مشکی */
+    color: #000000;
     font-family: 'Amiri', serif;
 }
 
 .pdf-item-row-modern {
     display: flex;
-    margin-bottom: 8mm; /* فاصله بیشتر بین آیتم‌ها */
+    margin-bottom: 8mm;
 }
 
 .pdf-date-col-modern {
