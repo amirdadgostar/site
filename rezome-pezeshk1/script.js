@@ -1,19 +1,15 @@
-/**
+ /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 3.4 (FINAL PRECISION EDIT - NESHAN & UI UPDATES)
- * DESCRIPTION: This is the definitive, feature-complete JavaScript.
- *              - Preloader logic preserved.
- *              - PDF logic preserved.
- *              - Contact Form logic preserved.
- *              - FAB Tooltips logic added (3s delay).
- *              - vCard filename updated to Farsi.
+ * VERSION: 3.5 (FINAL SUPERIOR EDIT - FAB MENU & PDF FIX)
+ * DESCRIPTION: Definitive Logic. 
+ *              - FAB Button changed to Multi-function Menu (10s delay).
+ *              - PDF Layout Logic improved.
+ *              - All other features preserved strictly.
  */
 
-// Strict mode for better code quality and error handling
 'use strict';
 
-// Wait for the entire DOM to be ready before executing any script
 document.addEventListener('DOMContentLoaded', () => {
 
     // =======================================================
@@ -21,8 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // =======================================================
     const preloader = document.getElementById('preloader-overlay');
     const header = document.querySelector('.main-header');
-    const fabTopButton = document.getElementById('fab-top');
-    const fabButtons = document.querySelectorAll('.fab-btn.has-tooltip'); // Select FABs with tooltips
+    
+    // [دستور جدید 1] انتخابگرهای جدید برای سیستم منوی شناور
+    const fabMainBtn = document.getElementById('fab-main-toggle');
+    const fabMenuContainer = document.getElementById('fab-menu-container');
+    const fabBadge = document.getElementById('fab-notification-badge');
+    const fabIcon = document.querySelector('.fab-main-icon');
+    
     const mobileToggle = document.querySelector('.mobile-toggle');
     const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
     const closeMenuButton = document.querySelector('.close-menu-btn');
@@ -37,20 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. تابع اصلی راه‌اندازی (Main Initializer)
     // =======================================================
     function initializePortal() {
-        // --- رفع مشکل گیر کردن لودینگ ---
         handleGuaranteedPreloader();
-
         setupEventListeners();
         setupScrollBehavior();
         setupAnimations();
         
-        // [دستور جدید 1] فعال‌سازی پیام دکمه‌های شناور بعد از ۳ ثانیه
-        handleFabTooltips();
+        // [دستور جدید 1] راه‌اندازی منطق جدید دکمه شناور
+        setupFabMenuBehavior();
     }
 
 
     // =======================================================
-    // 3. منطق جدید و تضمینی لودینگ (Guaranteed Preloader Logic)
+    // 3. منطق لودینگ (Preloader Logic)
     // =======================================================
     function handleGuaranteedPreloader() {
         if (!preloader) {
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const GUARANTEED_EXIT_TIME = 2500; // 2.5 seconds
+        const GUARANTEED_EXIT_TIME = 2500; 
 
         const progressBar = preloader.querySelector('.progress-fill');
         if (progressBar) {
@@ -76,59 +75,108 @@ document.addEventListener('DOMContentLoaded', () => {
         }, GUARANTEED_EXIT_TIME);
     }
 
-    // [دستور جدید 1] نمایش پیام دکمه‌ها
-    function handleFabTooltips() {
+
+    // =======================================================
+    // 4. [دستور جدید 1] منطق دکمه شناور چندمنظوره (New FAB Logic)
+    // =======================================================
+    function setupFabMenuBehavior() {
+        if (!fabMainBtn || !fabMenuContainer) return;
+
+        // الف) دکمه از ابتدا مشخص است (طبق دستور) - نیازی به مخفی بودن نیست.
+        
+        // ب) نمایش حالت پیام (عدد) بعد از 10 ثانیه
         setTimeout(() => {
-            fabButtons.forEach(btn => {
-                btn.classList.add('show-message');
-            });
-        }, 3000); // دقیقاً ۳ ثانیه
+            if (fabBadge) {
+                fabBadge.classList.add('show');
+                // پخش صدای ملایم نوتیفیکیشن (اختیاری)
+                playSoftNotificationSound();
+            }
+        }, 10000); // دقیقاً 10 ثانیه
+
+        // پ) کلیک روی دکمه برای باز/بسته کردن منو
+        fabMainBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleFabMenu();
+        });
+
+        // بستن منو اگر جایی بیرون از منو کلیک شد
+        document.addEventListener('click', (e) => {
+            if (!fabMenuContainer.contains(e.target) && !fabMainBtn.contains(e.target)) {
+                fabMenuContainer.classList.remove('active');
+                if(fabIcon) fabIcon.classList.replace('fa-xmark', 'fa-headset');
+            }
+        });
+    }
+
+    function toggleFabMenu() {
+        const isActive = fabMenuContainer.classList.contains('active');
+        
+        if (isActive) {
+            // بستن منو
+            fabMenuContainer.classList.remove('active');
+            if (fabIcon) {
+                fabIcon.classList.remove('fa-xmark');
+                fabIcon.classList.add('fa-headset'); // آیکون پیش‌فرض
+            }
+        } else {
+            // باز کردن منو
+            fabMenuContainer.classList.add('active');
+            // مخفی کردن عدد پیام وقتی منو باز شد
+            if (fabBadge) fabBadge.classList.remove('show');
+            
+            if (fabIcon) {
+                fabIcon.classList.remove('fa-headset');
+                fabIcon.classList.add('fa-xmark'); // آیکون بسته شدن
+            }
+        }
+    }
+
+    function playSoftNotificationSound() {
+        // یک صدای بسیار کوتاه و "بیپ" برای جلب توجه (بدون خطا در مرورگر)
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800; 
+            gainNode.gain.value = 0.05; // صدای خیلی کم
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 200);
+        } catch (e) {
+            // اگر مرورگر اجازه نداد، نادیده بگیر
+        }
     }
 
 
     // =======================================================
-    // 4. مدیریت رویدادها (Event Listeners)
+    // 5. مدیریت رویدادها (Event Listeners)
     // =======================================================
     function setupEventListeners() {
-        // Mobile Menu Toggle
-        if (mobileToggle) {
-            mobileToggle.addEventListener('click', openMobileMenu);
-        }
-        
-        if (closeMenuButton) {
-            closeMenuButton.addEventListener('click', closeMobileMenu);
-        }
-        
+        if (mobileToggle) mobileToggle.addEventListener('click', openMobileMenu);
+        if (closeMenuButton) closeMenuButton.addEventListener('click', closeMobileMenu);
         if (mobileMenuOverlay) {
             mobileMenuOverlay.addEventListener('click', (e) => {
                 if (e.target === mobileMenuOverlay) closeMobileMenu();
             });
         }
-        
         if (mobileNavLinks) {
             mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
         }
-
-        // Floating Action Button (Scroll to Top)
-        if (fabTopButton) {
-            fabTopButton.addEventListener('click', scrollToTop);
-        }
-
-        // Contact Form Submission
-        if (contactForm) {
-            contactForm.addEventListener('submit', handleFormSubmit);
-        }
+        if (contactForm) contactForm.addEventListener('submit', handleFormSubmit);
     }
 
 
     // =======================================================
-    // 5. رفتار اسکرول (Scroll Behavior)
+    // 6. رفتار اسکرول (Scroll Behavior)
     // =======================================================
     function setupScrollBehavior() {
         window.addEventListener('scroll', () => {
             handleHeaderSticky();
-            handleFabVisibility();
             updateActiveNavLink();
+            // نکته: تابع handleFabVisibility حذف شد چون طبق دستور دکمه همیشه باید مشخص باشد
+            // و دیگر قابلیت اسکرول به بالا مدنظر نیست.
         }, { passive: true });
     }
 
@@ -138,15 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
-        }
-    }
-
-    function handleFabVisibility() {
-        if (!fabTopButton) return;
-        if (window.scrollY > 400) {
-            fabTopButton.classList.remove('hidden');
-        } else {
-            fabTopButton.classList.add('hidden');
         }
     }
 
@@ -168,16 +207,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-
 
     // =======================================================
-    // 6. منوی موبایل (Mobile Menu Functions)
+    // 7. منوی موبایل (Mobile Menu Functions)
     // =======================================================
     function openMobileMenu() {
         if (mobileMenuOverlay) {
@@ -195,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 7. انیمیشن‌ها (Animations Logic)
+    // 8. انیمیشن‌ها (Animations Logic)
     // =======================================================
     function setupAnimations() {
         if (typeof AOS !== 'undefined') {
@@ -232,10 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 8. تولید PDF حرفه‌ای (Professional PDF Generation)
+    // 9. [دستور جدید 2] اصلاح سیستم PDF (PDF Fix)
     // =======================================================
     window.generateFullPDF = function() {
-        const fabBtn = document.getElementById('fab-pdf');
+        const fabBtn = document.getElementById('btn-download-cv'); // دکمه اصلی دانلود
         let originalIcon = '';
         
         if (fabBtn) {
@@ -251,32 +283,37 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // نمایش موقت برای رندر
         pdfTemplate.style.display = 'block';
 
+        // تنظیمات اصلاح شده برای جلوگیری از بهم ریختگی
         const options = {
-            margin: 0,
-            filename: 'Dr-Sara-Radmanesh-CV-Official.pdf',
-            image: { type: 'jpeg', quality: 1.0 },
+            margin: [0, 0, 0, 0], // حذف مارجین‌های پیش‌فرض
+            filename: 'Dr-Sara-Radmanesh-Resume.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
-                scale: 3,
+                scale: 2, // کیفیت مناسب
                 useCORS: true,
-                letterRendering: true
+                letterRendering: true,
+                scrollY: 0
             },
             jsPDF: {
                 unit: 'mm',
                 format: 'a4',
                 orientation: 'portrait'
-            }
+            },
+            // جلوگیری از برش بد محتوا
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
         if (typeof html2pdf !== 'undefined') {
             html2pdf().set(options).from(pdfTemplate).save().then(() => {
-                showToast('فایل رزومه با موفقیت آماده دانلود است.', 'success');
+                showToast('فایل رزومه با موفقیت دانلود شد.', 'success');
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
                 pdfTemplate.style.display = 'none';
             }).catch(err => {
                 console.error("PDF generation failed:", err);
-                showToast('خطا در ایجاد فایل PDF. لطفا مجددا تلاش کنید.', 'error');
+                showToast('خطا در ایجاد PDF. لطفا مجددا تلاش کنید.', 'error');
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
                 pdfTemplate.style.display = 'none';
             });
@@ -288,14 +325,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetPdfButton(btn, originalContent) {
         setTimeout(() => {
-            btn.innerHTML = originalContent;
-            btn.disabled = false;
+            if(btn) {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
         }, 1000);
     }
 
 
     // =======================================================
-    // 9. دانلود کارت ویزیت (vCard Generation)
+    // 10. دانلود کارت ویزیت (vCard Generation)
     // =======================================================
     window.downloadVCard = function() {
         const vCardString = [
@@ -317,7 +356,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        // [دستور جدید 3] تغییر نام فایل به فارسی
         link.setAttribute('download', 'دکتر-سارا-رادمنش.vcf');
         document.body.appendChild(link);
         link.click();
@@ -327,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 10. مدیریت فرم تماس (Contact Form Handler)
+    // 11. مدیریت فرم تماس (Contact Form Handler)
     // =======================================================
     function handleFormSubmit(event) {
         event.preventDefault();
@@ -354,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 11. سیستم نوتیفیکیشن (Toast Notifications)
+    // 12. سیستم نوتیفیکیشن (Toast Notifications)
     // =======================================================
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
@@ -396,10 +434,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-
-    // =======================================================
-    // 12. اجرای برنامه (Run the application)
-    // =======================================================
     initializePortal();
-
 });
