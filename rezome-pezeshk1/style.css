@@ -1,9 +1,16 @@
 /*
     FILENAME: style.css
     PROJECT: Dr. Radmanesh - Ultimate Professional Portal
-    VERSION: 4.0 (FINAL: PDF GEOMETRY FIX)
-    DESCRIPTION: Comprehensive style with FAB positioning fix and Brand New PDF Layout.
+    VERSION: 4.0 (FINAL: AMIRI FONT & BLACK TEXT & MOBILE FIX)
+    DESCRIPTION: 
+      - Imports Amiri font for PDF.
+      - PDF colors set to pure black/white for high contrast.
+      - Padding fixed to prevent text sticking to edges.
+      - Height locked to prevent extra blank pages.
 */
+
+/* ایمپورت فونت امیری برای رزومه */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 /* =======================================================
    1. متغیرهای اصلی، فونت و ریست عمومی
@@ -432,59 +439,55 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 /* =======================================================
-   10. استایل اختصاصی قالب PDF جدید (فوق حرفه‌ای و دو صفحه‌ای)
+   10. استایل اختصاصی قالب PDF جدید (فوق حرفه‌ای با فونت امیری)
    ======================================================= */
 #pdf-template-root { 
     display: none; 
-    /* این بخش در DOM اصلی مخفی است */
 }
 
-/* این کلاس زمانی که PDF تولید میشود به wrapper اضافه میشود 
-   ما در جاوااسکریپت wrapper اصلی را LTR میکنیم، 
-   و این بخش را RTL میکنیم تا مختصات درست شود */
 .pdf-wrapper-modern {
     width: 210mm;
+    /* تنظیم فونت امیری و رنگ مشکی خالص */
+    font-family: 'Amiri', serif;
     background-color: white;
-    font-family: 'Vazirmatn', sans-serif;
-    color: #333;
+    color: #000000;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* این بخش بسیار مهم است برای فیکس کردن باگ html2canvas */
     text-align: right;
-    direction: rtl; 
+    direction: rtl;
+    line-height: 1.6;
 }
 
-/* کانتینر هر صفحه PDF */
+/* کانتینر هر صفحه PDF با ارتفاع قفل شده */
 .pdf-page-container {
     width: 210mm;
-    height: 297mm; /* سایز دقیق A4 */
+    height: 297mm; /* ارتفاع دقیق A4 */
     display: flex;
-    overflow: hidden;
+    overflow: hidden; /* جلوگیری از صفحه اضافه */
     position: relative;
-    page-break-after: always; /* شکست صفحه اجباری بعد از هر کانتینر */
+    page-break-after: always;
     background: white;
     margin: 0;
     padding: 0;
 }
 
-/* سایدبار سمت راست (در RTL) - تیره */
+/* سایدبار سمت راست */
 .pdf-sidebar-modern {
     width: 70mm;
-    height: 100%; /* ارتفاع کامل صفحه */
+    height: 297mm; /* ارتفاع ثابت */
     background-color: var(--color-bg-dark);
-    color: white;
-    padding: 10mm 5mm;
+    color: #ffffff; /* متن سفید خالص */
+    padding: 10mm 8mm; /* افزایش پدینگ برای جلوگیری از چسبیدن متن */
     text-align: center;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     box-sizing: border-box;
-    flex-shrink: 0;
+    font-size: 11pt;
 }
 
-/* برای سایدبار صفحه دوم */
 .pdf-sidebar-modern.second-page-sidebar {
-    background-color: #0f172a; /* کمی متفاوت یا همان رنگ */
+    background-color: #0f172a; 
 }
 
 .pdf-profile-img-container {
@@ -503,12 +506,13 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .pdf-sidebar-title {
-    font-size: 13pt;
+    font-size: 16pt; /* فونت بزرگتر برای امیری */
+    font-weight: 700;
     color: var(--color-accent);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    padding-bottom: 2mm;
-    margin-bottom: 5mm;
-    margin-top: 8mm;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 3mm;
+    margin-bottom: 6mm;
+    margin-top: 10mm;
     text-align: right;
     display: flex;
     align-items: center;
@@ -523,42 +527,45 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 .pdf-contact-list li {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* جلوگیری از بهم ریختگی */
     gap: 10px;
-    margin-bottom: 4mm;
-    font-size: 9pt;
-    color: rgba(255,255,255,0.9);
+    margin-bottom: 5mm;
+    font-size: 11pt; /* فونت درشت‌تر */
+    color: #ffffff;
+    line-height: 1.5;
 }
 .pdf-contact-list .icon {
     width: 20px;
     color: var(--color-accent);
     text-align: center;
+    margin-top: 4px;
 }
 
 .pdf-skills-list {
     text-align: right;
-    padding-right: 5mm;
+    padding-right: 5mm; /* فاصله مناسب بولت‌ها */
     list-style: disc;
-    color: rgba(255,255,255,0.9);
-    font-size: 9pt;
+    color: #ffffff;
+    font-size: 11pt;
     line-height: 1.8;
     margin: 0;
 }
-.pdf-skills-list li { margin-bottom: 2mm; }
+.pdf-skills-list li { margin-bottom: 3mm; }
 
 .pdf-lang-item {
     text-align: right;
-    margin-bottom: 4mm;
+    margin-bottom: 5mm;
 }
 .pdf-lang-item span {
     display: block;
-    font-size: 9pt;
-    margin-bottom: 1mm;
+    font-size: 11pt;
+    margin-bottom: 2mm;
+    color: #ffffff;
 }
 .pdf-bar {
     width: 100%;
-    height: 4px;
-    background: rgba(255,255,255,0.2);
+    height: 5px;
+    background: rgba(255,255,255,0.3);
     border-radius: 2px;
 }
 .pdf-bar .fill {
@@ -567,62 +574,61 @@ button { font-family: inherit; border: none; cursor: pointer; }
     border-radius: 2px;
 }
 
-/* بخش اصلی سمت چپ (در RTL) - روشن */
+/* بخش اصلی سمت چپ */
 .pdf-main-content-modern {
     flex: 1;
-    padding: 10mm;
+    padding: 10mm 12mm; /* پدینگ بیشتر */
     background-color: white;
-    height: 100%;
+    height: 297mm;
     box-sizing: border-box;
 }
 
 .pdf-header-modern {
-    border-bottom: 2px solid var(--color-primary);
+    border-bottom: 3px solid var(--color-primary);
     padding-bottom: 5mm;
     margin-bottom: 8mm;
 }
 
 .pdf-name-modern {
-    font-size: 22pt;
-    font-weight: 900;
-    color: var(--color-primary-dark);
-    margin-bottom: 2mm;
+    font-size: 28pt; /* فونت درشت امیری */
+    font-weight: 700;
+    color: #000000; /* مشکی خالص */
+    margin-bottom: 3mm;
     line-height: 1.2;
 }
 
 .pdf-job-modern {
-    font-size: 11pt;
-    font-weight: 500;
-    color: var(--color-text-light);
+    font-size: 14pt;
+    font-weight: 400;
+    color: #000000; /* مشکی */
     margin-bottom: 3mm;
 }
 
 .pdf-reg-badge {
     display: inline-block;
     background: #f1f5f9;
-    color: var(--color-text-dark);
+    color: #000000;
     padding: 4px 12px;
     border-radius: 4px;
-    font-size: 9pt;
+    font-size: 11pt;
     font-weight: bold;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #000000; /* کادر مشکی برای وضوح */
 }
 
 .pdf-section-modern {
     margin-bottom: 8mm;
-    /* جلوگیری از شکستن سکشن‌ها */
     page-break-inside: avoid;
 }
 
 .pdf-section-title {
-    font-size: 13pt;
-    font-weight: 800;
+    font-size: 16pt;
+    font-weight: 700;
     color: var(--color-primary);
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 4mm;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 5mm;
+    border-bottom: 1px solid #ccc;
     padding-bottom: 2mm;
 }
 .pdf-section-title i {
@@ -631,54 +637,54 @@ button { font-family: inherit; border: none; cursor: pointer; }
 
 .pdf-text-justify {
     text-align: justify;
-    font-size: 10pt;
+    font-size: 12pt;
     line-height: 1.8;
-    color: #444;
+    color: #000000;
 }
 
 .pdf-item-row-modern {
     display: flex;
-    margin-bottom: 5mm;
+    margin-bottom: 6mm;
 }
 
 .pdf-date-col-modern {
-    width: 30mm;
-    font-size: 9pt;
+    width: 32mm;
+    font-size: 11pt;
     font-weight: bold;
-    color: var(--color-text-light);
+    color: #000000;
     padding-top: 2px;
     flex-shrink: 0;
 }
 
 .pdf-details-col-modern {
     flex: 1;
-    border-right: 2px solid #e2e8f0;
-    padding-right: 4mm;
+    border-right: 2px solid #000000; /* خط مشکی */
+    padding-right: 5mm;
 }
 
 .pdf-details-col-modern h4 {
-    font-size: 10.5pt;
-    color: var(--color-text-dark);
-    margin-bottom: 1mm;
+    font-size: 13pt;
+    color: #000000;
+    margin-bottom: 2mm;
     font-weight: 700;
 }
 
 .pdf-details-col-modern h5 {
-    font-size: 9.5pt;
+    font-size: 11pt;
     color: var(--color-primary);
-    font-weight: 500;
+    font-weight: 700;
     margin-bottom: 2mm;
 }
 
 .pdf-details-col-modern ul {
-    padding-right: 4mm;
-    list-style: disc;
+    padding-right: 5mm;
+    list-style: disc; /* یا none اگر نخواهید نقطه باشد */
     margin: 0;
 }
 .pdf-details-col-modern ul li, .pdf-details-col-modern p {
-    font-size: 9pt;
-    color: #555;
-    margin-bottom: 1mm;
+    font-size: 11pt;
+    color: #000000;
+    margin-bottom: 2mm;
     line-height: 1.6;
 }
 
@@ -689,26 +695,28 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 .pdf-honors-list li {
     position: relative;
-    padding-right: 20px;
-    margin-bottom: 3mm;
-    font-size: 9.5pt;
-    color: #444;
+    padding-right: 25px;
+    margin-bottom: 4mm;
+    font-size: 11pt;
+    color: #000000;
 }
 .pdf-honors-list li::before {
-    content: '\f058'; /* fa-circle-check */
+    content: '\f058'; 
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     position: absolute;
     right: 0;
     top: 3px;
     color: var(--color-success);
-    font-size: 10pt;
+    font-size: 11pt;
 }
 
-/* کلاس مخصوص شکست صفحه */
+/* اصلاح صفحه اضافه */
 .pdf-page-break {
-    display: block;
-    page-break-before: always;
     height: 0;
-    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    page-break-before: always;
+    display: block;
 }
