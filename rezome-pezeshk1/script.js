@@ -1,12 +1,11 @@
 /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.2 (FINAL GUARANTEED FIX: PDF Virtual Page Simulation)
+ * VERSION: 5.0 (CRITICAL FIX: RTL CANVAS CLIPPING & MOBILE VIEWPORT)
  * DESCRIPTION: 
- *    - PDF Generation Logic rewritten to simulate a virtual A4 page.
- *    - This forces perfect centering and scaling on ALL devices.
- *    - Solves the layout shifting/cropping issue permanently.
- *    - All other functionalities are preserved without any change.
+ *    - Solves the issue where 3cm of the right side is cut off in PDF.
+ *    - Forces absolute positioning (0,0) specifically for RTL layouts.
+ *    - All functionalities preserved.
  */
 
 'use strict';
@@ -14,7 +13,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // =======================================================
-    // 1. انتخابگرهای DOM (DOM Selectors)
+    // 1. انتخابگرهای DOM
     // =======================================================
     const preloader = document.getElementById('preloader-overlay');
     const header = document.querySelector('.main-header');
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 2. تابع اصلی راه‌اندازی (Main Initializer)
+    // 2. تابع اصلی راه‌اندازی
     // =======================================================
     function initializePortal() {
         handleGuaranteedPreloader();
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 3. منطق لودینگ (Preloader Logic)
+    // 3. منطق لودینگ
     // =======================================================
     function handleGuaranteedPreloader() {
         if (!preloader) {
@@ -76,12 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 4. منطق دکمه شناور چندمنظوره (FAB Logic)
+    // 4. منطق دکمه شناور
     // =======================================================
     function setupFabMenuBehavior() {
         if (!fabMainBtn || !fabMenuContainer) return;
 
-        // نمایش بج (عدد) بعد از 10 ثانیه
         setTimeout(() => {
             if (fabBadge) {
                 fabBadge.classList.add('show');
@@ -89,13 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 10000); 
 
-        // کلیک روی دکمه برای باز/بسته کردن منو
         fabMainBtn.addEventListener('click', (e) => {
             e.preventDefault();
             toggleFabMenu();
         });
 
-        // بستن منو با کلیک بیرون
         document.addEventListener('click', (e) => {
             if (!fabMenuContainer.contains(e.target) && !fabMainBtn.contains(e.target)) {
                 fabMenuContainer.classList.remove('active');
@@ -143,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 5. مدیریت رویدادها (Event Listeners)
+    // 5. مدیریت رویدادها
     // =======================================================
     function setupEventListeners() {
         if (mobileToggle) mobileToggle.addEventListener('click', openMobileMenu);
@@ -161,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 6. رفتار اسکرول (Scroll Behavior)
+    // 6. رفتار اسکرول
     // =======================================================
     function setupScrollBehavior() {
         window.addEventListener('scroll', () => {
@@ -199,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 7. منوی موبایل (Mobile Menu Functions)
+    // 7. منوی موبایل
     // =======================================================
     function openMobileMenu() {
         if (mobileMenuOverlay) {
@@ -217,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 8. انیمیشن‌ها (Animations Logic)
+    // 8. انیمیشن‌ها
     // =======================================================
     function setupAnimations() {
         if (typeof AOS !== 'undefined') {
@@ -254,87 +250,106 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (جدید: با شبیه‌سازی صفحه مجازی)
+    // 9. تولید PDF حرفه‌ای (اصلاح شده برای مشکل برش سمت راست)
     // =======================================================
     window.generateFullPDF = function() {
-        const downloadButton = document.getElementById('btn-download-cv');
-        let originalButtonContent = '';
+        const fabBtn = document.getElementById('btn-download-cv'); 
+        let originalIcon = '';
         
-        if (downloadButton) {
-            originalButtonContent = downloadButton.innerHTML;
-            downloadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
-            downloadButton.disabled = true;
+        if (fabBtn) {
+            originalIcon = fabBtn.innerHTML;
+            fabBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال تولید PDF...';
+            fabBtn.disabled = true;
         }
 
-        const pdfTemplate = document.getElementById('pdf-template-root');
+        // 1. دریافت قالب اصلی
+        const originalTemplate = document.getElementById('pdf-template-root');
         
-        if (!pdfTemplate) {
+        if (!originalTemplate) {
             showToast('خطا: قالب PDF یافت نشد.', 'error');
-            if (downloadButton) resetPdfButton(downloadButton, originalButtonContent);
+            if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             return;
         }
 
-        // 1. ایجاد یک "صفحه مجازی" برای شبیه‌سازی برگه A4
-        const virtualPage = document.createElement('div');
-        Object.assign(virtualPage.style, {
-            position: 'absolute',
-            left: '-9999px',
-            top: '0',
-            width: '840px', // کمی بزرگتر از A4 برای ایجاد حاشیه
-            padding: '20px', // حاشیه مجازی
-            backgroundColor: '#fff',
-            boxSizing: 'content-box'
-        });
-
-        // 2. کلون کردن محتوای اصلی و قرار دادن آن در مرکز صفحه مجازی
-        const contentToPrint = pdfTemplate.cloneNode(true);
-        contentToPrint.style.display = 'block';
-        const innerWrapper = contentToPrint.querySelector('.pdf-wrapper-modern');
-        if (innerWrapper) {
-            innerWrapper.style.margin = '0 auto'; // کلید اصلی برای مرکز کردن
-        }
+        // 2. ساخت کانتینر ایزوله با تنظیمات سخت‌گیرانه برای RTL
+        const cloneContainer = document.createElement('div');
         
-        virtualPage.appendChild(contentToPrint);
-        document.body.appendChild(virtualPage);
+        // تنظیمات حیاتی CSS برای جلوگیری از جابجایی در موبایل
+        cloneContainer.style.cssText = `
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 794px; 
+            min-width: 794px; 
+            margin: 0; 
+            padding: 0; 
+            z-index: -9999; 
+            background: #ffffff; 
+            direction: rtl;
+            overflow: visible;
+        `;
 
-        // 3. تنظیمات نهایی کتابخانه html2pdf
+        // کپی محتوا
+        cloneContainer.innerHTML = originalTemplate.innerHTML;
+        
+        // اضافه کردن به بادی
+        document.body.appendChild(cloneContainer);
+
+        // تنظیم المان داخلی
+        const elementToPrint = cloneContainer.querySelector('.pdf-wrapper-modern');
+        if(elementToPrint) {
+            elementToPrint.style.display = 'block'; 
+            elementToPrint.style.width = '794px'; 
+            elementToPrint.style.margin = '0'; // حذف هرگونه margin auto
+        }
+
+        // 3. تنظیمات html2pdf با مختصات دقیق
         const options = {
-            margin:       0,
-            filename:     'Dr-Sara-Radmanesh-CV.pdf',
-            image:        { type: 'jpeg', quality: 1.0 },
-            html2canvas:  { 
-                scale: 2, 
-                useCORS: true, 
+            margin: 0,
+            filename: 'Dr-Sara-Radmanesh-CV.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2, // کیفیت بالا
+                useCORS: true, // برای لود تصاویر خارجی
                 logging: false,
-                width: 794, // عرض دقیق محتوا را به آن می‌دهیم
-                windowWidth: 794 // شبیه‌سازی دید دسکتاپ
+                scrollY: 0, // شروع اسکرول از بالا
+                scrollX: 0, // شروع اسکرول از چپ (جلوگیری از برش)
+                x: 0,       // مختصات شروع عکس برداری X
+                y: 0,       // مختصات شروع عکس برداری Y
+                width: 794, // عرض دقیق عکس برداری
+                windowWidth: 794 // عرض پنجره مجازی (حیاتی برای موبایل)
             },
-            jsPDF:        { unit: 'px', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait',
+                compress: true
+            },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // 4. اجرا و پاکسازی
+        // 4. اجرا
         if (typeof html2pdf !== 'undefined') {
-            // ما محتوای داخلی (نه صفحه مجازی) را برای چاپ انتخاب می‌کنیم
-            html2pdf().set(options).from(innerWrapper).save().then(() => {
+            html2pdf().set(options).from(cloneContainer).save().then(() => {
                 showToast('رزومه با موفقیت دانلود شد.', 'success');
-                document.body.removeChild(virtualPage);
-                if (downloadButton) resetPdfButton(downloadButton, originalButtonContent);
+                // پاکسازی کامل
+                document.body.removeChild(cloneContainer);
+                if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             }).catch(err => {
                 console.error("PDF Generation Error:", err);
                 showToast('خطا در تولید فایل.', 'error');
-                if (document.body.contains(virtualPage)) {
-                    document.body.removeChild(virtualPage);
+                if(document.body.contains(cloneContainer)) {
+                    document.body.removeChild(cloneContainer);
                 }
-                if (downloadButton) resetPdfButton(downloadButton, originalButtonContent);
+                if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             });
         } else {
-            console.error("html2pdf.js library is not loaded.");
+            console.error("Library not loaded.");
             showToast('کتابخانه PDF لود نشد.', 'error');
-            if (document.body.contains(virtualPage)) {
-                document.body.removeChild(virtualPage);
+            if(document.body.contains(cloneContainer)) {
+                document.body.removeChild(cloneContainer);
             }
-            if (downloadButton) resetPdfButton(downloadButton, originalButtonContent);
+            if (fabBtn) resetPdfButton(fabBtn, originalIcon);
         }
     };
 
@@ -349,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 10. دانلود کارت ویزیت (vCard Generation)
+    // 10. دانلود کارت ویزیت
     // =======================================================
     window.downloadVCard = function() {
         const vCardString = [
@@ -381,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 11. مدیریت فرم تماس (Contact Form Handler)
+    // 11. مدیریت فرم تماس
     // =======================================================
     function handleFormSubmit(event) {
         event.preventDefault();
@@ -408,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 12. سیستم نوتیفیکیشن (Toast Notifications)
+    // 12. سیستم نوتیفیکیشن
     // =======================================================
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
