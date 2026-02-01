@@ -1,12 +1,11 @@
-
 /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.0 (FIXED: MOBILE RENDER, AMIRI FONT, BLACK TEXT)
- * DESCRIPTION:
- *              - FAB & Preloader Logic: PRESERVED 100%.
- *              - PDF Logic: Forced Desktop Rendering on Mobile.
- *              - Fixed blank pages and text overlap.
+ * VERSION: 4.0 (FINAL FIX: MOBILE PDF & AMIRI FONT)
+ * DESCRIPTION: 
+ *    - PDF Generation Logic rewritten to FORCE 794px width on mobile.
+ *    - Solves the layout breaking issue on small screens.
+ *    - All previous functionalities (FAB, Toast, Preloader) preserved.
  */
 
 'use strict';
@@ -254,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Corrected & Optimized Logic)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - FORCE DESKTOP VIEWPORT FIX)
     // =======================================================
     window.generateFullPDF = function() {
         const fabBtn = document.getElementById('btn-download-cv'); 
@@ -266,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fabBtn.disabled = true;
         }
 
+        // 1. دریافت قالب اصلی
         const originalTemplate = document.getElementById('pdf-template-root');
         
         if (!originalTemplate) {
@@ -274,50 +274,48 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // --- CLONE & ISOLATE STRATEGY ---
-        // ایجاد کانتینر موقت برای رندرینگ دقیق
-        // این کانتینر در بادی قرار می‌گیرد اما با استایل فیکس شده
-        // تا در موبایل هم با عرض دسکتاپ رندر شود
+        // 2. تکنیک کانتینر ایزوله با عرض ثابت (Fixed Width Isolation)
+        // این مهمترین بخش برای رفع مشکل موبایل است.
         const cloneContainer = document.createElement('div');
         
-        // استایل‌های حیاتی برای جلوگیری از بهم ریختگی در موبایل
-        cloneContainer.style.position = 'fixed'; // خارج کردن از جریان صفحه
-        cloneContainer.style.top = '-10000px'; // مخفی کردن از دید کاربر
-        cloneContainer.style.left = '-10000px'; 
-        cloneContainer.style.width = '210mm'; // عرض ثابت A4
-        cloneContainer.style.minHeight = '297mm';
-        cloneContainer.style.zIndex = '-9999';
+        // تنظیمات استایل کانتینر والد
+        cloneContainer.style.position = 'absolute';
+        cloneContainer.style.left = '-9999px'; // خارج از دید
+        cloneContainer.style.top = '0';
+        // عرض A4 در 96DPI حدود 794 پیکسل است. ما عرض را فیکس می کنیم تا موبایل آن را فشرده نکند.
+        cloneContainer.style.width = '794px'; 
+        cloneContainer.style.minWidth = '794px';
+        cloneContainer.style.zIndex = '-1';
+        cloneContainer.style.margin = '0';
+        cloneContainer.style.padding = '0';
         cloneContainer.style.background = '#ffffff';
-        cloneContainer.style.direction = 'rtl'; // اجبار راست‌چین
-        
-        // کپی محتوا
+
+        // کپی کردن محتوای قالب
         cloneContainer.innerHTML = originalTemplate.innerHTML;
         
-        // نمایش محتوای کپی شده (چون والدش display:none بود)
-        const wrapper = cloneContainer.querySelector('.pdf-wrapper-modern');
-        if(wrapper) {
-            wrapper.style.display = 'block';
-            wrapper.style.width = '210mm';
-        }
-
+        // اضافه کردن به body برای رندر شدن
         document.body.appendChild(cloneContainer);
 
-        // تنظیمات html2pdf
+        // اطمینان از اینکه المان داخلی هم عرض کامل دارد
+        const elementToPrint = cloneContainer.querySelector('.pdf-wrapper-modern');
+        if(elementToPrint) {
+            elementToPrint.style.display = 'block'; 
+            elementToPrint.style.width = '100%'; // نسبت به والد 794 پیکسلی
+        }
+
+        // 3. تنظیمات html2pdf
         const options = {
             margin: 0,
-            filename: 'Dr-Sara-Radmanesh-Resume.pdf',
-            image: { type: 'jpeg', quality: 1.0 }, // کیفیت حداکثر
+            filename: 'Dr-Sara-Radmanesh-CV.pdf',
+            image: { type: 'jpeg', quality: 1 }, // بالاترین کیفیت
             html2canvas: {
-                scale: 2.0, // اسکیل برای کیفیت متن
+                scale: 2, // کیفیت بالا
                 useCORS: true,
                 logging: false,
                 scrollY: 0,
                 scrollX: 0,
-                windowWidth: 1200, // *** کلید حل مشکل موبایل ***
-                                   // این باعث می‌شود مدیا کوئری‌های موبایل اعمال نشوند
-                                   // و رزومه به شکل دسکتاپ رندر شود
-                x: 0,
-                y: 0
+                windowWidth: 794, // فریب دادن canvas که فکر کند در دسکتاپ است
+                width: 794 // عرض دقیق ناحیه کپچر
             },
             jsPDF: {
                 unit: 'mm',
@@ -325,27 +323,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 orientation: 'portrait',
                 compress: true
             },
-            // جلوگیری از ایجاد صفحات سفید اضافی
-            pagebreak: { mode: ['css', 'legacy'] }
+            // جلوگیری از شکست بد
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
+        // 4. اجرا
         if (typeof html2pdf !== 'undefined') {
-            html2pdf().set(options).from(cloneContainer).save().then(() => {
-                showToast('دانلود رزومه انجام شد.', 'success');
-                // حذف کانتینر موقت
+            html2pdf().set(options).from(elementToPrint).save().then(() => {
+                showToast('رزومه با موفقیت دانلود شد.', 'success');
+                // پاکسازی
                 document.body.removeChild(cloneContainer);
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             }).catch(err => {
-                console.error("PDF Error:", err);
-                showToast('خطا در تولید PDF.', 'error');
+                console.error("PDF Generation Error:", err);
+                showToast('خطا در تولید فایل.', 'error');
                 if(document.body.contains(cloneContainer)) {
                     document.body.removeChild(cloneContainer);
                 }
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             });
         } else {
-            console.error("Library Missing");
-            showToast('کتابخانه PDF موجود نیست.', 'error');
+            console.error("Library not loaded.");
+            showToast('کتابخانه PDF لود نشد.', 'error');
             if(document.body.contains(cloneContainer)) {
                 document.body.removeChild(cloneContainer);
             }
