@@ -1,11 +1,11 @@
 /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 3.8 (FIXED: PDF GEOMETRY & ISOLATION)
+ * VERSION: 4.0 (FIXED: VISIBLE RENDER & RTL COORDINATES)
  * DESCRIPTION: Definitive Logic.
  *              - FAB Button logic preserved.
  *              - vCard Toast message preserved.
- *              - PDF Logic: Uses 'Clone & Isolate' method to fix alignment issues.
+ *              - PDF Logic: Uses 'Overlay' method to force html2canvas to render correctly.
  */
 
 'use strict';
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - REWRITTEN & FIXED)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - FIXED FOR A4/RTL)
     // =======================================================
     window.generateFullPDF = function() {
         const fabBtn = document.getElementById('btn-download-cv'); 
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (fabBtn) {
             originalIcon = fabBtn.innerHTML;
-            fabBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال پردازش...';
+            fabBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
             fabBtn.disabled = true;
         }
 
@@ -274,80 +274,84 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. ساخت یک کانتینر ایزوله برای رندر صحیح (Clone & Isolate)
-        // این کار باعث می‌شود قالب از استایل‌های بادی و اسکرول صفحه تاثیر نپذیرد
-        const cloneContainer = document.createElement('div');
-        cloneContainer.style.position = 'fixed';
-        cloneContainer.style.top = '0';
-        cloneContainer.style.left = '0';
-        cloneContainer.style.width = '210mm'; // عرض دقیق A4
-        cloneContainer.style.zIndex = '-9999'; // مخفی از دید کاربر
-        cloneContainer.style.background = '#ffffff';
-        cloneContainer.style.margin = '0';
-        cloneContainer.style.padding = '0';
-        cloneContainer.style.overflow = 'visible'; // اجازه به محتوا برای دیده شدن توسط canvas
-        
-        // کپی کردن محتوا داخل کانتینر جدید
-        cloneContainer.innerHTML = originalTemplate.innerHTML;
-        
-        // نمایش کانتینر موقت (باید داخل DOM باشد تا canvas ببیند)
-        // توجه: خود قالب داخلی display: none ندارد، بلکه والد اصلی داشت
-        // پس اینجا فقط div رپر را به بادی اضافه می‌کنیم
-        document.body.appendChild(cloneContainer);
+        // اسکرول به بالا برای جلوگیری از برش خوردن
+        window.scrollTo(0, 0);
 
-        // اطمینان از لود شدن استایل‌های Clone
-        const elementToPrint = cloneContainer.querySelector('.pdf-wrapper-modern');
-        if(elementToPrint) {
-            elementToPrint.style.display = 'block'; 
-            elementToPrint.style.width = '210mm';
+        // 2. ساخت کانتینر موقت روی صفحه (Overlay)
+        // این کار باعث می‌شود html2canvas بتواند المان را ببیند
+        const overlayDiv = document.createElement('div');
+        overlayDiv.id = 'temp-pdf-overlay';
+        overlayDiv.style.position = 'absolute'; // Absolute relative to body
+        overlayDiv.style.top = '0';
+        overlayDiv.style.left = '0';
+        overlayDiv.style.width = '100%';
+        overlayDiv.style.height = 'auto'; // اجازه رشد ارتفاع
+        overlayDiv.style.zIndex = '999999'; // بالاترین لایه
+        overlayDiv.style.backgroundColor = '#ffffff'; // پس زمینه سفید
+        overlayDiv.style.display = 'flex';
+        overlayDiv.style.justifyContent = 'center'; // وسط چین کردن محتوا
+        
+        // نکته مهم برای حل مشکل RTL:
+        // wrapper اصلی را LTR میکنیم تا مختصات از چپ (0,0) حساب شود
+        // اما داخلش دوباره RTL میکنیم.
+        overlayDiv.style.direction = 'ltr'; 
+
+        // کپی محتوا
+        overlayDiv.innerHTML = originalTemplate.innerHTML;
+        
+        // اضافه کردن به بادی
+        document.body.appendChild(overlayDiv);
+
+        // نمایش دادن wrapper داخلی
+        const wrapper = overlayDiv.querySelector('.pdf-wrapper-modern');
+        if(wrapper) {
+            wrapper.style.display = 'block';
         }
 
-        // 3. تنظیمات دقیق html2pdf برای کیفیت بالا و فیکس شدن سایز
+        // 3. تنظیمات html2pdf
         const options = {
             margin: 0,
             filename: 'Dr-Sara-Radmanesh-Resume.pdf',
-            image: { type: 'jpeg', quality: 1 }, // بالاترین کیفیت تصویر
+            image: { type: 'jpeg', quality: 1 },
             html2canvas: {
-                scale: 2, // مقیاس مناسب (نه خیلی زیاد که کرش کند، نه کم که تار شود)
+                scale: 2, 
                 useCORS: true,
                 logging: false,
-                scrollY: 0, // جلوگیری از اسکرول خوردن تصویر
-                scrollX: 0, // جلوگیری از شیفت به چپ/راست
-                windowWidth: 800, // عرض مجازی ویندو برای رندر
-                x: 0,
-                y: 0
+                scrollY: 0,
+                scrollX: 0,
+                windowWidth: 1024 // عرض ثابت برای رندر صحیح
             },
             jsPDF: {
                 unit: 'mm',
                 format: 'a4',
-                orientation: 'portrait',
-                compress: true
+                orientation: 'portrait'
             },
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // 4. اجرا
         if (typeof html2pdf !== 'undefined') {
-            html2pdf().set(options).from(cloneContainer).save().then(() => {
-                showToast('دانلود با موفقیت انجام شد.', 'success');
-                // پاکسازی کانتینر موقت
-                document.body.removeChild(cloneContainer);
+            // مخفی کردن اسکرول بادی موقتا
+            document.body.style.overflow = 'hidden';
+
+            html2pdf().set(options).from(wrapper).save().then(() => {
+                showToast('دانلود رزومه انجام شد.', 'success');
+                // پاکسازی
+                document.body.removeChild(overlayDiv);
+                document.body.style.overflow = '';
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             }).catch(err => {
-                console.error("PDF Error:", err);
-                showToast('خطا در ایجاد فایل. مجدد تلاش کنید.', 'error');
-                // پاکسازی در صورت خطا
-                if(document.body.contains(cloneContainer)) {
-                    document.body.removeChild(cloneContainer);
+                console.error("PDF Failed:", err);
+                showToast('خطا در دانلود. لطفا مجدد تلاش کنید.', 'error');
+                if(document.body.contains(overlayDiv)) {
+                    document.body.removeChild(overlayDiv);
                 }
+                document.body.style.overflow = '';
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             });
         } else {
-            console.error("Library not loaded.");
-            showToast('کتابخانه PDF لود نشده است.', 'error');
-            if(document.body.contains(cloneContainer)) {
-                document.body.removeChild(cloneContainer);
-            }
+            console.error("Lib missing");
+            showToast('کتابخانه لود نشد.', 'error');
+            if(document.body.contains(overlayDiv)) document.body.removeChild(overlayDiv);
             if (fabBtn) resetPdfButton(fabBtn, originalIcon);
         }
     };
