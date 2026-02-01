@@ -1,8 +1,8 @@
 /*
     FILENAME: style.css
     PROJECT: Dr. Radmanesh - Ultimate Professional Portal
-    VERSION: 4.2 (FINAL FIX: VERTICAL & HORIZONTAL ALIGNMENT)
-    DESCRIPTION: Fixed PDF Generation Layout (No top whitespace, centered horizontally).
+    VERSION: 4.0 (FINAL: AMIRI FONT & PURE BLACK)
+    DESCRIPTION: Fixed Styles with Desktop-Style PDF on Mobile.
 */
 
 /* =======================================================
@@ -443,12 +443,12 @@ button { font-family: inherit; border: none; cursor: pointer; }
     background-color: white;
     font-family: 'Amiri', 'Times New Roman', serif !important; /* فونت امیری */
     color: #000000; /* مشکی خالص */
-    margin: 0 auto; /* مرکزچین افقی - بسیار مهم */
+    margin: 0 auto; /* تغییر قبلی برای وسط چین کردن افقی */
     padding: 0;
     box-sizing: border-box;
     text-align: right;
     direction: rtl;
-    line-height: 1.6;
+    line-height: 1.6; /* افزایش فاصله خطوط برای جلوگیری از تداخل */
 }
 
 /* کانتینر هر صفحه PDF */
@@ -466,11 +466,11 @@ button { font-family: inherit; border: none; cursor: pointer; }
 
 /* سایدبار سمت راست (در RTL) - تیره */
 .pdf-sidebar-modern {
-    width: 75mm;
+    width: 75mm; /* کمی عریض‌تر */
     height: 100%;
     background-color: var(--color-bg-dark);
     color: white;
-    padding: 10mm 8mm;
+    padding: 10mm 8mm; /* افزایش پدینگ */
     text-align: center;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -525,9 +525,9 @@ button { font-family: inherit; border: none; cursor: pointer; }
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    margin-bottom: 5mm;
+    margin-bottom: 5mm; /* فاصله بیشتر */
     font-size: 10pt;
-    color: #ffffff;
+    color: #ffffff; /* سفید خالص */
     font-family: 'Amiri', serif;
 }
 .pdf-contact-list .icon {
@@ -547,9 +547,10 @@ button { font-family: inherit; border: none; cursor: pointer; }
     list-style: disc;
     color: #ffffff;
     font-size: 10pt;
-    line-height: 2;
+    line-height: 2; /* فاصله خطوط زیاد */
     margin: 0;
     font-family: 'Amiri', serif;
+    direction: rtl; /* تغییر: اطمینان از راست به چپ بودن لیست */
 }
 .pdf-skills-list li { margin-bottom: 3mm; }
 
@@ -583,7 +584,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
     background-color: white;
     height: 100%;
     box-sizing: border-box;
-    color: #000000;
+    color: #000000; /* متن مشکی */
 }
 
 .pdf-header-modern {
@@ -593,9 +594,9 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .pdf-name-modern {
-    font-size: 26pt;
+    font-size: 26pt; /* بزرگتر */
     font-weight: 900;
-    color: #000000;
+    color: #000000; /* مشکی */
     margin-bottom: 2mm;
     line-height: 1.2;
     font-family: 'Amiri', serif;
@@ -604,7 +605,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pdf-job-modern {
     font-size: 14pt;
     font-weight: bold;
-    color: #333333;
+    color: #333333; /* خاکستری خیلی تیره */
     margin-bottom: 3mm;
     font-family: 'Amiri', serif;
 }
@@ -629,7 +630,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pdf-section-title {
     font-size: 16pt;
     font-weight: 900;
-    color: var(--color-primary-dark);
+    color: var(--color-primary-dark); /* تیره‌تر */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -646,13 +647,13 @@ button { font-family: inherit; border: none; cursor: pointer; }
     text-align: justify;
     font-size: 11pt;
     line-height: 1.9;
-    color: #000000;
+    color: #000000; /* مشکی */
     font-family: 'Amiri', serif;
 }
 
 .pdf-item-row-modern {
     display: flex;
-    margin-bottom: 8mm;
+    margin-bottom: 8mm; /* فاصله بیشتر بین آیتم‌ها */
 }
 
 .pdf-date-col-modern {
@@ -691,6 +692,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
     padding-right: 5mm;
     list-style: disc;
     margin: 0;
+    direction: rtl; /* تغییر: جهت نوشتاری را برای لیست‌های اصلی اجباری می‌کند */
 }
 .pdf-details-col-modern ul li, .pdf-details-col-modern p {
     font-size: 11pt;
@@ -705,6 +707,8 @@ button { font-family: inherit; border: none; cursor: pointer; }
     list-style: none;
     padding: 0;
     margin: 0;
+    direction: rtl; /* تغییر: جهت نوشتاری را برای لیست افتخارات اجباری می‌کند */
+    text-align: right; /* تغییر: اطمینان از ترازبندی صحیح متن */
 }
 .pdf-honors-list li {
     position: relative;
