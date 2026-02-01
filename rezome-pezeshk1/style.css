@@ -1,15 +1,14 @@
 /*
     FILENAME: style.css
     PROJECT: Dr. Radmanesh - Ultimate Professional Portal
-    VERSION: 3.4 (UPDATED: High Precision UI & Full Width Map)
-    DESCRIPTION: A comprehensive, high-detail stylesheet.
+    VERSION: 3.5 (FINAL: FAB MENU & PERFECT PDF)
+    DESCRIPTION: Comprehensive style with new FAB logic and PDF fixes.
 */
 
 /* =======================================================
    1. متغیرهای اصلی، فونت و ریست عمومی
    ======================================================= */
 :root {
-    /* پالت رنگی رسمی و مدرن */
     --color-primary: #0e7490;      /* آبی-سبز سیر (Cyan) */
     --color-primary-dark: #155e75;
     --color-secondary: #0369a1;    /* آبی آسمانی تیره */
@@ -22,13 +21,11 @@
     --color-success: #10b981;
     --color-error: #ef4444;
 
-    /* سایه‌ها */
     --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
     --shadow-medium: 0 10px 30px -5px rgba(14, 116, 144, 0.15);
     --shadow-hard: 0 20px 40px -10px rgba(14, 116, 144, 0.25);
     --shadow-glow: 0 0 25px rgba(14, 116, 144, 0.4);
 
-    /* ابعاد و فواصل */
     --radius-sm: 8px;
     --radius-md: 16px;
     --radius-lg: 24px;
@@ -36,7 +33,6 @@
     --container-width: 1240px;
 }
 
-/* ریست کردن استاندارد */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -72,7 +68,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .section { padding: 100px 0; }
 
 /* =======================================================
-   2. استایل لودینگ و دکمه‌های شناور (Preloader & FAB)
+   2. استایل لودینگ (Preloader)
    ======================================================= */
 #preloader-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -85,56 +81,139 @@ button { font-family: inherit; border: none; cursor: pointer; }
 @keyframes heartbeat { 0% {transform: scale(1);} 50% {transform: scale(1.15);} 100% {transform: scale(1);} }
 .loader-text-box { margin: 20px 0; }
 .loader-name { font-size: 1.5rem; color: var(--color-text-dark); }
-/* [دستور جدید 4] استایل نام فارسی در لودینگ */
 .loader-name-fa { font-size: 1.2rem; color: var(--color-primary-dark); margin: 5px 0 10px; font-weight: 500; }
 .loader-status { font-size: 0.9rem; color: var(--color-text-light); }
 .progress-bar-wrapper { width: 200px; height: 5px; background: #e0e0e0; border-radius: 5px; overflow: hidden; }
 .progress-fill { width: 0; height: 100%; background: var(--color-primary); animation: fillProgress 2s ease-out forwards; }
 @keyframes fillProgress { from {width: 0;} to {width: 100%;} }
 
-.fab-container { position: fixed; bottom: 30px; left: 30px; z-index: 999; display: flex; flex-direction: column; gap: 15px; }
-/* [دستور جدید 1] پوزیشن نسبی برای قرارگیری تولتیپ */
-.fab-btn { position: relative; width: 55px; height: 55px; background: var(--color-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: var(--shadow-hard); transition: all 0.3s ease; }
-.fab-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-glow); }
-.fab-btn.hidden { opacity: 0; visibility: hidden; transform: translateY(20px); }
 
-.fab-whatsapp { background-color: #25D366; }
-.fab-whatsapp:hover { background-color: #1ebc59; }
-.fab-map { background-color: #4285F4; }
-.fab-map:hover { background-color: #3367d6; }
+/* =======================================================
+   3. [دستور جدید 1] استایل سیستم منوی شناور (FAB Styles)
+   ======================================================= */
+.fab-menu-wrapper {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
 
-/* [دستور جدید 1] استایل تولتیپ دکمه‌های شناور */
-.fab-tooltip-text {
-    position: absolute;
-    left: 65px; /* سمت راست دکمه (چون LTR است در CSS، ولی در صفحه راست‌چین نمایش داده میشود، پس Left فاصله از دکمه است) */
-    background: rgba(0,0,0,0.8);
+/* دکمه اصلی */
+.fab-main-btn {
+    width: 60px;
+    height: 60px;
+    background: var(--color-primary);
     color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    white-space: nowrap;
+    border-radius: 50%;
+    box-shadow: var(--shadow-hard);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    /* طبق دستور، دکمه از اول مشخص است (بدون hidden) */
+}
+
+.fab-main-btn:hover {
+    transform: scale(1.1);
+    background: var(--color-primary-dark);
+}
+
+/* آیکون داخل دکمه اصلی */
+.fab-main-icon {
+    transition: transform 0.3s ease;
+}
+
+/* بج نوتیفیکیشن (عدد پیام) */
+.fab-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ef4444; /* قرمز هشدار */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    transform: scale(0); /* مخفی در ابتدا */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fab-notification-badge.show {
+    transform: scale(1); /* نمایش با انیمیشن */
+}
+
+/* منوی گزینه‌ها (مخفی در ابتدا) */
+.fab-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     opacity: 0;
     visibility: hidden;
-    transform: translateX(10px);
+    transform: translateY(20px);
     transition: all 0.3s ease;
-    pointer-events: none;
+    margin-bottom: 10px; /* فاصله از دکمه اصلی */
 }
-/* نمایش تولتیپ وقتی کلاس show-message اضافه شود */
-.fab-btn.show-message .fab-tooltip-text {
+
+/* حالت فعال منو */
+.fab-options.active {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0);
+    transform: translateY(0);
 }
-/* همچنین وقتی موس روی دکمه میرود */
-.fab-btn:hover .fab-tooltip-text {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
+
+/* آیتم‌های منو */
+.fab-option-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* متن سمت راست، آیکون سمت چپ (چون LTR است در فلکس) */
+    gap: 12px;
+    cursor: pointer;
+    text-decoration: none;
 }
+
+.fab-label {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.fab-icon-small {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+.fab-icon-small:hover { transform: scale(1.1); }
+
+/* رنگ‌های اختصاصی */
+.fab-icon-small.whatsapp { background-color: #25D366; }
+.fab-icon-small.call { background-color: #0ea5e9; }
+.fab-icon-small.map { background-color: #4285F4; }
 
 
 /* =======================================================
-   3. هدر و منوها (Header & Navigation)
+   4. هدر و منوها
    ======================================================= */
 .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; height: var(--header-height); transition: all 0.3s ease; }
 .main-header.glass-effect { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
@@ -163,7 +242,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .mobile-nav-links a i { color: var(--color-primary); }
 
 /* =======================================================
-   4. بخش هیرو (Hero Section)
+   5. بخش هیرو
    ======================================================= */
 .hero-area { padding: calc(var(--header-height) + 80px) 0; min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; }
 .background-shapes .shape { position: absolute; border-radius: 50%; background: rgba(14, 116, 144, 0.05); }
@@ -216,7 +295,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 @keyframes scrollAnim { 0% {top: 8px; opacity: 1;} 100% {top: 20px; opacity: 0;} }
 
 /* =======================================================
-   5. بخش‌های عمومی و هدرها
+   6. بخش‌های عمومی
    ======================================================= */
 .section-head { margin-bottom: 60px; }
 .tag-line { display: inline-block; padding: 5px 15px; background: rgba(14, 116, 144, 0.1); color: var(--color-primary); border-radius: 50px; font-weight: 600; margin-bottom: 15px; }
@@ -225,7 +304,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .text-center { text-align: center; }
 
 /* =======================================================
-   6. بخش درباره من و مهارت‌ها
+   7. محتوای اصلی (درباره، مهارت، سوابق)
    ======================================================= */
 .about-content-wrapper { max-width: 900px; margin: 0 auto; }
 .about-text-full p { font-size: 1.1rem; text-align: justify; margin-bottom: 20px; color: var(--color-text-light); }
@@ -253,9 +332,6 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .circle-chart .meter { fill: none; stroke: var(--color-accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 0, 100; transition: stroke-dasharray 1s ease-out; }
 .percent-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2rem; font-weight: 700; }
 
-/* =======================================================
-   7. بخش‌های سوابق (Timeline & Cards)
-   ======================================================= */
 .timeline-box { position: relative; max-width: 900px; margin: 0 auto; }
 .timeline-box::after { content: ''; position: absolute; width: 4px; background: #e0e0e0; top: 0; bottom: 0; right: 50%; margin-right: -2px; }
 .timeline-row { position: relative; width: 50%; padding: 20px 40px; }
@@ -288,10 +364,10 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pub-badge { background: var(--color-accent); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.9rem; }
 
 /* =======================================================
-   8. بخش تماس و فوتر (Contact & Footer)
+   8. بخش تماس و فوتر
    ======================================================= */
 .bg-dark-blue { background-color: var(--color-bg-dark); color: white; }
-.contact-grid-layout { display: grid; grid-template-columns: 1fr; gap: 50px; } /* Changed to 1 column for layout adjustment */
+.contact-grid-layout { display: grid; grid-template-columns: 1fr; gap: 50px; }
 .contact-info-panel h3 { font-size: 2rem; margin-bottom: 20px; }
 .contact-info-panel > p { color: rgba(255,255,255,0.7); margin-bottom: 30px; }
 .contact-list-detailed li { display: flex; gap: 20px; margin-bottom: 30px; }
@@ -303,17 +379,16 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .sf-item:hover { background: var(--color-accent); }
 
 .glass-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 40px; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.1); }
-/* [دستور جدید 5] بازطراحی کامل استایل پنل نقشه برای تمام عرض شدن */
 .contact-map-panel {
-    width: 100vw; /* عرض کامل پنجره مرورگر */
+    width: 100vw; 
     position: relative;
     left: 50%;
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
-    border-radius: 0; /* حذف گردی گوشه‌ها */
-    padding: 0; /* حذف پدینگ برای چسبیدن کامل */
-    margin-top: 60px; /* فاصله از بالا */
+    border-radius: 0; 
+    padding: 0; 
+    margin-top: 60px; 
     border: none;
     border-top: 1px solid rgba(255,255,255,0.1);
 }
@@ -327,7 +402,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .copy-right { text-align: center; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
 
 /* =======================================================
-   9. واکنش‌گرایی (Responsive Design)
+   9. واکنش‌گرایی
    ======================================================= */
 @media (max-width: 1024px) {
     .hero-grid { grid-template-columns: 1fr; text-align: center; }
@@ -348,27 +423,31 @@ button { font-family: inherit; border: none; cursor: pointer; }
     .timeline-row.left { right: 0; text-align: right; }
     .timeline-row.left::after { right: 21px; }
     .timeline-row.right::after { right: 21px; }
-    /* Fix contact layout for responsive */
     .contact-grid-layout { grid-template-columns: 1fr; }
     .footer-content { flex-direction: column; gap: 40px; }
     .circles-container { flex-wrap: wrap; justify-content: center; }
 }
 
 /* =======================================================
-   12. استایل اختصاصی قالب PDF (بسیار مهم)
+   10. استایل اختصاصی قالب PDF (بسیار مهم: Fixed)
    ======================================================= */
 #pdf-template-root { display: none; }
+
+/* [دستور جدید 2] تنظیمات جلوگیری از شکستن صفحه */
 .pdf-a4-page { width: 210mm; min-height: 297mm; background: white; color: black; font-family: 'Vazirmatn'; display: flex; flex-direction: column; }
-.pdf-head { display: flex; justify-content: space-between; align-items: center; padding: 15mm; background: #f5f5f5; border-bottom: 2mm solid var(--color-primary); }
+.pdf-head { display: flex; justify-content: space-between; align-items: center; padding: 15mm; background: #f5f5f5; border-bottom: 2mm solid var(--color-primary); page-break-inside: avoid; }
 .pdf-name { font-size: 22pt; font-weight: 900; color: var(--color-primary-dark); }
 .pdf-job { font-size: 12pt; color: #333; }
 .pdf-reg-id { font-size: 10pt; color: #555; margin-top: 5px; }
 .pdf-head-img img { width: 30mm; height: 30mm; border-radius: 50%; border: 1mm solid var(--color-primary); }
 
 .pdf-content-body { display: flex; flex-grow: 1; }
-.pdf-sidebar-left { width: 70mm; background: #fafafa; padding: 10mm; }
+.pdf-sidebar-left { width: 70mm; background: #fafafa; padding: 10mm; page-break-inside: avoid; }
 .pdf-main-right { width: 140mm; padding: 10mm; }
-.pdf-sect { margin-bottom: 8mm; }
+
+/* کلاس‌های جلوگیری از شکستن ناقص */
+.pdf-sect, .pdf-block, .pdf-item-row { page-break-inside: avoid; break-inside: avoid; }
+
 .pdf-h3 { font-size: 12pt; font-weight: bold; color: var(--color-primary); border-bottom: 1px solid #ccc; padding-bottom: 2mm; margin-bottom: 3mm; display: flex; align-items: center; gap: 8px; }
 .pdf-txt { font-size: 9pt; line-height: 1.6; }
 .pdf-ul li { font-size: 9pt; margin-bottom: 1mm; }
@@ -381,4 +460,4 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pdf-info-col strong { font-size: 10pt; display: block; }
 .pdf-info-col span { font-size: 9pt; color: #666; }
 .pdf-info-col p { font-size: 8pt; margin-top: 1mm; }
-.pdf-foot { text-align: center; font-size: 8pt; color: #888; padding: 5mm; border-top: 1px solid #eee; margin-top: auto; }
+.pdf-foot { text-align: center; font-size: 8pt; color: #888; padding: 5mm; border-top: 1px solid #eee; margin-top: auto; page-break-before: auto; }
