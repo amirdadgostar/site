@@ -1,12 +1,11 @@
 /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.2 (FINAL FIX: Absolute Positioning for PDF Capture)
+ * VERSION: 4.3 (FIX: ABSOLUTE TOP POSITIONING)
  * DESCRIPTION: 
- *    - PDF generation logic now uses absolute positioning to ensure the element
- *      is captured from the top-left (0,0) of the viewport, solving vertical alignment issues.
- *    - This provides a stable and final solution for layout problems.
- *    - All other functionalities preserved.
+ *    - PDF Generation Logic REWRITTEN to use Absolute Positioning Clone.
+ *    - This FORCES the PDF to start at (0,0) ignoring scroll position.
+ *    - Solves the huge white space issue at top.
  */
 
 'use strict';
@@ -254,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - Final Fix)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - ABSOLUTE TOP FIX)
     // =======================================================
     window.generateFullPDF = function() {
         const btn = document.getElementById('btn-download-cv');
@@ -263,40 +262,47 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
         btn.disabled = true;
 
-        const element = document.getElementById('pdf-template-root');
-        if (!element) {
+        // 1. دریافت المان اصلی
+        const originalElement = document.getElementById('pdf-template-root');
+        
+        if (!originalElement) {
             showToast('خطا: قالب PDF یافت نشد.', 'error');
             resetPdfButton(btn, originalContent);
             return;
         }
 
-        // --- START: CRITICAL FIX ---
-        // Store original styles to restore them later
-        const originalStyles = {
-            display: element.style.display,
-            position: element.style.position,
-            top: element.style.top,
-            left: element.style.left,
-            zIndex: element.style.zIndex
-        };
+        // 2. ساخت کپی کامل (Clone) برای ایزوله کردن از اسکرول
+        const clone = originalElement.cloneNode(true);
+        
+        // 3. استایل‌دهی اجباری به کلون برای قرارگیری در بالای صفحه (0,0)
+        // این بخش حیاتی‌ترین قسمت برای حذف فضای سفید بالاست
+        clone.id = 'pdf-print-clone-temp'; // تغییر ID برای جلوگیری از تداخل
+        clone.style.display = 'block';
+        clone.style.position = 'absolute';
+        clone.style.top = '0px';
+        clone.style.left = '0px';
+        clone.style.width = '100%';
+        clone.style.zIndex = '-9999'; // مخفی زیر سایر المان‌ها
+        clone.style.background = '#ffffff';
 
-        // Temporarily apply styles to force top-left alignment for capture
-        element.style.display = 'block';
-        element.style.position = 'absolute';
-        element.style.top = '0';
-        element.style.left = '0';
-        element.style.zIndex = '-1'; // Place it behind everything
-        // --- END: CRITICAL FIX ---
+        // اضافه کردن کلون به ابتدای بادی
+        document.body.appendChild(clone);
 
+        // انتخاب محتوای داخلی برای پرینت
+        const elementToPrint = clone.querySelector('.pdf-wrapper-modern');
+
+        // 4. تنظیمات دقیق html2canvas برای نادیده گرفتن اسکرول
         const options = {
             margin: 0,
             filename: 'Dr-Sara-Radmanesh-CV.pdf',
-            image: { type: 'jpeg', quality: 1.0 },
+            image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
-                scale: 2,
+                scale: 2, 
                 useCORS: true,
-                logging: false,
-                scrollY: -window.scrollY // Ensure capture starts from the very top
+                scrollY: 0,  // !مهم! اسکرول عمودی را صفر در نظر می‌گیرد
+                scrollX: 0,
+                windowWidth: document.documentElement.offsetWidth, // عرض واقعی
+                logging: false
             },
             jsPDF: {
                 unit: 'mm',
@@ -305,22 +311,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Cleanup function to restore original styles
-        const cleanup = () => {
-            element.style.display = originalStyles.display;
-            element.style.position = originalStyles.position;
-            element.style.top = originalStyles.top;
-            element.style.left = originalStyles.left;
-            element.style.zIndex = originalStyles.zIndex;
+        // 5. اجرا و پاکسازی
+        html2pdf().set(options).from(elementToPrint).save().then(() => {
+            // حذف کلون بعد از اتمام کار
+            if(document.body.contains(clone)) {
+                document.body.removeChild(clone);
+            }
             resetPdfButton(btn, originalContent);
-        };
-
-        html2pdf().from(element).set(options).save().then(() => {
-            cleanup();
             showToast('رزومه با موفقیت دانلود شد.', 'success');
         }).catch(err => {
             console.error("PDF Generation Error:", err);
-            cleanup();
+            if(document.body.contains(clone)) {
+                document.body.removeChild(clone);
+            }
+            resetPdfButton(btn, originalContent);
             showToast('خطا در تولید فایل.', 'error');
         });
     };
