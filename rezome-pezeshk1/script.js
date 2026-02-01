@@ -1,11 +1,11 @@
 /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.0 (FIXED: VISIBLE RENDER & RTL COORDINATES)
- * DESCRIPTION: Definitive Logic.
- *              - FAB Button logic preserved.
- *              - vCard Toast message preserved.
- *              - PDF Logic: Uses 'Overlay' method to force html2canvas to render correctly.
+ * VERSION: 4.0 (FINAL FIX: MOBILE PDF & AMIRI FONT)
+ * DESCRIPTION: 
+ *    - PDF Generation Logic rewritten to FORCE 794px width on mobile.
+ *    - Solves the layout breaking issue on small screens.
+ *    - All previous functionalities (FAB, Toast, Preloader) preserved.
  */
 
 'use strict';
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - FIXED FOR A4/RTL)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - FORCE DESKTOP VIEWPORT FIX)
     // =======================================================
     window.generateFullPDF = function() {
         const fabBtn = document.getElementById('btn-download-cv'); 
@@ -274,84 +274,80 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // اسکرول به بالا برای جلوگیری از برش خوردن
-        window.scrollTo(0, 0);
-
-        // 2. ساخت کانتینر موقت روی صفحه (Overlay)
-        // این کار باعث می‌شود html2canvas بتواند المان را ببیند
-        const overlayDiv = document.createElement('div');
-        overlayDiv.id = 'temp-pdf-overlay';
-        overlayDiv.style.position = 'absolute'; // Absolute relative to body
-        overlayDiv.style.top = '0';
-        overlayDiv.style.left = '0';
-        overlayDiv.style.width = '100%';
-        overlayDiv.style.height = 'auto'; // اجازه رشد ارتفاع
-        overlayDiv.style.zIndex = '999999'; // بالاترین لایه
-        overlayDiv.style.backgroundColor = '#ffffff'; // پس زمینه سفید
-        overlayDiv.style.display = 'flex';
-        overlayDiv.style.justifyContent = 'center'; // وسط چین کردن محتوا
+        // 2. تکنیک کانتینر ایزوله با عرض ثابت (Fixed Width Isolation)
+        // این مهمترین بخش برای رفع مشکل موبایل است.
+        const cloneContainer = document.createElement('div');
         
-        // نکته مهم برای حل مشکل RTL:
-        // wrapper اصلی را LTR میکنیم تا مختصات از چپ (0,0) حساب شود
-        // اما داخلش دوباره RTL میکنیم.
-        overlayDiv.style.direction = 'ltr'; 
+        // تنظیمات استایل کانتینر والد
+        cloneContainer.style.position = 'absolute';
+        cloneContainer.style.left = '-9999px'; // خارج از دید
+        cloneContainer.style.top = '0';
+        // عرض A4 در 96DPI حدود 794 پیکسل است. ما عرض را فیکس می کنیم تا موبایل آن را فشرده نکند.
+        cloneContainer.style.width = '794px'; 
+        cloneContainer.style.minWidth = '794px';
+        cloneContainer.style.zIndex = '-1';
+        cloneContainer.style.margin = '0';
+        cloneContainer.style.padding = '0';
+        cloneContainer.style.background = '#ffffff';
 
-        // کپی محتوا
-        overlayDiv.innerHTML = originalTemplate.innerHTML;
+        // کپی کردن محتوای قالب
+        cloneContainer.innerHTML = originalTemplate.innerHTML;
         
-        // اضافه کردن به بادی
-        document.body.appendChild(overlayDiv);
+        // اضافه کردن به body برای رندر شدن
+        document.body.appendChild(cloneContainer);
 
-        // نمایش دادن wrapper داخلی
-        const wrapper = overlayDiv.querySelector('.pdf-wrapper-modern');
-        if(wrapper) {
-            wrapper.style.display = 'block';
+        // اطمینان از اینکه المان داخلی هم عرض کامل دارد
+        const elementToPrint = cloneContainer.querySelector('.pdf-wrapper-modern');
+        if(elementToPrint) {
+            elementToPrint.style.display = 'block'; 
+            elementToPrint.style.width = '100%'; // نسبت به والد 794 پیکسلی
         }
 
         // 3. تنظیمات html2pdf
         const options = {
             margin: 0,
-            filename: 'Dr-Sara-Radmanesh-Resume.pdf',
-            image: { type: 'jpeg', quality: 1 },
+            filename: 'Dr-Sara-Radmanesh-CV.pdf',
+            image: { type: 'jpeg', quality: 1 }, // بالاترین کیفیت
             html2canvas: {
-                scale: 2, 
+                scale: 2, // کیفیت بالا
                 useCORS: true,
                 logging: false,
                 scrollY: 0,
                 scrollX: 0,
-                windowWidth: 1024 // عرض ثابت برای رندر صحیح
+                windowWidth: 794, // فریب دادن canvas که فکر کند در دسکتاپ است
+                width: 794 // عرض دقیق ناحیه کپچر
             },
             jsPDF: {
                 unit: 'mm',
                 format: 'a4',
-                orientation: 'portrait'
+                orientation: 'portrait',
+                compress: true
             },
+            // جلوگیری از شکست بد
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
+        // 4. اجرا
         if (typeof html2pdf !== 'undefined') {
-            // مخفی کردن اسکرول بادی موقتا
-            document.body.style.overflow = 'hidden';
-
-            html2pdf().set(options).from(wrapper).save().then(() => {
-                showToast('دانلود رزومه انجام شد.', 'success');
+            html2pdf().set(options).from(elementToPrint).save().then(() => {
+                showToast('رزومه با موفقیت دانلود شد.', 'success');
                 // پاکسازی
-                document.body.removeChild(overlayDiv);
-                document.body.style.overflow = '';
+                document.body.removeChild(cloneContainer);
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             }).catch(err => {
-                console.error("PDF Failed:", err);
-                showToast('خطا در دانلود. لطفا مجدد تلاش کنید.', 'error');
-                if(document.body.contains(overlayDiv)) {
-                    document.body.removeChild(overlayDiv);
+                console.error("PDF Generation Error:", err);
+                showToast('خطا در تولید فایل.', 'error');
+                if(document.body.contains(cloneContainer)) {
+                    document.body.removeChild(cloneContainer);
                 }
-                document.body.style.overflow = '';
                 if (fabBtn) resetPdfButton(fabBtn, originalIcon);
             });
         } else {
-            console.error("Lib missing");
-            showToast('کتابخانه لود نشد.', 'error');
-            if(document.body.contains(overlayDiv)) document.body.removeChild(overlayDiv);
+            console.error("Library not loaded.");
+            showToast('کتابخانه PDF لود نشد.', 'error');
+            if(document.body.contains(cloneContainer)) {
+                document.body.removeChild(cloneContainer);
+            }
             if (fabBtn) resetPdfButton(fabBtn, originalIcon);
         }
     };
