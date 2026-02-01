@@ -1,11 +1,11 @@
-/**
+ /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 5.0 (FINAL FIX: RTL & LAYOUT SHIFT)
+ * VERSION: 4.1 (REVISED: Simplified PDF Generation Logic)
  * DESCRIPTION: 
- *    - PDF Generation Logic completely rewritten to solve the right-side cut-off issue.
- *    - Implemented "Fixed Position + LTR Wrapper" trick to handle html2canvas RTL bug.
- *    - All previous functionalities (FAB, Toast, Preloader) preserved.
+ *    - PDF Generation logic rewritten to be simpler and more reliable.
+ *    - Relies on CSS for layout and dimensions, removing complex JS workarounds.
+ *    - All other functionalities (FAB, Toast, Preloader) preserved.
  */
 
 'use strict';
@@ -253,104 +253,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF (REWRITTEN: FIXED POSITION + LTR WRAPPER TRICK)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - Simplified)
     // =======================================================
     window.generateFullPDF = function() {
-        const fabBtn = document.getElementById('btn-download-cv'); 
-        let originalIcon = '';
-        
-        if (fabBtn) {
-            originalIcon = fabBtn.innerHTML;
-            fabBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
-            fabBtn.disabled = true;
-        }
+        const btn = document.getElementById('btn-download-cv');
+        if (!btn) return;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
+        btn.disabled = true;
 
-        // 1. دریافت قالب اصلی
-        const originalTemplate = document.getElementById('pdf-template-root');
-        
-        if (!originalTemplate) {
+        // 1. Get the element to print
+        const element = document.getElementById('pdf-template-root');
+        if (!element) {
             showToast('خطا: قالب PDF یافت نشد.', 'error');
-            if (fabBtn) resetPdfButton(fabBtn, originalIcon);
+            resetPdfButton(btn, originalContent);
             return;
         }
 
-        // 2. ساخت کانتینر اصلی
-        // نکته مهم: استفاده از LTR برای کانتینر مادر تا مختصات به هم نریزد
-        const cloneContainer = document.createElement('div');
-        
-        // استایل‌های حیاتی برای رفع باگ شیفت خوردن
-        cloneContainer.style.position = 'fixed'; // فیکس کردن در 0،0
-        cloneContainer.style.top = '0';
-        cloneContainer.style.left = '0';
-        cloneContainer.style.width = '794px'; // عرض دقیق A4
-        cloneContainer.style.zIndex = '-9999'; // پشت همه المان‌ها
-        cloneContainer.style.direction = 'ltr'; // ترفند: اجبار به LTR برای محاسبه صحیح مختصات
-        cloneContainer.style.margin = '0';
-        cloneContainer.style.padding = '0';
-        cloneContainer.style.background = '#ffffff';
+        // 2. Temporarily make it visible for html2pdf to capture it correctly
+        element.style.display = 'block';
 
-        // کپی کردن محتوا درون کانتینر
-        cloneContainer.innerHTML = originalTemplate.innerHTML;
-        
-        // اضافه کردن به body
-        document.body.appendChild(cloneContainer);
-
-        // تنظیم المان داخلی برای نمایش صحیح RTL
-        const elementToPrint = cloneContainer.querySelector('.pdf-wrapper-modern');
-        if(elementToPrint) {
-            elementToPrint.style.display = 'block'; 
-            elementToPrint.style.width = '100%';
-            elementToPrint.style.direction = 'rtl'; // محتوای داخلی راست‌چین باقی بماند
-        }
-
-        // 3. تنظیمات html2pdf برای حذف کامل مارجین‌ها و تطبیق عرض
         const options = {
-            margin: 0, // حذف مارجین‌های اضافی
+            margin: 0,
             filename: 'Dr-Sara-Radmanesh-CV.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
+            image: { type: 'jpeg', quality: 1.0 },
             html2canvas: {
-                scale: 2, 
+                scale: 2, // For better quality
                 useCORS: true,
-                logging: false,
-                scrollY: 0,
-                scrollX: 0,
-                windowWidth: 794, // اجبار به عرض دسکتاپ
-                width: 794,       // محدود کردن عرض کپچر
-                x: 0,             // شروع دقیق از مختصات صفر
-                y: 0
+                logging: false
             },
             jsPDF: {
                 unit: 'mm',
                 format: 'a4',
-                orientation: 'portrait',
-                compress: true
-            },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                orientation: 'portrait'
+            }
         };
 
-        // 4. اجرا
-        if (typeof html2pdf !== 'undefined') {
-            html2pdf().set(options).from(cloneContainer).save().then(() => {
-                showToast('رزومه با موفقیت دانلود شد.', 'success');
-                // پاکسازی
-                document.body.removeChild(cloneContainer);
-                if (fabBtn) resetPdfButton(fabBtn, originalIcon);
-            }).catch(err => {
-                console.error("PDF Generation Error:", err);
-                showToast('خطا در تولید فایل.', 'error');
-                if(document.body.contains(cloneContainer)) {
-                    document.body.removeChild(cloneContainer);
-                }
-                if (fabBtn) resetPdfButton(fabBtn, originalIcon);
-            });
-        } else {
-            console.error("Library not loaded.");
-            showToast('کتابخانه PDF لود نشد.', 'error');
-            if(document.body.contains(cloneContainer)) {
-                document.body.removeChild(cloneContainer);
-            }
-            if (fabBtn) resetPdfButton(fabBtn, originalIcon);
-        }
+        // 3. Run html2pdf and cleanup afterwards
+        html2pdf().from(element).set(options).save().then(() => {
+            element.style.display = 'none'; // Hide it back
+            resetPdfButton(btn, originalContent);
+            showToast('رزومه با موفقیت دانلود شد.', 'success');
+        }).catch(err => {
+            console.error("PDF Generation Error:", err);
+            element.style.display = 'none'; // Hide it back on error
+            resetPdfButton(btn, originalContent);
+            showToast('خطا در تولید فایل.', 'error');
+        });
     };
 
     function resetPdfButton(btn, originalContent) {
