@@ -1,11 +1,11 @@
-/**
+   /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.3 (FIX: ABSOLUTE TOP POSITIONING)
+ * VERSION: 4.2 (CRITICAL FIX: Vertical Offset Elimination)
  * DESCRIPTION: 
- *    - PDF Generation Logic REWRITTEN to use Absolute Positioning Clone.
- *    - This FORCES the PDF to start at (0,0) ignoring scroll position.
- *    - Solves the huge white space issue at top.
+ *    - PDF Generation logic revised to enforce scrollY=0 for html2canvas.
+ *    - This resolves the issue where PDF content starts far down the page (vertical offset).
+ *    - All other functionalities (FAB, Toast, Preloader) preserved.
  */
 
 'use strict';
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - ABSOLUTE TOP FIX)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - Vertical Offset Fix)
     // =======================================================
     window.generateFullPDF = function() {
         const btn = document.getElementById('btn-download-cv');
@@ -262,47 +262,31 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
         btn.disabled = true;
 
-        // 1. دریافت المان اصلی
-        const originalElement = document.getElementById('pdf-template-root');
-        
-        if (!originalElement) {
+        // 1. Get the element to print
+        const element = document.getElementById('pdf-template-root');
+        if (!element) {
             showToast('خطا: قالب PDF یافت نشد.', 'error');
             resetPdfButton(btn, originalContent);
             return;
         }
 
-        // 2. ساخت کپی کامل (Clone) برای ایزوله کردن از اسکرول
-        const clone = originalElement.cloneNode(true);
-        
-        // 3. استایل‌دهی اجباری به کلون برای قرارگیری در بالای صفحه (0,0)
-        // این بخش حیاتی‌ترین قسمت برای حذف فضای سفید بالاست
-        clone.id = 'pdf-print-clone-temp'; // تغییر ID برای جلوگیری از تداخل
-        clone.style.display = 'block';
-        clone.style.position = 'absolute';
-        clone.style.top = '0px';
-        clone.style.left = '0px';
-        clone.style.width = '100%';
-        clone.style.zIndex = '-9999'; // مخفی زیر سایر المان‌ها
-        clone.style.background = '#ffffff';
+        // Save current window scroll position to restore later
+        const initialY = window.scrollY;
 
-        // اضافه کردن کلون به ابتدای بادی
-        document.body.appendChild(clone);
+        // 2. Temporarily make it visible for html2pdf to capture it correctly
+        element.style.display = 'block';
 
-        // انتخاب محتوای داخلی برای پرینت
-        const elementToPrint = clone.querySelector('.pdf-wrapper-modern');
-
-        // 4. تنظیمات دقیق html2canvas برای نادیده گرفتن اسکرول
         const options = {
             margin: 0,
             filename: 'Dr-Sara-Radmanesh-CV.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
+            image: { type: 'jpeg', quality: 1.0 },
             html2canvas: {
-                scale: 2, 
+                scale: 2, // For better quality
                 useCORS: true,
-                scrollY: 0,  // !مهم! اسکرول عمودی را صفر در نظر می‌گیرد
-                scrollX: 0,
-                windowWidth: document.documentElement.offsetWidth, // عرض واقعی
-                logging: false
+                logging: false,
+                // *** CRITICAL FIX: Explicitly set scroll to 0 to prevent vertical offset/whitespace issue ***
+                scrollY: 0, 
+                scrollX: 0
             },
             jsPDF: {
                 unit: 'mm',
@@ -311,19 +295,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // 5. اجرا و پاکسازی
-        html2pdf().set(options).from(elementToPrint).save().then(() => {
-            // حذف کلون بعد از اتمام کار
-            if(document.body.contains(clone)) {
-                document.body.removeChild(clone);
-            }
+        // 3. Run html2pdf and cleanup afterwards
+        html2pdf().from(element).set(options).save().then(() => {
+            element.style.display = 'none'; // Hide it back
+            // Restore window scroll position
+            window.scrollTo(0, initialY); 
             resetPdfButton(btn, originalContent);
             showToast('رزومه با موفقیت دانلود شد.', 'success');
         }).catch(err => {
             console.error("PDF Generation Error:", err);
-            if(document.body.contains(clone)) {
-                document.body.removeChild(clone);
-            }
+            element.style.display = 'none'; // Hide it back on error
+            // Restore window scroll position
+            window.scrollTo(0, initialY);
             resetPdfButton(btn, originalContent);
             showToast('خطا در تولید فایل.', 'error');
         });
