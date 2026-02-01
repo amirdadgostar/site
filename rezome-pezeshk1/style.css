@@ -443,7 +443,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
     background-color: white;
     font-family: 'Amiri', 'Times New Roman', serif !important; /* فونت امیری */
     color: #000000; /* مشکی خالص */
-    margin: 0 auto; /* تغییر قبلی برای وسط چین کردن افقی */
+    margin: 0 auto; /* اصلاح برای وسط‌چین شدن افقی */
     padding: 0;
     box-sizing: border-box;
     text-align: right;
@@ -543,16 +543,31 @@ button { font-family: inherit; border: none; cursor: pointer; }
 
 .pdf-skills-list {
     text-align: right;
-    padding-right: 5mm;
-    list-style: disc;
+    padding: 0; /* حذف پدینگ راست */
+    list-style: none; /* حذف دایره‌های پیش‌فرض */
     color: #ffffff;
     font-size: 10pt;
     line-height: 2; /* فاصله خطوط زیاد */
     margin: 0;
     font-family: 'Amiri', serif;
-    direction: rtl; /* تغییر: اطمینان از راست به چپ بودن لیست */
 }
-.pdf-skills-list li { margin-bottom: 3mm; }
+/* ایجاد Bullet Point در سمت راست */
+.pdf-skills-list li { 
+    margin-bottom: 3mm; 
+    position: relative;
+    padding-right: 10px; /* فضای خالی برای بولت */
+    text-align: right;
+}
+.pdf-skills-list li::before {
+    content: '•'; /* استفاده از کاراکتر دایره توپر */
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 10pt;
+    line-height: 1.7;
+    color: var(--color-accent); /* رنگ بولت را طلایی می‌کنیم */
+}
+
 
 .pdf-lang-item {
     text-align: right;
@@ -654,6 +669,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .pdf-item-row-modern {
     display: flex;
     margin-bottom: 8mm; /* فاصله بیشتر بین آیتم‌ها */
+    align-items: flex-start; /* FIX: برای حل مشکل تداخل عمودی */
 }
 
 .pdf-date-col-modern {
@@ -662,12 +678,12 @@ button { font-family: inherit; border: none; cursor: pointer; }
     font-weight: bold;
     color: #000000;
     padding-top: 2px;
-    flex-shrink: 0;
+    flex-shrink: 0; /* FIX: تاریخ فشرده نشود */
     font-family: 'Amiri', serif;
 }
 
 .pdf-details-col-modern {
-    flex: 1;
+    flex-grow: 1; /* FIX: اجازه رشد به ستون جزئیات */
     border-right: 2px solid #ccc;
     padding-right: 5mm;
 }
@@ -689,12 +705,32 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .pdf-details-col-modern ul {
-    padding-right: 5mm;
-    list-style: disc;
+    padding: 0; /* حذف پدینگ پیش‌فرض */
+    list-style: none; /* حذف دایره‌های پیش‌فرض */
     margin: 0;
-    direction: rtl; /* تغییر: جهت نوشتاری را برای لیست‌های اصلی اجباری می‌کند */
 }
-.pdf-details-col-modern ul li, .pdf-details-col-modern p {
+.pdf-details-col-modern ul li {
+    font-size: 11pt;
+    color: #000000;
+    margin-bottom: 2mm;
+    line-height: 1.7;
+    font-family: 'Amiri', serif;
+    text-align: right; /* FIX: تغییر از justify برای جلوگیری از تداخل */
+    position: relative;
+    padding-right: 12px; /* فضا برای بولت */
+}
+/* ایجاد Bullet Point در سمت راست */
+.pdf-details-col-modern ul li::before {
+    content: '•'; 
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 14pt;
+    line-height: 1.3;
+    color: #000000;
+}
+
+.pdf-details-col-modern p {
     font-size: 11pt;
     color: #000000;
     margin-bottom: 2mm;
@@ -707,8 +743,6 @@ button { font-family: inherit; border: none; cursor: pointer; }
     list-style: none;
     padding: 0;
     margin: 0;
-    direction: rtl; /* تغییر: جهت نوشتاری را برای لیست افتخارات اجباری می‌کند */
-    text-align: right; /* تغییر: اطمینان از ترازبندی صحیح متن */
 }
 .pdf-honors-list li {
     position: relative;
