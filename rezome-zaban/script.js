@@ -1,4 +1,14 @@
 
+   /**
+ * FILENAME: script.js
+ * PROJECT: Master Teacher Portal (Final Fix)
+ * VERSION: 7.0 (Fixed Loading Logic & Modern Modal)
+ * DESCRIPTION: 
+ *    - Preloader logic fixed: Now allows access immediately after animation, doesn't wait for heavy assets.
+ *    - Modal Logic preserved.
+ *    - Form Logic removed (as requested).
+ *    - PDF & vCard logic preserved.
+ */
 
 'use strict';
 
@@ -24,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const allSections = document.querySelectorAll('.section');
     const circleCharts = document.querySelectorAll('.circle-chart');
     
-    // انتخابگرهای مودال تماس (جدید)
+    // انتخابگرهای مودال تماس
     const contactModal = document.getElementById('contact-modal-overlay');
-    const openContactBtns = document.querySelectorAll('.btn-open-contact'); // تمام دکمه‌هایی که باید مودال را باز کنند
+    const openContactBtns = document.querySelectorAll('.btn-open-contact');
     const closeContactBtn = document.querySelector('.close-modal-btn');
 
 
@@ -34,40 +44,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. تابع اصلی راه‌اندازی (Main Initializer)
     // =======================================================
     function initializePortal() {
-        handleGuaranteedPreloader();
+        handleFastPreloader(); // منطق جدید و سریع لودینگ
         setupEventListeners();
         setupScrollBehavior();
         setupAnimations();
         setupFabMenuBehavior();
-        setupContactModal(); // راه‌اندازی مودال
+        setupContactModal();
     }
 
 
     // =======================================================
-    // 3. منطق لودینگ (Preloader Logic)
+    // 3. منطق لودینگ سریع و ایمن (Fixed Preloader Logic)
     // =======================================================
-    function handleGuaranteedPreloader() {
+    function handleFastPreloader() {
         if (!preloader) {
             document.body.classList.remove('loading-active');
             return;
         }
 
-        const GUARANTEED_EXIT_TIME = 2500; 
+        // مدت زمان انیمیشن پر شدن نوار (سریع‌تر شده)
+        const ANIMATION_TIME = 1500; 
 
         const progressBar = preloader.querySelector('.progress-fill');
         if (progressBar) {
-            progressBar.style.transition = `width ${GUARANTEED_EXIT_TIME}ms ease-out`;
-            progressBar.style.width = '100%';
+            // شروع انیمیشن پر شدن
+            requestAnimationFrame(() => {
+                progressBar.style.width = '100%';
+            });
         }
 
+        // اجبار به بستن لودینگ بعد از زمان مشخص (بدون توجه به لود شدن عکس‌های سنگین)
         setTimeout(() => {
-            preloader.style.opacity = '0';
-            document.body.classList.remove('loading-active');
+            closePreloader();
+        }, ANIMATION_TIME);
 
-            preloader.addEventListener('transitionend', () => {
-                preloader.remove();
-            }, { once: true });
-        }, GUARANTEED_EXIT_TIME);
+        // تابع بستن لودینگ
+        function closePreloader() {
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+            document.body.classList.remove('loading-active');
+            
+            // حذف کامل از DOM بعد از محو شدن
+            setTimeout(() => {
+                if(preloader.parentNode) {
+                    preloader.parentNode.removeChild(preloader);
+                }
+            }, 500);
+        }
     }
 
 
@@ -77,13 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupFabMenuBehavior() {
         if (!fabMainBtn || !fabMenuContainer) return;
 
-        // نمایش بج (عدد) بعد از 10 ثانیه
+        // نمایش بج (عدد) بعد از 5 ثانیه
         setTimeout(() => {
             if (fabBadge) {
                 fabBadge.classList.add('show');
                 playSoftNotificationSound();
             }
-        }, 10000); 
+        }, 5000); 
 
         // کلیک روی دکمه برای باز/بسته کردن منو
         fabMainBtn.addEventListener('click', (e) => {
@@ -152,32 +175,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileNavLinks) {
             mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
         }
-        // Listener فرم حذف شد چون خود فرم حذف شده است
     }
 
     // =======================================================
-    // 5.1. مدیریت مودال تماس (Contact Modal Logic) - جدید
+    // 5.1. مدیریت مودال تماس (Contact Modal Logic)
     // =======================================================
     function setupContactModal() {
         if (!contactModal) return;
 
-        // باز کردن مودال با کلیک روی دکمه‌های مربوطه
         openContactBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 contactModal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // جلوگیری از اسکرول صفحه
+                document.body.style.overflow = 'hidden';
             });
         });
 
-        // بستن مودال با دکمه ضربدر
         if (closeContactBtn) {
             closeContactBtn.addEventListener('click', () => {
                 closeContactModal();
             });
         }
 
-        // بستن مودال با کلیک بیرون از باکس
         contactModal.addEventListener('click', (e) => {
             if (e.target === contactModal) {
                 closeContactModal();
@@ -287,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - Text Overlap Fixed)
+    // 9. تولید PDF حرفه‌ای
     // =======================================================
     window.generateFullPDF = function() {
         const btn = document.getElementById('btn-download-cv');
@@ -296,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پردازش...';
         btn.disabled = true;
 
-        // 1. Get the element to print
         const element = document.getElementById('pdf-template-root');
         if (!element) {
             showToast('خطا: قالب PDF یافت نشد.', 'error');
@@ -304,23 +322,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Save current window scroll position to restore later
         const initialY = window.scrollY;
-
-        // 2. Temporarily make it visible for html2pdf to capture it correctly
         element.style.display = 'block';
 
         const options = {
             margin: 0,
-            filename: 'Tutor-Maryam-Kaviani-CV.pdf', // Updated Name
+            filename: 'Tutor-Maryam-Kaviani-CV.pdf',
             image: { type: 'jpeg', quality: 1.0 },
             html2canvas: {
-                scale: 2, // For better quality
+                scale: 2, 
                 useCORS: true,
                 logging: false,
-                // *** FIX: Enable letter rendering to prevent text overlap ***
                 letterRendering: true,
-                // *** CRITICAL FIX: Explicitly set scroll to 0 to prevent vertical offset/whitespace issue ***
                 scrollY: 0, 
                 scrollX: 0
             },
@@ -331,17 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // 3. Run html2pdf and cleanup afterwards
         html2pdf().from(element).set(options).save().then(() => {
-            element.style.display = 'none'; // Hide it back
-            // Restore window scroll position
+            element.style.display = 'none'; 
             window.scrollTo(0, initialY); 
             resetPdfButton(btn, originalContent);
             showToast('رزومه با موفقیت دانلود شد.', 'success');
         }).catch(err => {
             console.error("PDF Generation Error:", err);
-            element.style.display = 'none'; // Hide it back on error
-            // Restore window scroll position
+            element.style.display = 'none'; 
             window.scrollTo(0, initialY);
             resetPdfButton(btn, originalContent);
             showToast('خطا در تولید فایل.', 'error');
@@ -359,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 10. دانلود کارت ویزیت (vCard Generation - Updated for Tutor)
+    // 10. دانلود کارت ویزیت
     // =======================================================
     window.downloadVCard = function() {
         const vCardString = [
@@ -391,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 12. سیستم نوتیفیکیشن (Toast Notifications)
+    // 11. سیستم نوتیفیکیشن (Toast Notifications)
     // =======================================================
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
@@ -401,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bottom: '30px',
             left: '50%',
             transform: 'translate(-50%, 150%)',
-            backgroundColor: type === 'success' ? '#4f46e5' : '#ef4444', // Updated color to Indigo
+            backgroundColor: type === 'success' ? '#4f46e5' : '#ef4444',
             color: 'white',
             padding: '15px 25px',
             borderRadius: '50px',
@@ -417,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
-        . = `<i class="fa-solid ${iconClass}"></ispan>${}</span>`;
+        toast.innerHTML = `<i class="fa-solid ${iconClass}"></i><span>${message}</span>`;
         
         document.body.appendChild(toast);
 
