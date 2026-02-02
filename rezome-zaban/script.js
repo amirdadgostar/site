@@ -1,15 +1,4 @@
 
-   /**
- * FILENAME: script.js
- * PROJECT: Master Teacher Portal (Rebranded)
- * VERSION: 6.0 (Contact Modal & UI Fixes)
- * DESCRIPTION: 
- *    - PDF Generation logic revised to enforce scrollY=0 for html2canvas.
- *    - Added Contact Modal Logic.
- *    - Removed Form Listener (Form deleted per request).
- *    - All other functionalities (FAB, Toast, Preloader, Sticky Header) preserved exactly.
- *    - vCard data updated for Language Instructor.
- */
 
 'use strict';
 
@@ -428,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
-        toast.innerHTML = `<i class="fa-solid ${iconClass}"></i><span>${message}</span>`;
+        . = `<i class="fa-solid ${iconClass}"></ispan>${}</span>`;
         
         document.body.appendChild(toast);
 
