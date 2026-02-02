@@ -1,12 +1,9 @@
 
-
-
-
 /*
-    : style.css
-    : Master Teacher Portal
-    : 6.0 (Contact Modal & UI Polish)
-    : Modern EdTech theme with fixed layout issues and new Modal.
+    FILENAME: style.css
+    PROJECT: Master Teacher Portal
+    VERSION: 7.0 (Fixed Loading & Modern Modal)
+    DESCRIPTION: Modern EdTech theme with fixed layout issues and new Glassmorphism Modal.
 */
 
 /* =======================================================
@@ -96,8 +93,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .loader-name-fa { font-size: 1.2rem; color: var(--color-primary); margin: 5px 0 10px; font-weight: 500; }
 .loader-status { font-size: 0.9rem; color: var(--color-text-light); }
 .progress-bar-wrapper { width: 200px; height: 5px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
-.progress-fill { width: 0; height: 100%; background: var(--color-primary); animation: fillProgress 2s ease-out forwards; }
-@keyframes fillProgress { from {width: 0;} to {width: 100%;} }
+.progress-fill { width: 0; height: 100%; background: var(--color-primary); transition: width 0.2s ease; }
 
 
 /* =======================================================
@@ -353,10 +349,11 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .sb-track { width: 100%; height: 10px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
 .sb-fill { height: 100%; background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%); border-radius: 10px; }
 
+/* اصلاح چارت‌های دایره‌ای */
 .circles-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
 .circle-item { text-align: center; flex: 1 1 120px; max-width: 150px; }
 .circle-chart { position: relative; width: 120px; height: 120px; margin-bottom: 20px; margin-left: auto; margin-right: auto; }
-/* اصلاح بریده شدن چارت: اضافه کردن padding به SVG یا container */
+
 .circle-chart svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
 .circle-chart .bg { fill: none; stroke: #f1f5f9; stroke-width: 6; }
 .circle-chart .meter { fill: none; stroke: var(--color-accent); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0, 100; transition: stroke-dasharray 1.5s ease-out; }
@@ -440,22 +437,24 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .c-text strong { display: block; font-size: 1.1rem; margin-bottom: 5px; }
 .c-text span { color: rgba(255,255,255,0.6); display: block; font-size: 0.95rem; }
 
-/* استایل مودال تماس (Contact Modal CSS) */
+/* =======================================================
+   استایل مدرن و زیبای مودال تماس (Glassmorphism)
+   ======================================================= */
 .contact-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px); /* بلور شدن پس زمینه */
     z-index: 10002;
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .contact-modal-overlay.active {
@@ -463,110 +462,137 @@ button { font-family: inherit; border: none; cursor: pointer; }
     visibility: visible;
 }
 
-.contact-modal-box {
-    background: white;
+.contact-modal-modern {
     width: 90%;
-    max-width: 500px;
-    border-radius: var(--radius-lg);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 600px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     overflow: hidden;
+    transform: translateY(30px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.5);
 }
 
-.contact-modal-overlay.active .contact-modal-box {
-    transform: scale(1);
+.contact-modal-overlay.active .contact-modal-modern {
+    transform: translateY(0) scale(1);
 }
 
-.contact-modal-header {
-    background: #f8fafc;
-    padding: 20px;
-    border-bottom: 1px solid #e2e8f0;
+.modal-modern-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    padding: 25px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: white;
 }
 
-.contact-modal-header h3 {
+.modal-modern-header h3 {
     margin: 0;
-    color: var(--color-text-dark);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-weight: 700;
 }
 
 .close-modal-btn {
-    background: transparent;
+    background: rgba(255,255,255,0.2);
     border: none;
-    font-size: 1.5rem;
-    color: var(--color-text-light);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .close-modal-btn:hover {
-    color: var(--color-error);
+    background: rgba(255,255,255,0.4);
     transform: rotate(90deg);
 }
 
-.contact-modal-body {
+.modal-modern-body {
     padding: 30px;
-    text-align: center;
 }
 
-.contact-modal-body p {
+.modal-intro {
+    text-align: center;
     color: var(--color-text-light);
     margin-bottom: 25px;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
-.contact-options-grid {
+.contact-grid-modern {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 20px;
 }
 
-.contact-option-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 12px;
+.c-card {
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
     transition: all 0.3s ease;
     text-decoration: none;
-    gap: 10px;
-    color: var(--color-text-dark);
+    position: relative;
+    overflow: hidden;
 }
 
-.contact-option-btn i {
-    font-size: 1.8rem;
+.c-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.c-icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     transition: 0.3s;
 }
 
-.contact-option-btn span {
-    font-size: 0.9rem;
-    font-weight: 600;
+.c-info {
+    display: flex;
+    flex-direction: column;
 }
 
-.contact-option-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+.c-title {
+    font-weight: 700;
+    color: var(--color-text-dark);
+    font-size: 1rem;
+    margin-bottom: 4px;
 }
 
-/* رنگ بندی دکمه‌های مودال */
-.contact-option-btn.office:hover { background: #eef2ff; border-color: var(--color-primary); color: var(--color-primary); }
-.contact-option-btn.office i { color: var(--color-primary); }
+.c-sub {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+}
 
-.contact-option-btn.personal:hover { background: #f0fdf4; border-color: var(--color-success); color: var(--color-success); }
-.contact-option-btn.personal i { color: var(--color-success); }
+/* استایل اختصاصی کارت‌ها */
+.c-office .c-icon-box { background: #e0e7ff; color: var(--color-primary); }
+.c-office:hover { border-color: var(--color-primary); background: #eef2ff; }
 
-.contact-option-btn.whatsapp:hover { background: #dcfce7; border-color: #25D366; color: #166534; }
-.contact-option-btn.whatsapp i { color: #25D366; }
+.c-personal .c-icon-box { background: #fee2e2; color: #ef4444; }
+.c-personal:hover { border-color: #ef4444; background: #fef2f2; }
 
-.contact-option-btn.telegram:hover { background: #e0f2fe; border-color: #229ED9; color: #075985; }
-.contact-option-btn.telegram i { color: #229ED9; }
+.c-whatsapp .c-icon-box { background: #dcfce7; color: #22c55e; }
+.c-whatsapp:hover { border-color: #22c55e; background: #f0fdf4; }
+
+.c-telegram .c-icon-box { background: #e0f2fe; color: #0ea5e9; }
+.c-telegram:hover { border-color: #0ea5e9; background: #f0f9ff; }
 
 
 .social-footer { display: flex; gap: 15px; margin-top: 30px; }
@@ -611,14 +637,14 @@ button { font-family: inherit; border: none; cursor: pointer; }
     
     /* اصلاح هدر موبایل: دکمه تماس و منو در کنار هم و مرتب */
     .header-controls {
-        gap: 10px;
+        gap: 15px;
     }
     .btn-call {
-        padding: 8px 15px;
-        font-size: 0.8rem;
+        padding: 8px 16px;
+        font-size: 0.85rem;
     }
     .main-header {
-        padding: 0 10px;
+        padding: 0 15px;
     }
 }
 
@@ -632,17 +658,15 @@ button { font-family: inherit; border: none; cursor: pointer; }
     .timeline-row.right::after { right: 21px; }
     .contact-grid-layout { grid-template-columns: 1fr; }
     .footer-content { flex-direction: column; gap: 40px; }
-    .circles-container { flex-wrap: wrap; justify-content: center; }
     
-    /* تنظیمات خاص موبایل برای مودال */
-    .contact-options-grid {
+    /* اصلاح شبکه مودال در موبایل */
+    .contact-grid-modern {
         grid-template-columns: 1fr;
     }
 }
 
 /* =======================================================
    11. استایل اختصاصی قالب PDF جدید 
-   (مدرن، فونت امیری، بهینه برای چاپ، تم آموزشی)
    ======================================================= */
 #pdf-template-root { 
     display: none; 
@@ -999,4 +1023,3 @@ button { font-family: inherit; border: none; cursor: pointer; }
     margin: 0;
     padding: 0;
 }
-```
