@@ -1,11 +1,10 @@
-
    /**
  * FILENAME: script.js
  * PROJECT: Dr. Radmanesh - Ultimate Professional Portal
- * VERSION: 4.2 (CRITICAL FIX: Vertical Offset Elimination)
+ * VERSION: 4.3 (SEO & PDF FIX)
  * DESCRIPTION: 
  *    - PDF Generation logic revised to enforce scrollY=0 for html2canvas.
- *    - This resolves the issue where PDF content starts far down the page (vertical offset).
+ *    - Added letterRendering: true to html2canvas options to fix text overlap.
  *    - All other functionalities (FAB, Toast, Preloader) preserved.
  */
 
@@ -254,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 9. تولید PDF حرفه‌ای (Resume Generation - Vertical Offset Fix)
+    // 9. تولید PDF حرفه‌ای (Resume Generation - Text Overlap Fixed)
     // =======================================================
     window.generateFullPDF = function() {
         const btn = document.getElementById('btn-download-cv');
@@ -285,6 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 scale: 2, // For better quality
                 useCORS: true,
                 logging: false,
+                // *** FIX: Enable letter rendering to prevent text overlap ***
+                letterRendering: true,
                 // *** CRITICAL FIX: Explicitly set scroll to 0 to prevent vertical offset/whitespace issue ***
                 scrollY: 0, 
                 scrollX: 0
