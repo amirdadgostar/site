@@ -1,8 +1,12 @@
+
+
+
+
 /*
-    FILENAME: style.css
-    PROJECT: Master Teacher Portal
-    VERSION: 6.0 (Contact Modal & UI Polish)
-    DESCRIPTION: Modern EdTech theme with fixed layout issues and new Modal.
+    : style.css
+    : Master Teacher Portal
+    : 6.0 (Contact Modal & UI Polish)
+    : Modern EdTech theme with fixed layout issues and new Modal.
 */
 
 /* =======================================================
@@ -995,3 +999,4 @@ button { font-family: inherit; border: none; cursor: pointer; }
     margin: 0;
     padding: 0;
 }
+```
