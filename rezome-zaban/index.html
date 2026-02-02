@@ -136,20 +136,21 @@
                 <button class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-modern-body">
-                <p class="modal-intro">جهت رزرو کلاس یا دریافت مشاوره تخصصی، لطفاً یکی از روش‌های زیر را انتخاب کنید:</p>
+                <p class="modal-intro">لطفاً یکی از روش‌های زیر را انتخاب کنید:</p>
+                <!-- ویرایش شده: گرید جمع و جور با متن های جدید -->
                 <div class="contact-grid-modern">
                     <a href="tel:02188888888" class="c-card c-office">
-                        <div class="c-icon-box"><i class="fa-solid fa-phone-office"></i></div>
+                        <div class="c-icon-box"><i class="fa-solid fa-building"></i></div>
                         <div class="c-info">
-                            <span class="c-title">تماس با دفتر</span>
-                            <span class="c-sub">8 صبح تا 8 شب</span>
+                            <span class="c-title">دفتر</span>
+                            <span class="c-sub">021-88888888</span>
                         </div>
                     </a>
                     <a href="tel:09120000000" class="c-card c-personal">
                         <div class="c-icon-box"><i class="fa-solid fa-mobile-screen-button"></i></div>
                         <div class="c-info">
-                            <span class="c-title">تماس با استاد</span>
-                            <span class="c-sub">خط مستقیم</span>
+                            <span class="c-title">موبایل</span>
+                            <span class="c-sub">0912-0000000</span>
                         </div>
                     </a>
                     <a href="https://wa.me/989120000000" target="_blank" class="c-card c-whatsapp">
@@ -163,7 +164,7 @@
                         <div class="c-icon-box"><i class="fa-brands fa-telegram"></i></div>
                         <div class="c-info">
                             <span class="c-title">تلگرام</span>
-                            <span class="c-sub">پشتیبانی آنلاین</span>
+                            <span class="c-sub">پشتیبانی</span>
                         </div>
                     </a>
                 </div>
@@ -197,9 +198,9 @@
             </nav>
 
             <div class="header-controls">
-                <!-- دکمه تماس به جای ثبت نام -->
+                <!-- ویرایش شده: دکمه تماس با استاد به دکمه "تماس" تغییر یافت -->
                 <button class="btn-call btn-open-contact">
-                    <i class="fa-solid fa-phone-volume"></i> تماس با استاد
+                    <i class="fa-solid fa-phone-volume"></i> تماس
                 </button>
                 <div class="mobile-toggle">
                     <i class="fa-solid fa-bars-staggered"></i>
@@ -263,9 +264,10 @@
                         <button id="btn-download-cv" class="btn btn-primary-glow" onclick="generateFullPDF()">
                             <i class="fa-solid fa-file-pdf"></i> دانلود رزومه استاد
                         </button>
-                        <!-- دکمه تماس -->
-                        <button class="btn btn-visible-dark btn-open-contact">
-                            <i class="fa-solid fa-phone"></i> تماس جهت مشاوره
+                        <!-- ویرایش شده: دکمه تماس جهت مشاوره به دکمه ذخیره اطلاعات تماس تغییر یافت -->
+                        <!-- کلاس btn-open-contact حذف شد تا مودال باز نشود -->
+                        <button class="btn btn-visible-dark" onclick="downloadVCard()">
+                            <i class="fa-solid fa-address-card"></i> ذخیره اطلاعات تماس
                         </button>
                     </div>
 
@@ -699,10 +701,9 @@
 
     </main>
 
-    <!-- [ساختار جدید PDF متناسب با مدرس زبان] -->
+    <!-- [ساختار جدید و کامل PDF متناسب با دستورات شما] -->
     <div id="pdf-template-root" style="display: none;">
         <div class="pdf-wrapper-modern">
-            <!-- محتوای PDF بدون تغییر نسبت به نسخه قبل حفظ شده است -->
             <div class="pdf-page-container">
                 <aside class="pdf-sidebar-modern">
                     <div class="pdf-profile-img-container">
@@ -710,19 +711,32 @@
                     </div>
                     
                     <div class="pdf-contact-box">
-                        <h3 class="pdf-sidebar-title"><i class="fa-solid fa-address-card"></i> اطلاعات تماس</h3>
+                        <h3 class="pdf-sidebar-title"><i class="fa-solid fa-address-card"></i> تماس</h3>
                         <ul class="pdf-contact-list">
-                            <li><span class="icon"><i class="fa-solid fa-phone"></i></span><span class="text">0912-000-0000</span></li>
-                            <li><span class="icon"><i class="fa-brands fa-whatsapp"></i></span><span class="text">0912-000-0000</span></li>
-                            <li><span class="icon"><i class="fa-solid fa-envelope"></i></span><span class="text">hi@maryam.com</span></li>
+                            <li><span class="icon"><i class="fa-solid fa-mobile"></i></span><span class="text">09120000000</span></li>
+                            <li><span class="icon"><i class="fa-solid fa-phone"></i></span><span class="text">02188888888</span></li>
+                            <li><span class="icon"><i class="fa-solid fa-envelope"></i></span><span class="text">hi@maryam-kaviani.com</span></li>
+                            <li><span class="icon"><i class="fa-solid fa-location-dot"></i></span><span class="text">تهران، سعادت آباد</span></li>
                             <li><span class="icon"><i class="fa-solid fa-globe"></i></span><span class="text">maryam-kaviani.com</span></li>
                         </ul>
                     </div>
                     <div class="pdf-lang-box">
                         <h3 class="pdf-sidebar-title"><i class="fa-solid fa-language"></i> زبان‌ها</h3>
-                        <div class="pdf-lang-item"><span>فارسی</span><div class="pdf-bar"><div class="fill" style="width: 100%"></div></div></div>
-                        <div class="pdf-lang-item"><span>انگلیسی</span><div class="pdf-bar"><div class="fill" style="width: 100%"></div></div></div>
-                        <div class="pdf-lang-item"><span>فرانسه</span><div class="pdf-bar"><div class="fill" style="width: 70%"></div></div></div>
+                        <div class="pdf-lang-item"><span>Persian (Native)</span><div class="pdf-bar"><div class="fill" style="width: 100%"></div></div></div>
+                        <div class="pdf-lang-item"><span>English (C2/Native)</span><div class="pdf-bar"><div class="fill" style="width: 100%"></div></div></div>
+                        <div class="pdf-lang-item"><span>French (B2)</span><div class="pdf-bar"><div class="fill" style="width: 70%"></div></div></div>
+                        <div class="pdf-lang-item"><span>German (A2)</span><div class="pdf-bar"><div class="fill" style="width: 40%"></div></div></div>
+                    </div>
+                    
+                    <div class="pdf-skills-box" style="margin-top: 10mm;">
+                        <h3 class="pdf-sidebar-title"><i class="fa-solid fa-lightbulb"></i> مهارت‌های نرم</h3>
+                        <ul class="pdf-skills-list">
+                            <li>مدیریت زمان</li>
+                            <li>ارتباط موثر</li>
+                            <li>حل مسئله خلاقانه</li>
+                            <li>کار تیمی</li>
+                            <li>رهبری آموزشی</li>
+                        </ul>
                     </div>
                 </aside>
                 <main class="pdf-main-content-modern">
@@ -730,41 +744,128 @@
                         <div class="pdf-header-top">
                              <div>
                                 <h1 class="pdf-name-modern">مریم کاویانی</h1>
-                                <h2 class="pdf-job-modern">مدرس ارشد زبان انگلیسی | متخصص IELTS</h2>
+                                <h2 class="pdf-job-modern">مدرس ارشد زبان انگلیسی (Senior TEFL Teacher)</h2>
                              </div>
                              <div class="pdf-reg-card-modern">
                                  <div class="reg-icon"><i class="fa-solid fa-certificate"></i></div>
-                                 <div class="reg-info"><span class="reg-label">مدرک بین‌المللی</span><span class="reg-num">CELTA</span></div>
+                                 <div class="reg-info"><span class="reg-label">مدرک بین‌المللی</span><span class="reg-num">CELTA & DELTA</span></div>
                              </div>
                         </div>
+                        <p class="pdf-text-justify" style="margin-top: 5mm;">
+                            مدرس حرفه‌ای و با انگیزه زبان انگلیسی با بیش از ۱۰ سال سابقه تدریس در سطوح مختلف آکادمیک و عمومی. دارای مدرک کارشناسی ارشد آموزش زبان (TEFL) از دانشگاه تهران و مدارک بین‌المللی CELTA و DELTA از دانشگاه کمبریج. متخصص در آماده‌سازی زبان‌آموزان برای آزمون‌های آیلتس (Academic & General) و تافل با رکورد موفقیت بالای ۹۵٪. توانمند در طراحی سیلابس‌های آموزشی شخصی‌سازی شده و مدیریت کلاس‌های آنلاین و حضوری با استفاده از تکنولوژی‌های نوین آموزشی.
+                        </p>
                     </header>
                     <section class="pdf-section-modern">
-                        <h3 class="pdf-section-title"><i class="fa-solid fa-user-tie"></i> درباره من</h3>
-                        <p class="pdf-text-justify">مدرس پرانرژی و با انگیزه زبان انگلیسی با بیش از ۱۰ سال سابقه تدریس در سطوح مختلف. دارای مدرک کارشناسی ارشد آموزش زبان (TEFL) و مدرک بین‌المللی CELTA از دانشگاه کمبریج.</p>
-                    </section>
-                    <section class="pdf-section-modern">
-                        <h3 class="pdf-section-title"><i class="fa-solid fa-graduation-cap"></i> سوابق تحصیلی</h3>
-                        <div class="pdf-item-row-modern"><div class="pdf-date-col-modern">1394 - 1396</div><div class="pdf-details-col-modern"><h4>کارشناسی ارشد TEFL</h4><h5>دانشگاه تهران</h5></div></div>
-                        <div class="pdf-item-row-modern"><div class="pdf-date-col-modern">1389 - 1393</div><div class="pdf-details-col-modern"><h4>کارشناسی مترجمی</h4><h5>دانشگاه علامه</h5></div></div>
+                        <h3 class="pdf-section-title"><i class="fa-solid fa-briefcase"></i> سوابق شغلی</h3>
+                        
+                        <div class="pdf-item-row-modern">
+                            <div class="pdf-date-col-modern">1400 - اکنون</div>
+                            <div class="pdf-details-col-modern">
+                                <h4>سوپروایزر دپارتمان آیلتس</h4>
+                                <h5>موسسه زبان سفیر گفتمان | تهران</h5>
+                                <ul>
+                                    <li>مدیریت و نظارت بر عملکرد بیش از ۵۰ مدرس زبان در شعب مختلف.</li>
+                                    <li>طراحی و بازنگری سیلابس‌های درسی دوره‌های آیلتس و تافل.</li>
+                                    <li>برگزاری کارگاه‌های تربیت مدرس (TTC) و ارتقای سطح کیفی اساتید.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="pdf-item-row-modern">
+                            <div class="pdf-date-col-modern">1397 - 1400</div>
+                            <div class="pdf-details-col-modern">
+                                <h4>مدرس ارشد (Senior Teacher)</h4>
+                                <h5>آکادمی زبان ایران اروپا | تهران</h5>
+                                <ul>
+                                    <li>تدریس سطوح پیشرفته (C1/C2) و دوره‌های تخصصی مکالمه تجاری.</li>
+                                    <li>برگزاری دوره‌های فشرده آمادگی آزمون برای مهاجران.</li>
+                                    <li>کسب عنوان مدرس برتر سال در سال‌های ۹۸ و ۹۹.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="pdf-item-row-modern">
+                            <div class="pdf-date-col-modern">1393 - 1397</div>
+                            <div class="pdf-details-col-modern">
+                                <h4>مدرس زبان انگلیسی</h4>
+                                <h5>کانون زبان ایران (ILI) | تهران</h5>
+                                <ul>
+                                    <li>تدریس به گروه‌های سنی بزرگسالان و نوجوانان (سطوح مبتدی تا پیشرفته).</li>
+                                    <li>مشارکت در طرح‌ریزی سوالات امتحانات پایان ترم.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </section>
                 </main>
             </div>
+            
+            <!-- صفحه دوم رزومه برای کامل بودن -->
             <div class="pdf-page-break"></div>
+            
             <div class="pdf-page-container">
                 <aside class="pdf-sidebar-modern second-page-sidebar">
                      <div class="pdf-skills-box">
-                        <h3 class="pdf-sidebar-title"><i class="fa-solid fa-star"></i> مهارت‌های تدریس</h3>
+                        <h3 class="pdf-sidebar-title"><i class="fa-solid fa-star"></i> تخصص‌های تدریس</h3>
                         <ul class="pdf-skills-list">
-                            <li>تدریس آیلتس</li>
+                            <li>تدریس تخصصی آیلتس</li>
                             <li>روش تدریس Task-based</li>
                             <li>مدیریت کلاس آنلاین</li>
+                            <li>فن بیان و Body Language</li>
+                            <li>روانشناسی آموزش</li>
+                            <li>طراحی کورس آموزشی</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pdf-skills-box" style="margin-top: 10mm;">
+                        <h3 class="pdf-sidebar-title"><i class="fa-solid fa-laptop"></i> نرم‌افزارها</h3>
+                        <ul class="pdf-skills-list">
+                            <li>Microsoft Office</li>
+                            <li>Adobe Connect</li>
+                            <li>Skyroom / Zoom</li>
+                            <li>Moodle LMS</li>
                         </ul>
                     </div>
                 </aside>
                 <main class="pdf-main-content-modern">
                     <section class="pdf-section-modern" style="margin-top: 0;">
-                        <h3 class="pdf-section-title"><i class="fa-solid fa-briefcase"></i> سوابق شغلی</h3>
-                        <div class="pdf-item-row-modern"><div class="pdf-date-col-modern">1400 - اکنون</div><div class="pdf-details-col-modern"><h4>سوپروایزر</h4><h5>سفیر گفتمان</h5></div></div>
+                        <h3 class="pdf-section-title"><i class="fa-solid fa-graduation-cap"></i> سوابق تحصیلی</h3>
+                        <div class="pdf-item-row-modern">
+                            <div class="pdf-date-col-modern">1394 - 1396</div>
+                            <div class="pdf-details-col-modern">
+                                <h4>کارشناسی ارشد آموزش زبان انگلیسی (TEFL)</h4>
+                                <h5>دانشگاه تهران</h5>
+                                <p>عنوان پایان‌نامه: تاثیر استفاده از تکنولوژی‌های تعاملی بر یادگیری لغات در زبان‌آموزان بزرگسال.</p>
+                            </div>
+                        </div>
+                        <div class="pdf-item-row-modern">
+                            <div class="pdf-date-col-modern">1389 - 1393</div>
+                            <div class="pdf-details-col-modern">
+                                <h4>کارشناسی مترجمی زبان انگلیسی</h4>
+                                <h5>دانشگاه علامه طباطبایی</h5>
+                                <p>فارغ‌التحصیل با معدل الف و عضو استعدادهای درخشان.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="pdf-section-modern">
+                        <h3 class="pdf-section-title"><i class="fa-solid fa-certificate"></i> مدارک و گواهینامه‌ها</h3>
+                        <ul class="pdf-honors-list">
+                            <li>مدرک بین‌المللی CELTA از دانشگاه کمبریج (Pass A) - 2018</li>
+                            <li>مدرک DELTA Module 1 - 2020</li>
+                            <li>گواهینامه تربیت مدرس (TTC) از موسسه سفیر - 2014</li>
+                            <li>نمره آیلتس آکادمیک 8.5 (Listening: 9, Reading: 9, Speaking: 8.5, Writing: 8)</li>
+                            <li>کارگاه تخصصی Teaching Grammar Creatively - 2019</li>
+                        </ul>
+                    </section>
+                    
+                    <section class="pdf-section-modern">
+                        <h3 class="pdf-section-title"><i class="fa-solid fa-pencil"></i> مقالات و پژوهش‌ها</h3>
+                        <div class="pdf-details-col-modern" style="border: none;">
+                            <ul>
+                                <li>چاپ مقاله "The Impact of Blended Learning on EFL Learners" در ژورنال Applied Linguistics.</li>
+                                <li>سخنرانی در کنفرانس ملی آموزش زبان در سال ۱۳۹۸ در مورد متدهای نوین تدریس آنلاین.</li>
+                            </ul>
+                        </div>
                     </section>
                 </main>
             </div>
