@@ -1,9 +1,8 @@
-
-/*
+   /*
     FILENAME: style.css
     PROJECT: Master Teacher Portal
-    VERSION: 7.0 (Fixed Loading & Modern Modal)
-    DESCRIPTION: Modern EdTech theme with fixed layout issues and new Glassmorphism Modal.
+    VERSION: 8.0 (Strict Design & Logic Fixes)
+    DESCRIPTION: Modern EdTech theme with Compact Modal and Scroll Locking.
 */
 
 /* =======================================================
@@ -63,6 +62,12 @@ body {
 
 body.loading-active {
     overflow: hidden;
+}
+
+/* کلاس مخصوص قفل کردن اسکرول هنگام باز بودن مودال */
+body.modal-open {
+    overflow: hidden !important;
+    height: 100vh;
 }
 
 a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
@@ -438,7 +443,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .c-text span { color: rgba(255,255,255,0.6); display: block; font-size: 0.95rem; }
 
 /* =======================================================
-   استایل مدرن و زیبای مودال تماس (Glassmorphism)
+   استایل مدرن و زیبای مودال تماس (Glassmorphism + Compact)
    ======================================================= */
 .contact-modal-overlay {
     position: fixed;
@@ -455,16 +460,19 @@ button { font-family: inherit; border: none; cursor: pointer; }
     opacity: 0;
     visibility: hidden;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    /* برای جلوگیری از کلیک روی المان های زیرین وقتی مخفی است */
+    pointer-events: none; 
 }
 
 .contact-modal-overlay.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto; /* فعال کردن کلیک فقط وقتی مودال باز است */
 }
 
 .contact-modal-modern {
     width: 90%;
-    max-width: 600px;
+    max-width: 500px; /* کاهش عرض برای جمع و جور بودن */
     background: white;
     border-radius: 24px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -481,7 +489,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 
 .modal-modern-header {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    padding: 25px 30px;
+    padding: 20px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -490,7 +498,7 @@ button { font-family: inherit; border: none; cursor: pointer; }
 
 .modal-modern-header h3 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -518,34 +526,38 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .modal-modern-body {
-    padding: 30px;
+    padding: 25px;
 }
 
 .modal-intro {
     text-align: center;
     color: var(--color-text-light);
     margin-bottom: 25px;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
+/* اصلاح گرید برای حالت مربعی و جمع و جور */
 .contact-grid-modern {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr; /* دو ستونه */
+    gap: 15px;
 }
 
 .c-card {
     background: #f8fafc;
     border: 2px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px;
+    padding: 15px;
     display: flex;
+    flex-direction: column; /* چینش ستونی برای مربعی شدن */
     align-items: center;
-    gap: 15px;
+    justify-content: center;
+    gap: 10px;
     transition: all 0.3s ease;
     text-decoration: none;
     position: relative;
     overflow: hidden;
+    height: 120px; /* ارتفاع ثابت برای حالت مربعی */
 }
 
 .c-card:hover {
@@ -554,30 +566,31 @@ button { font-family: inherit; border: none; cursor: pointer; }
 }
 
 .c-icon-box {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     transition: 0.3s;
 }
 
 .c-info {
     display: flex;
     flex-direction: column;
+    text-align: center; /* وسط چین کردن متن ها */
 }
 
 .c-title {
     font-weight: 700;
     color: var(--color-text-dark);
-    font-size: 1rem;
-    margin-bottom: 4px;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
 }
 
 .c-sub {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-text-light);
 }
 
@@ -660,8 +673,9 @@ button { font-family: inherit; border: none; cursor: pointer; }
     .footer-content { flex-direction: column; gap: 40px; }
     
     /* اصلاح شبکه مودال در موبایل */
+    /* همچنان 2 ستونه باشد اما با فونت کمی کوچکتر اگر نیاز شد */
     .contact-grid-modern {
-        grid-template-columns: 1fr;
+        gap: 10px;
     }
 }
 
@@ -1022,4 +1036,4 @@ button { font-family: inherit; border: none; cursor: pointer; }
     width: 100%;
     margin: 0;
     padding: 0;
-}
+    }
