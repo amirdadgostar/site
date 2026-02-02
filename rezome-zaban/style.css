@@ -1,1 +1,997 @@
+/*
+    FILENAME: style.css
+    PROJECT: Master Teacher Portal
+    VERSION: 6.0 (Contact Modal & UI Polish)
+    DESCRIPTION: Modern EdTech theme with fixed layout issues and new Modal.
+*/
 
+/* =======================================================
+   1. متغیرهای اصلی، فونت و ریست عمومی
+   ======================================================= */
+:root {
+    /* تم رنگی جدید: آموزشی/تکنولوژی (Indigo & Amber) */
+    --color-primary: #4f46e5;      /* بنفش ایندیگو (اصلی) */
+    --color-primary-dark: #4338ca; /* تیره‌تر */
+    --color-secondary: #3b82f6;    /* آبی روشن برای جزئیات */
+    --color-accent: #f59e0b;       /* نارنجی امبر (اکشن‌ها) */
+    
+    --color-text-dark: #1e293b;    /* سرمه‌ای خیلی تیره */
+    --color-text-light: #64748b;   /* خاکستری */
+    
+    --color-bg-body: #f8fafc;      /* زمینه روشن */
+    --color-bg-light: #ffffff;     /* سفید */
+    --color-bg-dark: #1e1b4b;      /* بنفش خیلی تیره برای فوتر/تماس */
+    
+    --color-success: #10b981;
+    --color-error: #ef4444;
+
+    --shadow-soft: 0 4px 12px rgba(79, 70, 229, 0.08);
+    --shadow-medium: 0 10px 30px -5px rgba(79, 70, 229, 0.15);
+    --shadow-hard: 0 20px 40px -10px rgba(79, 70, 229, 0.25);
+    --shadow-glow: 0 0 25px rgba(79, 70, 229, 0.4);
+
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --header-height: 85px;
+    --container-width: 1240px;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: var(--color-bg-body);
+    color: var(--color-text-dark);
+    line-height: 1.7;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body.loading-active {
+    overflow: hidden;
+}
+
+a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+ul, ol { list-style: none; }
+img { max-width: 100%; height: auto; display: block; }
+button { font-family: inherit; border: none; cursor: pointer; }
+.container { max-width: var(--container-width); margin: 0 auto; padding: 0 20px; }
+.section { padding: 100px 0; }
+
+/* کلاس برای حذف زیرخط لینک‌ها */
+.no-underline-link { text-decoration: none !important; color: rgba(255,255,255,0.7); display: inline-block; }
+.no-underline-link:hover { color: white; }
+
+/* =======================================================
+   2. استایل لودینگ (Preloader)
+   ======================================================= */
+#preloader-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--color-bg-body); z-index: 10000;
+    display: flex; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.loader-container { text-align: center; }
+.heartbeat-icon { font-size: 4rem; color: var(--color-primary); animation: bookPulse 1.5s infinite; }
+@keyframes bookPulse { 0% {transform: scale(1);} 50% {transform: scale(1.1) rotate(5deg);} 100% {transform: scale(1);} }
+.loader-text-box { margin: 20px 0; }
+.loader-name { font-size: 1.5rem; color: var(--color-text-dark); font-weight: 800; }
+.loader-name-fa { font-size: 1.2rem; color: var(--color-primary); margin: 5px 0 10px; font-weight: 500; }
+.loader-status { font-size: 0.9rem; color: var(--color-text-light); }
+.progress-bar-wrapper { width: 200px; height: 5px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+.progress-fill { width: 0; height: 100%; background: var(--color-primary); animation: fillProgress 2s ease-out forwards; }
+@keyframes fillProgress { from {width: 0;} to {width: 100%;} }
+
+
+/* =======================================================
+   3. استایل سیستم منوی شناور (FAB Styles)
+   ======================================================= */
+.fab-menu-wrapper {
+    position: fixed;
+    bottom: 30px;
+    left: 15px; 
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* انیمیشن لرزش دکمه شناور */
+@keyframes shake-fab {
+    0% { transform: rotate(0deg); }
+    2% { transform: rotate(-10deg); }
+    4% { transform: rotate(10deg); }
+    6% { transform: rotate(-10deg); }
+    8% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* دکمه اصلی */
+.fab-main-btn {
+    width: 60px;
+    height: 60px;
+    background: var(--color-accent); /* تغییر به رنگ اکشن */
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    /* اعمال انیمیشن لرزش هر 5 ثانیه */
+    animation: shake-fab 5s infinite;
+}
+
+.fab-main-btn:hover {
+    transform: scale(1.1);
+    background: #d97706;
+    animation: none; /* توقف لرزش هنگام هاور */
+}
+
+/* آیکون داخل دکمه اصلی */
+.fab-main-icon {
+    transition: transform 0.3s ease;
+}
+
+/* بج نوتیفیکیشن (عدد پیام) */
+.fab-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ef4444; 
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    transform: scale(0);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fab-notification-badge.show {
+    transform: scale(1);
+}
+
+/* منوی گزینه‌ها (مخفی در ابتدا) */
+.fab-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+    align-items: flex-start;
+    padding-left: 5px;
+}
+
+/* حالت فعال منو */
+.fab-options.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* آیتم‌های منو */
+.fab-option-item {
+    display: flex;
+    align-items: center;
+    flex-direction: row; 
+    gap: 12px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.fab-label {
+    background: rgba(30, 41, 59, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    order: 2;
+}
+
+.fab-icon-small {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+    order: 1;
+}
+.fab-icon-small:hover { transform: scale(1.1); }
+
+/* رنگ‌های اختصاصی */
+.fab-icon-small.whatsapp { background-color: #25D366; }
+.fab-icon-small.call { background-color: #3b82f6; }
+.fab-icon-small.map { background-color: #229ED9; } /* Telegram color */
+
+
+/* =======================================================
+   4. هدر و منوها
+   ======================================================= */
+.main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; height: var(--header-height); transition: all 0.3s ease; }
+.main-header.glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+.header-inner { display: flex; justify-content: space-between; align-items: center; height: 100%; }
+.logo-area { display: flex; align-items: center; gap: 15px; }
+.logo-symbol { font-size: 2rem; color: var(--color-primary); }
+.logo-details h1 { font-size: 1.2rem; font-weight: 800; color: var(--color-text-dark); line-height: 1.1; }
+.logo-details span { font-size: 0.8rem; color: var(--color-text-light); font-weight: 500; }
+.nav-list { display: flex; gap: 30px; }
+.nav-link { font-size: 0.95rem; font-weight: 500; color: var(--color-text-light); position: relative; padding: 5px 0; transition: 0.3s; }
+.nav-link::after { content: ''; position: absolute; bottom: -5px; right: 0; width: 0; height: 2px; background: var(--color-accent); transition: width 0.3s ease; }
+.nav-link:hover, .nav-link.active { color: var(--color-primary); font-weight: 700; }
+.nav-link.active::after { width: 100%; }
+.header-controls { display: flex; align-items: center; gap: 20px; }
+.btn-call { background: var(--color-primary); color: white; padding: 10px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3); }
+.btn-call:hover { background: var(--color-primary-dark); transform: translateY(-2px); }
+.mobile-toggle { font-size: 1.5rem; color: var(--color-text-dark); cursor: pointer; display: none; }
+
+.mobile-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1001; opacity: 0; visibility: hidden; transition: 0.3s; }
+.mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+.mobile-menu-content { position: absolute; top: 0; right: -300px; width: 300px; height: 100%; background: white; padding: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.1); transition: right 0.4s ease; }
+.mobile-menu-overlay.active .mobile-menu-content { right: 0; }
+.menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+.close-menu-btn { background: none; font-size: 1.5rem; color: var(--color-text-light); }
+.mobile-nav-links a { display: flex; align-items: center; gap: 15px; padding: 15px 0; font-size: 1.1rem; color: var(--color-text-dark); font-weight: 500; border-bottom: 1px solid #eee; }
+.mobile-nav-links a i { color: var(--color-primary); width: 25px; }
+
+/* =======================================================
+   5. بخش هیرو (بازطراحی برای مدرس)
+   ======================================================= */
+.hero-area { padding: calc(var(--header-height) + 60px) 0 80px; min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; }
+.background-shapes .shape { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.5; }
+.shape-1 { width: 500px; height: 500px; top: -10%; left: -10%; background: rgba(79, 70, 229, 0.15); }
+.shape-2 { width: 300px; height: 300px; bottom: 10%; right: 5%; background: rgba(245, 158, 11, 0.1); }
+.shape-3 { width: 150px; height: 150px; top: 30%; right: 40%; background: rgba(59, 130, 246, 0.1); }
+
+.hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 60px; }
+.status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: white; color: var(--color-primary); border: 1px solid #e2e8f0; border-radius: 50px; font-weight: 600; margin-bottom: 25px; box-shadow: var(--shadow-soft); font-size: 0.9rem; }
+.main-title { font-size: 3.5rem; font-weight: 900; line-height: 1.2; margin-bottom: 15px; color: var(--color-text-dark); }
+.sub-title { font-size: 1.6rem; color: var(--color-accent); font-weight: 700; margin-bottom: 25px; }
+.bio-intro { font-size: 1.15rem; color: var(--color-text-light); max-width: 95%; margin-bottom: 30px; line-height: 1.8; }
+
+.medical-reg-box { margin-bottom: 35px; }
+.trust-sentence { background: rgba(79, 70, 229, 0.05); padding: 15px 20px; border-radius: 12px; border-right: 4px solid var(--color-primary); display: flex; gap: 15px; align-items: center; color: var(--color-text-dark); font-weight: 500; font-style: italic; }
+.trust-sentence i { color: var(--color-accent); font-size: 1.2rem; }
+
+.btn { padding: 14px 30px; border-radius: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
+.btn-primary-glow { background: var(--color-primary); color: white; box-shadow: var(--shadow-hard); }
+.btn-primary-glow:hover { transform: translateY(-3px); box-shadow: var(--shadow-glow); background: var(--color-primary-dark); }
+
+.btn-visible-dark { background: white; color: var(--color-text-dark); box-shadow: var(--shadow-soft); border: 1px solid #e2e8f0; }
+.btn-visible-dark:hover { background: var(--color-accent); color: white; border-color: var(--color-accent); transform: translateY(-3px); }
+
+.hero-actions {
+    margin-bottom: 35px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.social-hero-row a { width: 45px; height: 45px; display: inline-flex; align-items: center; justify-content: center; background: white; color: var(--color-text-light); border-radius: 50%; transition: 0.3s; border: 1px solid #e2e8f0; }
+.social-hero-row a:hover { background: var(--color-primary); color: white; transform: translateY(-3px); border-color: var(--color-primary); }
+
+.hero-image-col { position: relative; }
+.image-wrapper-modern { position: relative; border-radius: 40px 40px 40px 0; overflow: hidden; border: 5px solid white; box-shadow: var(--shadow-hard); }
+.doctor-img { width: 100%; object-fit: cover; }
+
+.float-box { position: absolute; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px 20px; min-width: 140px; justify-content: center; border-radius: 16px; box-shadow: var(--shadow-medium); display: flex; align-items: center; gap: 15px; animation: floatAnim 4s ease-in-out infinite; border: 1px solid rgba(255,255,255,0.5); }
+.float-box .num { font-size: 1.8rem; font-weight: 800; color: var(--color-accent); }
+.float-box .txt { font-size: 0.8rem; line-height: 1.4; font-weight: 600; color: var(--color-text-dark); }
+.exp-box { bottom: 40px; right: -20px; }
+.patients-box { top: 40px; left: -20px; animation-delay: 2s; }
+@keyframes floatAnim { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-10px);} }
+
+.scroll-down-indicator { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); opacity: 0.6; }
+.mouse { width: 26px; height: 42px; border: 2px solid var(--color-text-dark); border-radius: 20px; display: block; }
+.wheel { width: 4px; height: 8px; background: var(--color-primary); border-radius: 2px; position: relative; top: 8px; left: 9px; animation: scrollAnim 2s infinite; }
+@keyframes scrollAnim { 0% {top: 8px; opacity: 1;} 100% {top: 20px; opacity: 0;} }
+
+/* =======================================================
+   6. بخش‌های عمومی
+   ======================================================= */
+.section-head { margin-bottom: 60px; }
+.tag-line { display: inline-block; padding: 6px 18px; background: rgba(79, 70, 229, 0.1); color: var(--color-primary); border-radius: 50px; font-weight: 700; margin-bottom: 15px; font-size: 0.9rem; }
+.section-title { font-size: 2.5rem; font-weight: 800; color: var(--color-text-dark); }
+.separator-line { width: 60px; height: 6px; background: var(--color-accent); margin: 20px auto 0; border-radius: 3px; }
+.text-center { text-align: center; }
+
+/* =======================================================
+   7. محتوای اصلی (درباره، مهارت، سوابق)
+   ======================================================= */
+.about-content-wrapper { max-width: 950px; margin: 0 auto; }
+.about-text-full p { font-size: 1.1rem; text-align: justify; margin-bottom: 20px; color: var(--color-text-light); }
+.info-grid-modern { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 50px; }
+.info-item { background: white; padding: 25px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); display: flex; align-items: center; gap: 15px; border: 1px solid #f1f5f9; transition: 0.3s; }
+.info-item:hover { transform: translateY(-5px); border-color: var(--color-primary); }
+.info-item i { font-size: 2rem; color: var(--color-primary); width: 50px; height: 50px; background: #eef2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.info-item .meta span { font-size: 0.85rem; color: var(--color-text-light); display: block; }
+.info-item .meta strong { display: block; font-size: 1rem; color: var(--color-text-dark); margin-top: 3px; }
+
+.bg-pattern { background-color: white; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 30px 30px; }
+
+.skills-wrapper-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.skills-col { width: 100%; }
+.skills-col .col-title { font-size: 1.5rem; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; color: var(--color-text-dark); font-weight: 800; }
+.skills-col .col-title i { color: var(--color-accent); }
+
+.skill-bar-item { margin-bottom: 30px; }
+.sb-info { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; color: var(--color-text-dark); font-size: 0.95rem; }
+.sb-track { width: 100%; height: 10px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+.sb-fill { height: 100%; background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%); border-radius: 10px; }
+
+.circles-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+.circle-item { text-align: center; flex: 1 1 120px; max-width: 150px; }
+.circle-chart { position: relative; width: 120px; height: 120px; margin-bottom: 20px; margin-left: auto; margin-right: auto; }
+/* اصلاح بریده شدن چارت: اضافه کردن padding به SVG یا container */
+.circle-chart svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.circle-chart .bg { fill: none; stroke: #f1f5f9; stroke-width: 6; }
+.circle-chart .meter { fill: none; stroke: var(--color-accent); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0, 100; transition: stroke-dasharray 1.5s ease-out; }
+.percent-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.4rem; font-weight: 800; color: var(--color-text-dark); }
+.circle-label { font-weight: 600; color: var(--color-text-light); }
+
+.timeline-box { position: relative; max-width: 900px; margin: 0 auto; }
+.timeline-box::after { content: ''; position: absolute; width: 4px; background: #e2e8f0; top: 0; bottom: 0; right: 50%; margin-right: -2px; border-radius: 4px; }
+.timeline-row { position: relative; width: 50%; padding: 20px 40px; }
+.timeline-row.left { right: 50%; text-align: left; }
+.timeline-row.right { right: 0; }
+.timeline-row::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border: 5px solid var(--color-primary); border-radius: 50%; top: 30px; z-index: 1; box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.1); }
+.timeline-row.right::after { right: -12px; }
+.timeline-row.left::after { left: -12px; }
+.tl-content { padding: 30px; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); position: relative; border-bottom: 4px solid transparent; transition: 0.3s; }
+.tl-content:hover { border-bottom-color: var(--color-accent); transform: translateY(-5px); }
+.tl-date { color: var(--color-primary); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
+.tl-role { font-size: 1.3rem; margin-bottom: 5px; font-weight: 800; }
+.tl-place { font-weight: 500; color: var(--color-text-light); margin-bottom: 15px; }
+.tl-badge { position: absolute; top: 20px; left: 20px; background: var(--color-accent); color: white; padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
+
+.bg-light { background-color: #f8fafc; }
+
+/* =======================================================
+   8. استایل‌های جدید برای Pricing & FAQ
+   ======================================================= */
+.pub-slider-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+/* کارت قیمت */
+.pricing-card {
+    background: white;
+    padding: 35px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid #f1f5f9;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.pricing-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hard); border-color: var(--color-primary); }
+
+.price-header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px; }
+.pricing-card .pub-type { color: var(--color-text-light); font-weight: 600; margin-bottom: 10px; }
+.price-amount { display: block; font-size: 1.8rem; font-weight: 800; color: var(--color-primary); margin-bottom: 5px; }
+.price-per { font-size: 0.9rem; color: var(--color-text-light); }
+.plan-title { text-align: center; font-size: 1.4rem; margin-bottom: 20px; font-weight: 800; }
+
+.plan-features { flex-grow: 1; margin-bottom: 30px; }
+.plan-features li { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 1rem; color: var(--color-text-light); }
+.plan-features li i { color: var(--color-success); background: #d1fae5; padding: 5px; border-radius: 50%; font-size: 0.7rem; }
+
+.btn-block { display: block; text-align: center; width: 100%; background: #f1f5f9; padding: 12px; border-radius: 12px; color: var(--color-text-dark); font-weight: 700; transition: 0.3s; }
+.btn-block:hover { background: var(--color-primary); color: white; }
+
+/* کارت محبوب */
+.popular-plan { border: 2px solid var(--color-accent); transform: scale(1.05); z-index: 2; }
+.popular-plan:hover { transform: scale(1.08); }
+.popular-badge { position: absolute; top: 0; right: 0; background: var(--color-accent); color: white; padding: 5px 15px; border-bottom-left-radius: 15px; font-size: 0.8rem; font-weight: 700; }
+
+/* بخش سوالات متداول */
+.faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+.faq-card { background: white; padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); display: flex; gap: 20px; align-items: flex-start; transition: 0.3s; }
+.faq-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-medium); }
+.faq-card .edu-icon { font-size: 2rem; color: var(--color-accent); min-width: 50px; text-align: center; }
+.faq-card h3 { font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; }
+.faq-card p { font-size: 0.95rem; color: var(--color-text-light); line-height: 1.6; }
+
+
+/* =======================================================
+   9. بخش تماس و فوتر (به روز شده)
+   ======================================================= */
+.bg-dark-blue { background-color: var(--color-bg-dark); color: white; }
+.contact-grid-layout { display: grid; grid-template-columns: 1fr; gap: 50px; }
+.contact-info-panel h3 { font-size: 2rem; margin-bottom: 20px; font-weight: 800; color: white; }
+.contact-info-panel > p { color: rgba(255,255,255,0.7); margin-bottom: 40px; }
+
+.contact-list-detailed li { display: flex; gap: 20px; margin-bottom: 30px; }
+.c-icon { width: 55px; height: 55px; background: rgba(255,255,255,0.05); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--color-accent); border: 1px solid rgba(255,255,255,0.1); }
+.c-text strong { display: block; font-size: 1.1rem; margin-bottom: 5px; }
+.c-text span { color: rgba(255,255,255,0.6); display: block; font-size: 0.95rem; }
+
+/* استایل مودال تماس (Contact Modal CSS) */
+.contact-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 10002;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.contact-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.contact-modal-box {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.contact-modal-overlay.active .contact-modal-box {
+    transform: scale(1);
+}
+
+.contact-modal-header {
+    background: #f8fafc;
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contact-modal-header h3 {
+    margin: 0;
+    color: var(--color-text-dark);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.close-modal-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-modal-btn:hover {
+    color: var(--color-error);
+    transform: rotate(90deg);
+}
+
+.contact-modal-body {
+    padding: 30px;
+    text-align: center;
+}
+
+.contact-modal-body p {
+    color: var(--color-text-light);
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.contact-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.contact-option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    gap: 10px;
+    color: var(--color-text-dark);
+}
+
+.contact-option-btn i {
+    font-size: 1.8rem;
+    transition: 0.3s;
+}
+
+.contact-option-btn span {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.contact-option-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* رنگ بندی دکمه‌های مودال */
+.contact-option-btn.office:hover { background: #eef2ff; border-color: var(--color-primary); color: var(--color-primary); }
+.contact-option-btn.office i { color: var(--color-primary); }
+
+.contact-option-btn.personal:hover { background: #f0fdf4; border-color: var(--color-success); color: var(--color-success); }
+.contact-option-btn.personal i { color: var(--color-success); }
+
+.contact-option-btn.whatsapp:hover { background: #dcfce7; border-color: #25D366; color: #166534; }
+.contact-option-btn.whatsapp i { color: #25D366; }
+
+.contact-option-btn.telegram:hover { background: #e0f2fe; border-color: #229ED9; color: #075985; }
+.contact-option-btn.telegram i { color: #229ED9; }
+
+
+.social-footer { display: flex; gap: 15px; margin-top: 30px; }
+.sf-item { width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s; }
+.sf-item:hover { background: var(--color-primary); transform: translateY(-3px); }
+
+.glass-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 0; border-radius: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 80px; }
+.contact-map-panel {
+    width: 100vw; 
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-bottom: -60px; /* برای چسبیدن به فوتر */
+    z-index: 1;
+}
+.map-frame-wrapper { width: 100%; height: 400px; filter: none; } /* نقشه رنگی */
+
+.main-footer { background: #0f172a; color: rgba(255,255,255,0.7); padding-top: 60px; position: relative; z-index: 2; }
+.footer-content { display: flex; justify-content: space-between; text-align: center; padding-bottom: 40px; }
+.footer-col h4 { font-size: 1.2rem; color: white; margin-bottom: 25px; font-weight: 700; }
+.footer-col ul li { margin-bottom: 12px; }
+.footer-col a:hover { color: var(--color-accent); }
+.footer-logo-icon { font-size: 3rem; color: var(--color-primary); margin-bottom: 15px; }
+.copy-right { text-align: center; padding: 25px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; background: #020617; }
+
+/* =======================================================
+   10. واکنش‌گرایی
+   ======================================================= */
+@media (max-width: 1024px) {
+    .hero-grid { grid-template-columns: 1fr; text-align: center; }
+    .hero-text-col { order: 2; align-items: center; display: flex; flex-direction: column; }
+    .bio-intro { max-width: 100%; }
+    .hero-image-col { order: 1; margin-bottom: 50px; max-width: 500px; margin: 0 auto 50px; }
+    .desktop-navigation { display: none; }
+    .mobile-toggle { display: block; }
+    .skills-wrapper-grid { grid-template-columns: 1fr; }
+    .pub-slider-wrapper { grid-template-columns: 1fr; }
+    .pricing-card.popular-plan { transform: scale(1); }
+    .pricing-card.popular-plan:hover { transform: translateY(-10px); }
+    
+    /* اصلاح هدر موبایل: دکمه تماس و منو در کنار هم و مرتب */
+    .header-controls {
+        gap: 10px;
+    }
+    .btn-call {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+    .main-header {
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section { padding: 80px 0; }
+    .main-title { font-size: 2.2rem; }
+    .timeline-box::after { right: 30px; }
+    .timeline-row { width: 100%; padding-right: 70px; padding-left: 0; }
+    .timeline-row.left { right: 0; text-align: right; }
+    .timeline-row.left::after { right: 21px; }
+    .timeline-row.right::after { right: 21px; }
+    .contact-grid-layout { grid-template-columns: 1fr; }
+    .footer-content { flex-direction: column; gap: 40px; }
+    .circles-container { flex-wrap: wrap; justify-content: center; }
+    
+    /* تنظیمات خاص موبایل برای مودال */
+    .contact-options-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =======================================================
+   11. استایل اختصاصی قالب PDF جدید 
+   (مدرن، فونت امیری، بهینه برای چاپ، تم آموزشی)
+   ======================================================= */
+#pdf-template-root { 
+    display: none; 
+}
+
+.pdf-wrapper-modern {
+    width: 210mm;
+    background-color: white;
+    font-family: 'Amiri', 'Times New Roman', serif !important; 
+    color: #000000;
+    margin: 0 auto; 
+    padding: 0;
+    box-sizing: border-box;
+    text-align: right;
+    direction: rtl;
+    line-height: 1.6;
+}
+
+.pdf-page-container {
+    width: 210mm;
+    height: 296mm;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    page-break-after: always;
+    background: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* سایدبار سمت راست */
+.pdf-sidebar-modern {
+    width: 75mm;
+    height: 100%;
+    background-color: #f8fafc; 
+    border-left: 1px solid #e2e8f0; 
+    color: #1e293b;
+    padding: 10mm 8mm;
+    text-align: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-sizing: border-box;
+}
+
+.pdf-sidebar-modern.second-page-sidebar {
+    background-color: #f8fafc; 
+}
+
+.pdf-profile-img-container {
+    width: 40mm;
+    height: 40mm;
+    margin: 0 auto 10mm;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--color-primary); 
+}
+
+.pdf-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pdf-sidebar-title {
+    font-size: 15pt;
+    font-family: 'Amiri', serif;
+    font-weight: bold;
+    color: var(--color-primary); 
+    border-bottom: 2px solid rgba(79, 70, 229, 0.2);
+    padding-bottom: 2mm;
+    margin-bottom: 5mm;
+    margin-top: 8mm;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pdf-contact-list {
+    text-align: right;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    direction: ltr; 
+}
+.pdf-contact-list li {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5mm;
+    font-size: 10pt;
+    color: #334155; 
+    font-family: 'Amiri', serif;
+}
+.pdf-contact-list .icon {
+    width: 20px;
+    color: var(--color-primary);
+    text-align: center;
+}
+.pdf-contact-list .text {
+    text-align: right;
+    direction: rtl; 
+    unicode-bidi: embed;
+}
+
+.pdf-skills-list {
+    text-align: right;
+    padding: 0;
+    list-style: none;
+    color: #334155; 
+    font-size: 10pt;
+    line-height: 2;
+    margin: 0;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-skills-list li { 
+    margin-bottom: 3mm; 
+    position: relative;
+    padding-right: 15px;
+    text-align: right;
+}
+.pdf-skills-list li::before {
+    content: '•';
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 14pt;
+    line-height: 1.5;
+    color: var(--color-accent);
+}
+
+.pdf-lang-item {
+    text-align: right;
+    margin-bottom: 6mm;
+}
+.pdf-lang-item span {
+    display: block;
+    font-size: 10pt;
+    color: #334155;
+    margin-bottom: 2mm;
+    font-family: 'Amiri', serif;
+}
+.pdf-bar {
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0; 
+    border-radius: 3px;
+}
+.pdf-bar .fill {
+    height: 100%;
+    background: var(--color-primary); 
+    border-radius: 3px;
+}
+
+/* بخش اصلی محتوا */
+.pdf-main-content-modern {
+    flex: 1;
+    padding: 12mm;
+    background-color: white;
+    height: 100%;
+    box-sizing: border-box;
+    color: #000000;
+}
+
+.pdf-header-modern {
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 5mm;
+    margin-bottom: 10mm;
+}
+.pdf-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.pdf-name-modern {
+    font-size: 26pt;
+    font-weight: 900;
+    color: #000000;
+    margin-bottom: 2mm;
+    line-height: 1.2;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-job-modern {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #64748b;
+    margin-bottom: 3mm;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-reg-card-modern {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pdf-reg-card-modern .reg-icon {
+    font-size: 16pt;
+    color: var(--color-primary);
+}
+.pdf-reg-card-modern .reg-info {
+    display: flex;
+    flex-direction: column;
+}
+.pdf-reg-card-modern .reg-label {
+    font-size: 8pt;
+    color: #64748b;
+}
+.pdf-reg-card-modern .reg-num {
+    font-size: 12pt;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: 1px;
+}
+
+.pdf-section-modern {
+    margin-bottom: 10mm;
+    page-break-inside: avoid;
+}
+
+.pdf-section-title {
+    font-size: 16pt;
+    font-weight: 900;
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5mm;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 2mm;
+    font-family: 'Amiri', serif;
+}
+.pdf-section-title i {
+    color: var(--color-accent);
+}
+
+.pdf-text-justify {
+    text-align: justify;
+    font-size: 11pt;
+    line-height: 1.9;
+    color: #000000;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-item-row-modern {
+    display: flex;
+    margin-bottom: 8mm;
+    align-items: flex-start;
+}
+
+.pdf-date-col-modern {
+    width: 35mm;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #000000;
+    padding-top: 2px;
+    flex-shrink: 0;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-details-col-modern {
+    flex-grow: 1;
+    border-right: 2px solid #e2e8f0; 
+    padding-right: 5mm;
+}
+
+.pdf-details-col-modern h4 {
+    font-size: 13pt;
+    color: #000000;
+    margin-bottom: 1mm;
+    font-weight: 900;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-details-col-modern h5 {
+    font-size: 11pt;
+    color: var(--color-primary-dark);
+    font-weight: bold;
+    margin-bottom: 2mm;
+    font-family: 'Amiri', serif;
+}
+
+.pdf-details-col-modern ul {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+.pdf-details-col-modern ul li {
+    font-size: 11pt;
+    color: #000000;
+    margin-bottom: 2mm;
+    line-height: 1.7;
+    font-family: 'Amiri', serif;
+    text-align: right;
+    position: relative;
+    padding-right: 12px;
+}
+.pdf-details-col-modern ul li::before {
+    content: '•'; 
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 14pt;
+    line-height: 1.3;
+    color: #000000;
+}
+
+.pdf-details-col-modern p {
+    font-size: 11pt;
+    color: #000000;
+    margin-bottom: 2mm;
+    line-height: 1.7;
+    font-family: 'Amiri', serif;
+    text-align: justify;
+}
+
+.pdf-honors-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.pdf-honors-list li {
+    position: relative;
+    padding-right: 25px;
+    margin-bottom: 4mm;
+    font-size: 11pt;
+    color: #000000;
+    font-family: 'Amiri', serif;
+}
+.pdf-honors-list li::before {
+    content: '\f058'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 0;
+    top: 3px;
+    color: var(--color-success);
+    font-size: 12pt;
+}
+
+.pdf-page-break {
+    display: block;
+    page-break-before: always;
+    height: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
