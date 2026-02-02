@@ -1,3 +1,4 @@
+
    /*
     FILENAME: style.css
     PROJECT: Master Teacher Portal
@@ -607,6 +608,24 @@ button { font-family: inherit; border: none; cursor: pointer; }
 .c-telegram .c-icon-box { background: #e0f2fe; color: #0ea5e9; }
 .c-telegram:hover { border-color: #0ea5e9; background: #f0f9ff; }
 
+/* استایل جدید برای باکس آدرس (مراجعه حضوری) */
+.c-card.full-span {
+    grid-column: 1 / -1; /* کل عرض گرید را پر کند */
+    flex-direction: row; /* چینش افقی */
+    height: auto; /* ارتفاع خودکار */
+    padding: 20px;
+    justify-content: flex-start; /* شروع از سمت راست (RTL) */
+    gap: 20px;
+    text-align: right;
+}
+
+.c-card.full-span .c-info {
+    text-align: right;
+    align-items: flex-start;
+}
+
+.c-address .c-icon-box { background: #ffedd5; color: #ea580c; } /* رنگ نارنجی برای نقشه */
+.c-address:hover { border-color: #ea580c; background: #fff7ed; }
 
 .social-footer { display: flex; gap: 15px; margin-top: 30px; }
 .sf-item { width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s; }
