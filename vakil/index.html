@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وکیل پایه یک دادگستری | محمد رادمنش</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- فونت وزیرمتن (با وزن‌های کامل) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- آیکن‌ها (Phosphor Icons - نسخه کامل) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <!-- صدای نوتیفیکیشن (لینک کوتاه شده برای صدای دینگ ملایم) -->
+    <audio id="notification-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" preload="auto"></audio>
+
+    <!-- صفحه لودینگ (بازطراحی شده: مدرن، گرافیکی و حرفه‌ای) -->
+    <div id="loader">
+        <div class="loader-wrapper">
+            <!-- حلقه‌های انیمیشنی اطراف متن -->
+            <div class="loader-circle outer"></div>
+            <div class="loader-circle inner"></div>
+            
+            <div class="loader-content">
+                <!-- لوگو یا آیکن انتزاعی وسط -->
+                <div class="loader-icon">
+                    <i class="ph ph-scales"></i>
+                </div>
+                <span class="loader-name">محمد رادمنش</span>
+                <span class="loader-title">همراه حقوقی شما</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- هدر (حفظ شده طبق دستور) -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo-area">
+                <h1 class="lawyer-name">محمد رادمنش</h1>
+            </div>
+            <a href="tel:09120000000" class="btn-header">
+                <i class="ph ph-phone-call"></i>
+                <span>تماس با دفتر</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- بخش اصلی (Hero) - حفظ شده -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content fade-in">
+            <h2>عدالت، <span class="text-gold">شفافیت</span> و نتیجه</h2>
+            <p>ما پیچیدگی‌های حقوقی را برای شما ساده می‌کنیم. دفاع قدرتمند از حقوق شما با استراتژی‌های مدرن و قانونی در فضایی امن و مطمئن.</p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn btn-primary">درخواست مشاوره فوری</a>
+                <a href="#services" class="btn btn-outline">مشاهده تخصص‌ها</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش درباره (حفظ شده با لینک پروانه) -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h3>درباره وکیل</h3>
+                <div class="line"></div>
+            </div>
+            <div class="about-card fade-in">
+                <p>
+                    اینجانب محمد رادمنش، وکیل پایه یک دادگستری و عضو کانون وکلا، با سابقه پیگیری پرونده‌های متعدد حقوقی و کیفری، متعهد به دفاع صادقانه و حرفه‌ای از موکلین می‌باشم. استراتژی این دفتر بر پایه نظم، شفافیت در هزینه‌ها و تلاش برای احقاق حق در کوتاه‌ترین زمان ممکن استوار است.
+                </p>
+                
+                <!-- شماره پروانه -->
+                <div class="license-wrapper">
+                    <a href="https://search.icbar.org" target="_blank" class="license-btn" title="برای استعلام کلیک کنید">
+                        <i class="ph ph-certificate"></i>
+                        شماره پروانه: ۱۲۳۴۵ (جهت استعلام کلیک کنید)
+                    </a>
+                </div>
+
+                <div class="features">
+                    <span><i class="ph ph-shield-check"></i> رازداری و امنیت</span>
+                    <span><i class="ph ph-chart-line-up"></i> پیگیری تا نتیجه</span>
+                    <span><i class="ph ph-handshake"></i> شفافیت و صداقت</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- حوزه‌های فعالیت (حفظ شده) -->
+    <section id="services" class="section bg-light">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h3>حوزه‌های تخصص</h3>
+                <div class="line"></div>
+            </div>
+            <div class="grid-services">
+                <div class="card fade-in">
+                    <div class="icon-circle">
+                        <i class="ph ph-house-line"></i>
+                    </div>
+                    <h4>دعاوی ملکی</h4>
+                    <p>الزام به تنظیم سند، خلع ید، تخلیه، مشارکت در ساخت.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="icon-circle">
+                        <i class="ph ph-briefcase"></i>
+                    </div>
+                    <h4>دعاوی تجاری</h4>
+                    <p>چک و سفته، ورشکستگی، قراردادهای شرکت‌ها.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="icon-circle">
+                        <i class="ph ph-users-three"></i>
+                    </div>
+                    <h4>دعاوی خانواده</h4>
+                    <p>طلاق توافقی، مهریه، حضانت، انحصار وراثت.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="icon-circle">
+                        <i class="ph ph-gavel"></i>
+                    </div>
+                    <h4>دعاوی کیفری</h4>
+                    <p>کلاهبرداری، خیانت در امانت، جرایم رایانه‌ای.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- اطلاعات تماس و نقشه (حفظ شده) -->
+    <section id="contact" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h3>ارتباط با دفتر</h3>
+                <div class="line"></div>
+            </div>
+            
+            <div class="contact-wrapper fade-in">
+                <!-- ستون اطلاعات -->
+                <div class="contact-info">
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="ph ph-map-pin"></i>
+                        </div>
+                        <div>
+                            <strong>آدرس دفتر:</strong>
+                            <p>تهران، خیابان ولیعصر، نرسیده به میدان ونک، پلاک ۰۰، طبقه ۳</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="ph ph-phone"></i>
+                        </div>
+                        <div>
+                            <strong>تلفن تماس:</strong>
+                            <p class="ltr">021 - 88 88 00 00</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="ph ph-device-mobile-camera"></i>
+                        </div>
+                        <div>
+                            <strong>شماره همراه (موارد فوری):</strong>
+                            <p class="ltr">0912 000 0000</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="ph ph-clock"></i>
+                        </div>
+                        <div>
+                            <strong>ساعات حضور:</strong>
+                            <p>شنبه تا چهارشنبه (۱۷ الی ۲۰)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ستون نقشه -->
+                <div class="map-box">
+                    <div class="map-placeholder">
+                        <i class="ph ph-map-trifold"></i>
+                        <span>نمایش موقعیت دقیق روی نقشه</span>
+                    </div>
+                    
+                    <div class="routing-label">مسیریابی سریع با:</div>
+                    <div class="routing-buttons">
+                        <a href="https://nshn.ir/..." target="_blank" class="route-card neshan">
+                            <i class="ph ph-navigation-arrow"></i>
+                            <span>نشان</span>
+                        </a>
+                        <a href="https://balad.ir/..." target="_blank" class="route-card balad">
+                            <i class="ph ph-map-pin-line"></i>
+                            <span>بلد</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- فوتر (حفظ شده) -->
+    <footer>
+        <div class="container">
+            <p>تمامی حقوق محفوظ است © ۱۴۰۳ | محمد رادمنش</p>
+        </div>
+    </footer>
+
+    <!-- ویجت ارتباطی هوشمند (حفظ شده طبق دستور مرحله قبل) -->
+    <div class="smart-widget-container" id="smartWidget">
+        
+        <div class="widget-menu" id="widgetMenu">
+            <div class="widget-header-title">راه‌های ارتباطی</div>
+            
+            <a href="tel:09120000000" class="w-item item-phone">
+                <div class="w-icon"><i class="ph ph-phone-call"></i></div>
+                <div class="w-text">
+                    <strong>تماس با دفتر</strong>
+                    <span>پاسخگویی سریع</span>
+                </div>
+            </a>
+            
+            <a href="https://wa.me/989120000000" target="_blank" class="w-item item-whatsapp">
+                <div class="w-icon"><i class="ph ph-whatsapp-logo"></i></div>
+                <div class="w-text">
+                    <strong>دریافت وقت واتساپ</strong>
+                    <span>ارسال مدارک و رزرو</span>
+                </div>
+            </a>
+            
+            <a href="https://instagram.com/username" target="_blank" class="w-item item-insta">
+                <div class="w-icon"><i class="ph ph-instagram-logo"></i></div>
+                <div class="w-text">
+                    <strong>اینستاگرام</strong>
+                    <span>مشاهده پرونده‌ها</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="widget-trigger" id="widgetTrigger">
+            <div class="notification-badge" id="notifBadge">۳</div>
+            
+            <div class="trigger-content">
+                <i class="ph ph-chat-circle-text"></i>
+                <span>ارتباط با ما</span>
+            </div>
+            
+            <div class="close-icon">
+                <i class="ph ph-x"></i>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
