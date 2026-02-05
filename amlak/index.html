@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>املاک تخصصی پارسیان | مشاوره ملکی مدرن</title>
+    <!-- فونت وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- استایل -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="overflow: hidden;"> <!-- اسکرول اولیه بسته شد تا لودینگ تمام شود -->
+
+    <!-- ۱. لودینگ پرده‌ای (Split Curtain) -->
+    <div id="loader-overlay">
+        <div class="curtain left"></div>
+        <div class="curtain right"></div>
+        <div class="loader-content">
+            <div class="loader-logo">PARSIAN</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- ۲. نوار ناوبری شیشه‌ای -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="brand">
+                <i class="fa-solid fa-city brand-icon"></i>
+                <span>پارسیان</span>
+            </div>
+            <div class="nav-info">
+                <a href="https://nshn.ir/_bvkMaGx-o_-" target="_blank" class="nav-location">
+                    <i class="fa-solid fa-location-dot"></i> نارمک، تهرانپارس
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ۳. هدر اصلی (Hero) - تیره‌تر و منظم‌تر -->
+    <header class="hero-section">
+        <!-- تصویر پس‌زمینه -->
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div> <!-- تیره‌تر شده -->
+        
+        <div class="container hero-content">
+            <!-- متن عمومی و کاربردی برای فروش قالب -->
+            <div class="hero-badge">
+                <i class="fa-regular fa-handshake"></i> همراه شما در معاملات ملکی
+            </div>
+            <h1 class="hero-title">
+                خرید امن، فروش سریع،
+                <br>
+                <span class="highlight">مشاوره صادقانه</span>
+            </h1>
+            <p class="hero-desc">
+                ما پلی هستیم میان شما و خانه رویایی‌تان. تخصص ما انجام معاملات شفاف، قانونی و پرسود در منطقه است.
+            </p>
+            <div class="hero-actions">
+                <button onclick="scrollToContact()" class="btn-primary">
+                    درخواست مشاوره <i class="fa-solid fa-phone-flip"></i>
+                </button>
+                <a href="#divar-section" class="btn-secondary">
+                    مشاهده املاک <i class="fa-solid fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ۴. باکس‌های خدمات (اصلاح فاصله و متون ساده) -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="f-icon-box">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <h3>قیمت‌گذاری دقیق منطقه</h3>
+                    <p>آگاهی کامل از آخرین قیمت‌های معامله شده در نارمک و تهرانپارس برای جلوگیری از ضرر شما.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon-box">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <!-- متن ساده و قابل فهم جایگزین شد -->
+                    <h3>املاک اختصاصی و خوش‌قیمت</h3>
+                    <p>دسترسی به خانه‌هایی با قیمت مناسب که فقط در اختیار دفتر ما قرار دارد و هنوز آگهی نشده‌اند.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon-box">
+                        <i class="fa-regular fa-calendar-check"></i>
+                    </div>
+                    <h3>بازدید حتی در ایام تعطیل</h3>
+                    <p>ما می‌دانیم شما مشغله دارید؛ بنابراین در روزهای تعطیل هم برای بازدید هماهنگ هستیم.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ۵. محتوای مراحل کار -->
+    <section class="steps-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>مسیر صاحب‌خانه شدن شما</h2>
+                <div class="title-line"></div>
+            </div>
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">۱</div>
+                    <h4>تماس و مشاوره</h4>
+                    <p>نیازتان را بگویید تا بهترین گزینه‌ها را معرفی کنیم.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">۲</div>
+                    <h4>بازدید حضوری</h4>
+                    <p>با هماهنگی ما، ملک‌های گلچین شده را ببینید.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">۳</div>
+                    <h4>تنظیم قرارداد</h4>
+                    <p>معامله‌ای امن و شفاف زیر نظر مدیر املاک.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ۶. بخش استریپ دیوار -->
+    <section id="divar-section" class="divar-promo-section">
+        <div class="container">
+            <div class="divar-card-modern">
+                <div class="divar-visual-side">
+                    <i class="fa-solid fa-mobile-screen-button mobile-icon"></i>
+                    <div class="floating-bubble"><i class="fa-solid fa-house"></i> آپارتمان</div>
+                    <div class="floating-bubble two"><i class="fa-solid fa-shop"></i> تجاری</div>
+                </div>
+                <div class="divar-text-side">
+                    <div class="badge-mini">کاتالوگ آنلاین</div>
+                    <h3>مشاهده تمام آگهی‌های ما</h3>
+                    <p>برای دیدن عکس‌ها، قیمت‌ها و مشخصات کامل موارد موجود، همین حالا وارد صفحه اختصاصی ما در دیوار شوید.</p>
+                    <a href="LINK_DIVAR" target="_blank" class="divar-cta-btn">
+                        مشاهده در دیوار <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ۷. بخش تماس و آدرس -->
+    <section id="contact-area" class="contact-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>ارتباط مستقیم با مشاورین</h2>
+                <div class="title-line"></div>
+            </div>
+
+            <div class="contact-grid">
+                <!-- تماس -->
+                <a href="tel:09120000000" class="info-card phone">
+                    <div class="ic-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div class="ic-text">
+                        <span>تماس مستقیم</span>
+                        <strong>0912-123-4567</strong>
+                    </div>
+                </a>
+
+                <!-- واتساپ -->
+                <a href="https://wa.me/989120000000" class="info-card whatsapp">
+                    <div class="ic-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                    <div class="ic-text">
+                        <span>واتساپ</span>
+                        <strong>ارسال پیام</strong>
+                    </div>
+                </a>
+
+                <!-- اینستاگرام -->
+                <a href="https://instagram.com/ID" class="info-card instagram">
+                    <div class="ic-icon"><i class="fa-brands fa-instagram"></i></div>
+                    <div class="ic-text">
+                        <span>اینستاگرام</span>
+                        <strong>مشاهده ویدیوها</strong>
+                    </div>
+                </a>
+
+                <!-- دکمه نشان -->
+                <a href="https://nshn.ir/_bvkMaGx-o_-" target="_blank" class="info-card neshan-card">
+                    <div class="ic-icon"><i class="fa-solid fa-location-arrow"></i></div>
+                    <div class="ic-text">
+                        <span>مسیریابی هوشمند</span>
+                        <strong>مسیریابی در نشان</strong>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ۸. فوتر حرفه‌ای -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- ستون اول -->
+                <div class="footer-col brand-col">
+                    <div class="footer-logo">
+                        <i class="fa-solid fa-city"></i> املاک پارسیان
+                    </div>
+                    <p class="footer-desc">
+                        با بیش از ۱۰ سال سابقه درخشان در منطقه شرق تهران.
+                        هدف ما انجام معاملات شفاف و ایجاد حس اعتماد در مشتریان است.
+                    </p>
+                    <div class="footer-socials">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                        <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- ستون دوم -->
+                <div class="footer-col links-col">
+                    <h4>دسترسی سریع</h4>
+                    <ul>
+                        <li><a href="#">صفحه اصلی</a></li>
+                        <li><a href="#divar-section">آگهی‌های دیوار</a></li>
+                        <li><a href="#contact-area">تماس با ما</a></li>
+                        <li><a href="#">درباره ما</a></li>
+                    </ul>
+                </div>
+
+                <!-- ستون سوم: آدرس -->
+                <div class="footer-col address-col">
+                    <h4>آدرس دفتر</h4>
+                    <p class="address-text">
+                        <i class="fa-solid fa-location-dot"></i>
+                        تهران، نارمک، میدان هفت‌حوض، جانبازان شرقی، پلاک ۱۱۰، واحد ۱
+                    </p>
+                    <div class="footer-map-btns">
+                        <a href="https://nshn.ir/_bvkMaGx-o_-" target="_blank" class="f-map-btn neshan-btn">
+                            <i class="fa-solid fa-location-arrow"></i> مسیریابی نشان
+                        </a>
+                        <a href="https://balad.ir/..." target="_blank" class="f-map-btn balad-btn">
+                            <i class="fa-solid fa-map"></i> مسیریابی بلد
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>تمامی حقوق محفوظ است © ۱۴۰۳ | گروه مشاورین املاک پارسیان</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ۹. ویجت شناور تماس -->
+    <div class="float-widget-container">
+        <div class="float-menu" id="floatMenu">
+            <a href="tel:09120000000" class="float-item">
+                <span class="f-label">تماس</span>
+                <div class="f-icon ph"><i class="fa-solid fa-phone"></i></div>
+            </a>
+            <a href="https://wa.me/989120000000" class="float-item">
+                <span class="f-label">واتساپ</span>
+                <div class="f-icon wa"><i class="fa-brands fa-whatsapp"></i></div>
+            </a>
+            <a href="LINK_DIVAR" class="float-item">
+                <span class="f-label">دیوار</span>
+                <div class="f-icon dv"><i class="fa-solid fa-store"></i></div>
+            </a>
+        </div>
+
+        <button class="float-btn-main" id="floatTrigger">
+            <div class="float-content">
+                <i class="fa-solid fa-headset pulse-icon"></i>
+                <span class="float-text">مشاوره رایگان</span>
+            </div>
+            <div class="notif-badge" id="notifBadge">1</div>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
