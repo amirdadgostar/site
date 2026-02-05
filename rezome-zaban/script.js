@@ -1,12 +1,8 @@
 /**
  * FILENAME: script.js
- * PROJECT: Master Teacher Portal (Final Fix)
- * VERSION: 8.0 (Strict Compliance Edition)
- * DESCRIPTION: 
- *    - All previous functionalities preserved.
- *    - Modal Logic: Enforces body scroll lock strictly. Prevents ghost clicks.
- *    - PDF Logic: Updated to handle multi-page complete resume.
- *    - vCard Logic: Connected to Hero button.
+ * PROJECT: Master Teacher Portal
+ * VERSION: 10.0 (Ultra Modern Logic)
+ * DESCRIPTION: Handles Preloader, Pill FAB, Modal Locking, and Scroll Spy.
  */
 
 'use strict';
@@ -19,16 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const preloader = document.getElementById('preloader-overlay');
     const header = document.querySelector('.main-header');
     
-    // انتخابگرهای سیستم منوی شناور
+    // انتخابگرهای سیستم منوی شناور (FAB)
     const fabMainBtn = document.getElementById('fab-main-toggle');
     const fabMenuContainer = document.getElementById('fab-menu-container');
     const fabBadge = document.getElementById('fab-notification-badge');
-    const fabIcon = document.querySelector('.fab-main-icon');
+    const fabIcon = document.querySelector('.fab-pill-icon'); 
     
     const mobileToggle = document.querySelector('.mobile-toggle');
     const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
     const closeMenuButton = document.querySelector('.close-menu-btn');
     const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+    
     const allNavLinks = document.querySelectorAll('.nav-link');
     const allSections = document.querySelectorAll('.section');
     const circleCharts = document.querySelectorAll('.circle-chart');
@@ -43,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. تابع اصلی راه‌اندازی (Main Initializer)
     // =======================================================
     function initializePortal() {
-        handleFastPreloader(); 
+        handleModernPreloader(); 
         setupEventListeners();
         setupScrollBehavior();
         setupAnimations();
@@ -53,22 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 3. منطق لودینگ سریع و ایمن (Fixed Preloader Logic)
+    // 3. منطق لودینگ مدرن (Modern Preloader Logic)
     // =======================================================
-    function handleFastPreloader() {
+    function handleModernPreloader() {
         if (!preloader) {
             document.body.classList.remove('loading-active');
             return;
         }
 
-        const ANIMATION_TIME = 1500; 
-
-        const progressBar = preloader.querySelector('.progress-fill');
-        if (progressBar) {
-            requestAnimationFrame(() => {
-                progressBar.style.width = '100%';
-            });
-        }
+        // زمان برای دیدن انیمیشن لودینگ
+        const ANIMATION_TIME = 2000; 
 
         setTimeout(() => {
             closePreloader();
@@ -89,17 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =======================================================
-    // 4. منطق دکمه شناور چندمنظوره (FAB Logic)
+    // 4. منطق دکمه شناور جدید (Pill FAB Logic)
     // =======================================================
     function setupFabMenuBehavior() {
         if (!fabMainBtn || !fabMenuContainer) return;
 
+        // نمایش نوتیفیکیشن
         setTimeout(() => {
             if (fabBadge) {
                 fabBadge.classList.add('show');
                 playSoftNotificationSound();
             }
-        }, 5000); 
+        }, 4000); 
 
         fabMainBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -109,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('click', (e) => {
             if (!fabMenuContainer.contains(e.target) && !fabMainBtn.contains(e.target)) {
                 fabMenuContainer.classList.remove('active');
-                if(fabIcon) fabIcon.classList.replace('fa-xmark', 'fa-headset');
+                if(fabIcon) {
+                    fabIcon.classList.remove('fa-xmark');
+                    fabIcon.classList.add('fa-headset');
+                }
             }
         });
     }
@@ -143,9 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
             gainNode.connect(audioCtx.destination);
             oscillator.type = 'sine';
             oscillator.frequency.value = 800; 
-            gainNode.gain.value = 0.05; 
+            gainNode.gain.value = 0.02; 
             oscillator.start();
-            setTimeout(() => oscillator.stop(), 200);
+            setTimeout(() => oscillator.stop(), 150);
         } catch (e) {
             // Ignored
         }
@@ -169,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =======================================================
-    // 5.1. مدیریت مودال تماس (Contact Modal Logic)
+    // 5.1. مدیریت مودال تماس جدید
     // =======================================================
     function setupContactModal() {
         if (!contactModal) return;
@@ -177,9 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
         openContactBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation(); // جلوگیری از انتشار کلیک
-                contactModal.classList.add('active');
-                document.body.classList.add('modal-open'); // کلاس قفل اسکرول برای بادی
+                e.stopPropagation(); 
+                openModal();
             });
         });
 
@@ -198,12 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeContactModal();
             }
         });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && contactModal.classList.contains('active')) {
+                closeContactModal();
+            }
+        });
+    }
+
+    function openModal() {
+        if (contactModal) {
+            contactModal.classList.add('active');
+            document.body.classList.add('modal-open'); 
+        }
     }
 
     function closeContactModal() {
         if (contactModal) {
             contactModal.classList.remove('active');
-            // تاخیر کوچک برای برداشتن قفل اسکرول تا انیمیشن بسته شود
             setTimeout(() => {
                 document.body.classList.remove('modal-open');
             }, 300);
@@ -235,7 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
         allSections.forEach(section => {
             const sectionTop = section.offsetTop;
             const headerHeight = header ? header.offsetHeight : 85;
-            if (pageYOffset >= sectionTop - headerHeight) {
+            
+            if (pageYOffset >= (sectionTop - headerHeight - 100)) {
                 currentSection = section.getAttribute('id');
             }
         });
@@ -255,14 +262,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function openMobileMenu() {
         if (mobileMenuOverlay) {
             mobileMenuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; 
         }
     }
 
     function closeMobileMenu() {
         if (mobileMenuOverlay) {
             mobileMenuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
+            document.body.style.overflow = ''; 
         }
     }
 
@@ -276,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 1000,
                 easing: 'ease-in-out-cubic',
                 once: true,
-                offset: 10, 
+                offset: 50, 
             });
         }
 
@@ -303,127 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
         circleCharts.forEach(chart => observer.observe(chart));
     }
 
-
-    // =======================================================
-    // 9. تولید PDF حرفه‌ای و کامل (تغییر یافته به دانلود مستقیم)
-    // =======================================================
-    window.generateFullPDF = function() {
-        // [VIRAYESH SHOD] - تغییر منطق: دانلود مستقیم فایل موجود به جای تولید PDF
-        const btn = document.getElementById('btn-download-cv');
-        if (!btn) return;
-        
-        // ذخیره متن اصلی دکمه
-        const originalContent = btn.innerHTML;
-        
-        // تغییر وضعیت دکمه به حالت لودینگ
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال دانلود...';
-        btn.disabled = true;
-
-        // شبیه‌سازی یک تاخیر کوتاه برای تجربه کاربری بهتر و نمایش نوتیفیکیشن
-        setTimeout(() => {
-            // دانلود فایل PDF از لینک مستقیم
-            window.open('https://amirdadgostar.github.io/site/rezome.pdf', '_blank');
-            
-            showToast('رزومه با موفقیت دانلود شد.', 'success');
-            
-            // بازگرداندن دکمه به حالت اول
-            resetPdfButton(btn, originalContent);
-        }, 800);
-
-        /*
-        // [NOTE] کدهای تولید PDF قبلی (html2pdf) غیرفعال شد تا تداخلی ایجاد نکند
-        // اما مطابق دستور "حذف نکردن کدها"، ساختار تابع حفظ شده است.
-        const element = document.getElementById('pdf-template-root');
-        if (!element) { ... }
-        ...
-        */
-    };
-
-    function resetPdfButton(btn, originalContent) {
-        setTimeout(() => {
-            if(btn) {
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            }
-        }, 1000);
-    }
-
-
-    // =======================================================
-    // 10. دانلود کارت ویزیت (متصل به دکمه هیرو)
-    // =======================================================
-    window.downloadVCard = function() {
-        const vCardString = [
-            'BEGIN:VCARD',
-            'VERSION:3.0',
-            'N:کاویانی;مریم;;استاد;',
-            'FN:استاد مریم کاویانی',
-            'ORG:آکادمی زبان انگلیسی کاویانی',
-            'TITLE:مدرس ارشد آیلتس و تافل',
-            'TEL;TYPE=WORK,VOICE:021-88888888',
-            'TEL;TYPE=CELL,VOICE:09120000000',
-            'ADR;TYPE=WORK:;;تهران، سعادت آباد، بلوار دریا;تهران;;;',
-            'EMAIL:hi@maryam-kaviani.com',
-            'URL:https://maryam-kaviani.com', 
-            'NOTE:مدرس تخصصی آیلتس و مکالمه',
-            'END:VCARD'
-        ].join('\n');
-
-        const blob = new Blob([vCardString], { type: 'text/vcard;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'Contact-Maryam-Kaviani.vcf');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        showToast('اطلاعات تماس در دفترچه تلفن ذخیره شد.', 'success');
-    }
-
-
-    // =======================================================
-    // 11. سیستم نوتیفیکیشن (Toast Notifications)
-    // =======================================================
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        
-        Object.assign(toast.style, {
-            position: 'fixed',
-            bottom: '30px',
-            left: '50%',
-            transform: 'translate(-50%, 150%)',
-            backgroundColor: type === 'success' ? '#4f46e5' : '#ef4444',
-            color: 'white',
-            padding: '15px 25px',
-            borderRadius: '50px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            zIndex: '10001',
-            transition: 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            opacity: '0',
-            fontFamily: 'inherit',
-            fontSize: '0.95rem'
-        });
-
-        const iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
-        toast.innerHTML = `<i class="fa-solid ${iconClass}"></i><span>${message}</span>`;
-        
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.transform = 'translate(-50%, 0)';
-            toast.style.opacity = '1';
-        }, 100);
-
-        setTimeout(() => {
-            toast.style.transform = 'translate(-50%, 150%)';
-            toast.style.opacity = '0';
-            toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-        }, 4000);
-    }
-
+    // شروع برنامه
     initializePortal();
 });
