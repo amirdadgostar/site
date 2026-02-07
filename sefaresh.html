@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -274,8 +274,12 @@
             };
 
             fetch(WEB_APP_URL, {
+                redirect: "follow", // اضافه شده برای رفع مشکل
                 method: "POST",
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8", // اضافه شده برای رفع مشکل CORS
+                },
             })
             .then(res => res.json())
             .then(data => {
