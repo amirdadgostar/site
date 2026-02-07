@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه قرارداد طراحی سایت | امیرحسین دادگستر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #f3f4f6; }
+        .contract-paper { 
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); 
+            background-color: #fff;
+        }
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 4rem; color: rgba(255, 0, 0, 0.1); font-weight: bold; border: 5px solid rgba(255, 0, 0, 0.1);
+            padding: 20px; z-index: 0; pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-10">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white p-4 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-xl font-bold">سامانه ثبت قرارداد طراحی سایت</h1>
+            <p class="text-sm opacity-80">توسعه دهنده: امیرحسین دادگستر</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto p-4 max-w-2xl mt-6" id="app">
+        
+        <!-- STEP 1: FORM -->
+        <div id="step-form" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+            <h2 class="text-lg font-bold border-b pb-2 text-blue-800">1. مشخصات و انتخاب سرویس</h2>
+            
+            <div>
+                <label class="block text-sm text-gray-700">نام و نام خانوادگی</label>
+                <input type="text" id="fullName" class="w-full border p-2 rounded mt-1 focus:ring-2 focus:ring-blue-500" placeholder="مثال: علی محمدی">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-700">کد ملی</label>
+                <input type="number" id="nationalCode" class="w-full border p-2 rounded mt-1" placeholder="کد ملی 10 رقمی">
+                <p id="nc-error" class="text-red-500 text-xs mt-1 hidden">کد ملی نامعتبر است</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm text-gray-700">انتخاب پلن</label>
+                    <select id="planType" class="w-full border p-2 rounded mt-1" onchange="calculatePrice()">
+                        <option value="basic" data-price="1000000">سایت معرفی ساده (1 میلیون تومان)</option>
+                        <option value="google" data-price="2000000">متصل به گوگل شیت (2 میلیون تومان)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-700">نام قالب انتخابی</label>
+                    <select id="templateName" class="w-full border p-2 rounded mt-1">
+                        <option value="ToWeb-Minimal">قالب مینیمال (ToWeb-Minimal)</option>
+                        <option value="ToWeb-Corporate">قالب شرکتی (ToWeb-Corporate)</option>
+                        <option value="ToWeb-Personal">قالب شخصی (ToWeb-Personal)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-3 rounded border border-blue-100">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="domainRequest" class="w-5 h-5" onchange="calculatePrice()">
+                    <span class="text-sm">درخواست خرید دامنه IR و اتصال (100,000 تومان)</span>
+                </label>
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-700">تاریخ شروع طراحی</label>
+                <input type="date" id="startDate" class="w-full border p-2 rounded mt-1">
+                <p class="text-xs text-gray-500 mt-1">ظرفیت روزانه محدود است (3 سفارش).</p>
+            </div>
+
+            <div class="text-center bg-gray-100 p-3 rounded-lg">
+                <p class="text-sm text-gray-600">مبلغ قابل پرداخت:</p>
+                <p class="text-2xl font-bold text-blue-800" id="displayPrice">1,000,000 تومان</p>
+            </div>
+
+            <button onclick="goToContract()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
+                مرحله بعد: مشاهده قرارداد
+            </button>
+        </div>
+
+        <!-- STEP 2: CONTRACT PREVIEW -->
+        <div id="step-contract" class="hidden">
+            <div id="contract-capture" class="contract-paper p-8 shadow-2xl relative text-sm leading-7 text-justify text-gray-900 border border-gray-300">
+                
+                <div class="watermark">فاقد اعتبار بدون پرداخت</div>
+
+                <!-- Contract Header -->
+                <div class="text-center border-b-2 border-black pb-4 mb-4">
+                    <h2 class="text-2xl font-bold">قرارداد طراحی وب‌سایت</h2>
+                    <p class="text-sm mt-1">شماره سفارش: <span id="c-orderId">---</span> | تاریخ: <span id="c-date">---</span></p>
+                </div>
+
+                <!-- Contract Body -->
+                <p>این قرارداد فی‌مابین <strong>امیرحسین دادگستر</strong> (طراح) و <strong><span id="c-name">---</span></strong> به کد ملی <strong><span id="c-nc">---</span></strong> (سفارش‌دهنده) منعقد می‌گردد.</p>
+
+                <h3 class="font-bold mt-4">موضوع قرارداد:</h3>
+                <p>طراحی وب‌سایت با مشخصات زیر:</p>
+                <ul class="list-disc list-inside bg-gray-50 p-2 rounded border">
+                    <li>نوع پلن: <span id="c-plan">---</span></li>
+                    <li>قالب انتخابی: <span id="c-template">---</span></li>
+                    <li>وضعیت دامنه: <span id="c-domain">---</span></li>
+                    <li>تاریخ شروع پروژه: <span id="c-startDate">---</span></li>
+                    <li>زمان تحویل: حداکثر 20 روز کاری پس از شروع</li>
+                </ul>
+
+                <h3 class="font-bold mt-4">مبلغ و نحوه پرداخت:</h3>
+                <p>مبلغ کل قرارداد: <strong><span id="c-total">---</span> تومان</strong> می‌باشد.</p>
+                <p>پرداخت به صورت کامل یا دو قسط (50% شروع، 50% تحویل) به شماره کارت <strong>6063-7311-3256-0120</strong> انجام می‌شود.</p>
+
+                <h3 class="font-bold mt-4">شرایط و قوانین:</h3>
+                <ol class="list-decimal list-inside text-xs space-y-1">
+                    <li>کلیک روی دکمه تأیید توسط سفارش‌دهنده، جایگزین امضای دستی و به‌منزله قبول مفاد قرارداد است.</li>
+                    <li>این قرارداد پس از تأیید کاربر، 3 روز اعتبار دارد و در صورت عدم واریز حداقل قسط اول، باطل می‌شود.</li>
+                    <li>ارسال فیش و تصویر قرارداد صرفاً اعلام پرداخت است و قبول نهایی با تأیید طراح است.</li>
+                    <li>تغییرات خارج از قالب و دامنه انتخابی شامل هزینه جداگانه است.</li>
+                    <li>سایت روی GitHub Pages میزبانی می‌شود. مسئولیت تمدید دامنه شخصی با خریدار است.</li>
+                </ol>
+
+                <div class="flex justify-between mt-8 pt-4 border-t border-black">
+                    <div class="text-center">
+                        <p class="font-bold">امضای طراح</p>
+                        <p class="text-gray-500 text-xs">تأیید سیستمی</p>
+                        <p>امیرحسین دادگستر</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-bold">تأیید سفارش‌دهنده</p>
+                        <p class="text-green-600 font-bold text-lg">✔ تأیید و پذیرش شد</p>
+                        <p id="c-confirmTime" class="text-xs text-gray-500"></p>
+                    </div>
+                </div>
+                
+                <p class="text-center text-xs text-red-600 mt-4 border border-red-200 bg-red-50 p-1">
+                    اعتبار این پیش‌فاکتور تا تاریخ <span id="c-expire">---</span> می‌باشد.
+                </p>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-white p-4 mt-4 rounded shadow space-y-3">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" id="termsCheck" class="w-5 h-5 accent-blue-600">
+                    <span class="text-sm font-bold">متن قرارداد را مطالعه کردم و تمام مفاد آن را می‌پذیرم.</span>
+                </label>
+                
+                <button id="btn-submit" onclick="submitOrder()" disabled class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                    تأیید نهایی و ایجاد قرارداد
+                </button>
+                
+                <button onclick="document.getElementById('step-contract').classList.add('hidden'); document.getElementById('step-form').classList.remove('hidden');" class="w-full bg-gray-300 text-gray-700 py-2 rounded text-sm">
+                    بازگشت و اصلاح
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: FINAL -->
+        <div id="step-final" class="hidden text-center bg-white p-8 rounded-xl shadow-lg">
+            <div class="bg-green-100 text-green-800 p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center text-4xl mb-4">✓</div>
+            <h2 class="text-xl font-bold text-gray-800">سفارش با موفقیت ثبت شد</h2>
+            <p class="text-gray-600 mt-2 text-sm">قرارداد شما ایجاد شد. لطفاً تصویر زیر را دانلود کنید.</p>
+
+            <div class="my-6 border-2 border-dashed border-blue-200 p-4 rounded bg-blue-50">
+                <p class="text-sm font-bold text-blue-900 mb-2">شماره کارت جهت واریز:</p>
+                <p class="text-xl font-mono dir-ltr select-all">6063 7311 3256 0120</p>
+                <p class="text-xs text-gray-500 mt-1">به نام امیرحسین دادگستر</p>
+            </div>
+
+            <button id="dl-btn" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold mb-4 shadow-lg animate-pulse">
+                📥 دانلود تصویر قرارداد
+            </button>
+
+            <p class="text-xs text-gray-500 text-justify bg-yellow-50 p-2 rounded border border-yellow-200">
+                <strong>توجه:</strong> تصویر قرارداد دانلود شده را به همراه فیش واریزی (حداقل 50% مبلغ) در پیام‌رسان ایتا ارسال کنید تا سفارش شما نهایی شود.
+            </p>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white p-5 rounded-lg flex items-center gap-3">
+                <div class="w-6 h-6 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <span>در حال پردازش...</span>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // 🔴🔴 آدرس اسکریپت گوگل خود را اینجا بگذارید 🔴🔴
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyo8vFxQ1egbs-FTf17PQEhJygLXjyGFyvftoa8scuYAbgUtPKk5uSuIU1Wx41ObGGAiA/exec"; 
+
+        // Utility: Validation Code Melli
+        function isValidIranianNationalCode(input) {
+            if (!/^\d{10}$/.test(input)) return false;
+            const check = +input[9];
+            const sum = input.split('').slice(0, 9).reduce((acc, x, i) => acc + +x * (10 - i), 0) % 11;
+            return sum < 2 ? check === sum : check + sum === 11;
+        }
+
+        function calculatePrice() {
+            const planPrice = parseInt(document.querySelector('#planType option:checked').dataset.price);
+            const domainPrice = document.getElementById('domainRequest').checked ? 100000 : 0;
+            const total = planPrice + domainPrice;
+            document.getElementById('displayPrice').innerText = total.toLocaleString() + " تومان";
+            return total;
+        }
+
+        // Logic
+        async function goToContract() {
+            const name = document.getElementById('fullName').value;
+            const nc = document.getElementById('nationalCode').value;
+            const date = document.getElementById('startDate').value;
+
+            // Validations
+            if(name.length < 3) return alert("نام کامل را وارد کنید");
+            if(!isValidIranianNationalCode(nc)) {
+                document.getElementById('nc-error').classList.remove('hidden');
+                return alert("کد ملی نامعتبر است");
+            } else {
+                document.getElementById('nc-error').classList.add('hidden');
+            }
+            if(!date) return alert("تاریخ شروع را انتخاب کنید");
+
+            // Fill Preview
+            document.getElementById('c-name').innerText = name;
+            document.getElementById('c-nc').innerText = nc;
+            document.getElementById('c-plan').innerText = document.querySelector('#planType option:checked').text;
+            document.getElementById('c-template').innerText = document.getElementById('templateName').value;
+            document.getElementById('c-domain').innerText = document.getElementById('domainRequest').checked ? "همراه با خرید دامنه IR" : "استفاده از دامنه رایگان";
+            document.getElementById('c-startDate').innerText = date;
+            document.getElementById('c-total').innerText = calculatePrice().toLocaleString();
+            
+            // Set Temp Dates
+            const now = new Date();
+            document.getElementById('c-date').innerText = now.toLocaleDateString('fa-IR');
+            document.getElementById('c-confirmTime').innerText = now.toLocaleString('fa-IR');
+            
+            // Generate Temp Order ID for preview
+            document.getElementById('c-orderId').innerText = nc + now.getHours() + now.getMinutes(); // موقت برای نمایش
+
+            // Switch View
+            document.getElementById('step-form').classList.add('hidden');
+            document.getElementById('step-contract').classList.remove('hidden');
+        }
+
+        // Handle Checkbox
+        document.getElementById('termsCheck').addEventListener('change', function(e) {
+            document.getElementById('btn-submit').disabled = !e.target.checked;
+        });
+
+        // Submit to Google Sheets
+        function submitOrder() {
+            document.getElementById('loading').classList.remove('hidden');
+            
+            const payload = {
+                action: "createOrder",
+                full_name: document.getElementById('fullName').value,
+                national_code: document.getElementById('nationalCode').value,
+                plan_type: document.querySelector('#planType option:checked').text,
+                plan_price: parseInt(document.querySelector('#planType option:checked').dataset.price),
+                template_name: document.getElementById('templateName').value,
+                domain_request: document.getElementById('domainRequest').checked ? "بله" : "خیر",
+                domain_price: document.getElementById('domainRequest').checked ? 100000 : 0,
+                total_price: calculatePrice(),
+                start_date: document.getElementById('startDate').value
+            };
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading').classList.add('hidden');
+                if(data.status === "success") {
+                    // Update Final Details
+                    document.getElementById('c-orderId').innerText = data.order_id; // شناسه واقعی از سرور
+                    document.getElementById('c-expire').innerText = data.expire_at;
+                    
+                    // Show Final Step
+                    document.getElementById('step-contract').classList.add('hidden');
+                    document.getElementById('step-final').classList.remove('hidden');
+
+                    // Setup Download
+                    setupDownload(data.order_id);
+                } else {
+                    alert("خطا: " + data.message);
+                }
+            })
+            .catch(err => {
+                document.getElementById('loading').classList.add('hidden');
+                alert("خطا در ارتباط با سرور");
+                console.error(err);
+            });
+        }
+
+        function setupDownload(fileName) {
+            const element = document.getElementById("contract-capture");
+            // باید عنصر را موقتا نمایش دهیم تا عکس گرفته شود (اما کاربر نباید ببیند)
+            // در اینجا چون از flow خارج شده، آن را به step-final منتقل میکنیم اما مخفی
+            document.getElementById('step-final').appendChild(element);
+            element.style.position = "absolute";
+            element.style.left = "-9999px";
+            element.style.width = "800px"; // عرض ثابت برای کیفیت بهتر
+
+            document.getElementById('dl-btn').onclick = function() {
+                element.style.left = "0"; // موقتا قابل دیدن برای اسکریپت
+                html2canvas(element, {scale: 2}).then(canvas => {
+                    element.style.left = "-9999px"; // مخفی کردن مجدد
+                    const link = document.createElement('a');
+                    link.download = `Contract-${fileName}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            };
+        }
+    </script>
+</body>
+</html>
