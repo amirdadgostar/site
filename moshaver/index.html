@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کلینیک روانشناسی دکتر آرش راد</title>
+    <!-- فونت وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- آیکون‌های FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- صدای ناتیفیکیشن -->
+    <audio id="notifSound" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" preload="auto"></audio>
+
+    <!-- لودینگ سینمایی -->
+    <div class="cinema-loader" id="loader">
+        <div class="loader-wrapper">
+            <span class="loader-line"></span>
+            <h2 class="loader-brand">DR. RAD CLINIC</h2>
+            <span class="loader-line"></span>
+        </div>
+    </div>
+
+    <!-- کانتینر اصلی صفحه -->
+    <div class="main-layout">
+        
+        <!-- منوی سایدبار -->
+        <aside class="sidebar-nav">
+            <div class="sidebar-content-wrapper">
+                <div class="sidebar-header">
+                    <div class="logo-box">
+                        <i class="fa-solid fa-infinity"></i>
+                    </div>
+                    <div class="brand-name">
+                        <h3>دکتر آرش راد</h3>
+                        <span>شماره نظام: ۱۲۳۴۵</span>
+                    </div>
+                </div>
+
+                <nav class="vertical-menu">
+                    <a href="#home" class="v-link active">
+                        <span class="link-txt">صفحه اصلی</span>
+                        <span class="link-num">01</span>
+                    </a>
+                    <a href="#services" class="v-link">
+                        <span class="link-txt">خدمات کلینیک</span>
+                        <span class="link-num">02</span>
+                    </a>
+                    <a href="#psych-tests" class="v-link">
+                        <span class="link-txt">تست‌های آنلاین</span>
+                        <span class="link-num">03</span>
+                    </a>
+                    <a href="#contact-footer" class="v-link">
+                        <span class="link-txt">اطلاعات تماس</span>
+                        <span class="link-num">04</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <a href="tel:02188888888" class="sidebar-call-btn">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>021-88888888</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- دکمه موبایل -->
+            <button class="mobile-toggle-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </aside>
+
+        <!-- محتوای اصلی -->
+        <main class="page-content" id="scrollContainer">
+            
+            <!-- هیرو سکشن (بخش آغازین) -->
+            <section class="hero-art" id="home">
+                <!-- متن پس زمینه -->
+                <div class="hero-overlay-text fade-in">PSYCHOLOGY</div>
+                
+                <!-- اصلاح دستور 2: تصویر ابتدا بارگذاری می‌شود -->
+                <div class="hero-visual-side fade-in">
+                    <img src="https://amirdadgostar.github.io/site/moshaver/rasmi.jpeg" alt="دکتر آرش راد - روانشناس">
+                    <div class="glass-info">
+                        <i class="fa-solid fa-quote-right"></i>
+                        <p>آرامش، نتیجه درک عمیق خویشتن است.</p>
+                    </div>
+                </div>
+
+                <!-- اصلاح دستور 2: متن‌ها با تاخیر بارگذاری می‌شوند -->
+                <div class="hero-content-box fade-up delay-1">
+                    <div class="tag-modern">مشاوره تخصصی و راهگشا</div>
+                    <h1>کلینیک روانشناسی <br> <span class="gold-text">دکتر آرش راد</span></h1>
+                    <p>در فضایی امن و حرفه‌ای، با بهره‌گیری از دانش روز روانشناسی، همراه شما هستیم تا مسیر زندگی را با آرامش و آگاهی بیشتری طی کنید.</p>
+                    
+                    <div class="hero-actions">
+                        <a href="#contact-footer" class="btn-gold">
+                            رزرو وقت مشاوره
+                        </a>
+                        <div class="exp-badge">
+                            <span class="big-num">۱۵+</span>
+                            <span class="sm-txt">سال<br>تجربه</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- بخش خدمات -->
+            <section class="services-list-sec" id="services">
+                
+                <!-- اصلاح دستور 3: تصویر همدلی بالای عنوان قرار گرفت -->
+                <div class="empathy-banner fade-up">
+                    <img src="https://amirdadgostar.github.io/site/moshaver/Hamdeli.jpeg" alt="همدلی و آرامش در مشاوره">
+                    <div class="empathy-overlay">
+                        <span><i class="fa-solid fa-hand-holding-heart"></i> فضای امن و همدلانه</span>
+                    </div>
+                </div>
+
+                <div class="section-title-box">
+                    <h2>حوزه‌های تخصصی</h2>
+                    <div class="line-deco"></div>
+                </div>
+
+                <div class="service-list-container">
+                    <!-- آیتم ۱ -->
+                    <a href="#contact-footer" class="srv-row fade-up">
+                        <div class="srv-idx">01</div>
+                        <div class="srv-info">
+                            <h3>زوج درمانی و روابط</h3>
+                            <p>حل تعارضات زناشویی، مشاوره پیش از ازدواج و بهبود روابط عاطفی</p>
+                        </div>
+                        <div class="srv-action">
+                            <div class="circle-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+                        </div>
+                    </a>
+
+                    <!-- آیتم ۲ -->
+                    <a href="#contact-footer" class="srv-row fade-up delay-1">
+                        <div class="srv-idx">02</div>
+                        <div class="srv-info">
+                            <h3>درمان اضطراب و افسردگی</h3>
+                            <p>درمان تخصصی وسواس، پنیک و اختلالات خلقی با رویکرد CBT</p>
+                        </div>
+                        <div class="srv-action">
+                            <div class="circle-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+                        </div>
+                    </a>
+
+                    <!-- آیتم ۳ -->
+                    <a href="#contact-footer" class="srv-row fade-up delay-2">
+                        <div class="srv-idx">03</div>
+                        <div class="srv-info">
+                            <h3>مشاوره کودک و نوجوان</h3>
+                            <p>درمان مشکلات رفتاری، تحصیلی، بیش‌فعالی و دوران بلوغ</p>
+                        </div>
+                        <div class="srv-action">
+                            <div class="circle-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+                        </div>
+                    </a>
+                    
+                    <!-- آیتم ۴ -->
+                    <a href="#contact-footer" class="srv-row fade-up">
+                        <div class="srv-idx">04</div>
+                        <div class="srv-info">
+                            <h3>سنجش و روانسنجی</h3>
+                            <p>اجرای دقیق تست‌های هوش، شخصیت و استعدادیابی</p>
+                        </div>
+                        <div class="srv-action">
+                            <div class="circle-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- بخش تست‌ها -->
+            <section class="banner-test" id="psych-tests">
+                <div class="banner-bg"></div>
+                <i class="fa-solid fa-brain icon-bg"></i>
+                
+                <div class="banner-content fade-up">
+                    <h2>کاوش در اعماق شخصیت</h2>
+                    <p>همین حالا با معتبرترین تست‌های جهانی (NEO, MBTI, 16PF) لایه‌های پنهان شخصیت خود را بشناسید.</p>
+                    <div class="test-links-group">
+                        <a href="https://reselo.ir" target="_blank" class="btn-outline-light">ورود به سامانه تست</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- فوتر -->
+            <footer class="footer-modern" id="contact-footer">
+                <div class="footer-grid">
+                    <div class="f-col">
+                        <h4><i class="fa-solid fa-phone-volume"></i> تماس مستقیم</h4>
+                        <a href="tel:09120000000" class="f-phone">0912-000-0000</a>
+                        <a href="tel:02188888888" class="f-phone">021-88888888</a>
+                    </div>
+                    <div class="f-col">
+                        <h4><i class="fa-solid fa-location-dot"></i> آدرس کلینیک</h4>
+                        <p>تهران، خیابان ولیعصر، بالاتر از پارک ساعی، کوچه ساعی یکم، پلاک ۱۰، واحد ۴</p>
+                        <div class="map-links">
+                            <a href="https://nshn.ir" target="_blank">نشان</a> / 
+                            <a href="https://balad.ir" target="_blank">بلد</a> / 
+                            <a href="https://google.com/maps" target="_blank">گوگل مپ</a>
+                        </div>
+                    </div>
+                    <div class="f-col social-col">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                    </div>
+                </div>
+                <div class="copy-right">
+                    © 2026 Dr. Arash Rad. All Rights Reserved. | طراحی حرفه‌ای و اختصاصی
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- منوی موبایل -->
+    <div class="mobile-menu-overlay" id="mobileNav">
+        <div class="mobile-nav-content">
+            <button id="closeMenuBtn" class="m-close"><i class="fa-solid fa-xmark"></i></button>
+            <a href="#home" class="mobile-link">صفحه اصلی</a>
+            <a href="#services" class="mobile-link">خدمات</a>
+            <a href="#psych-tests" class="mobile-link">تست‌ها</a>
+            <a href="#contact-footer" class="mobile-link">تماس با ما</a>
+        </div>
+    </div>
+
+    <!-- ابزارک شناور نئونی -->
+    <div class="neon-dock" id="floatingDock">
+        <div class="dock-items" id="widgetOptions">
+            <a href="tel:09120000000" class="d-item"><i class="fa-solid fa-phone"></i></a>
+            <a href="https://wa.me/989120000000" class="d-item"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+        
+        <button class="main-neon-btn" id="mainWidgetBtn">
+            <span class="pulse-ring"></span>
+            <span class="dot" id="notifDot"></span>
+            <i class="fa-solid fa-message"></i>
+            
+            <div class="msg-tooltip" id="widgetMessage">
+                نیاز به مشاوره دارید؟
+            </div>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
