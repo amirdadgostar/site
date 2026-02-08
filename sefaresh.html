@@ -7,56 +7,216 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: 'Vazirmatn', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        h1, h2, h3 { text-align: center; color: #1a202c; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #4a5568; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; font-family: inherit; font-size: 16px; box-sizing: border-box; }
-        .price-box { background: #ebf8ff; padding: 15px; border-radius: 8px; border: 1px solid #bee3f8; text-align: center; font-size: 1.2rem; color: #2b6cb0; font-weight: bold; margin: 20px 0; }
-        .btn { width: 100%; padding: 15px; background: #2f855a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; font-family: inherit; font-weight: bold; }
-        .btn:disabled { background: #cbd5e0; cursor: not-allowed; }
-        .btn:hover:not(:disabled) { background: #276749; }
+        :root {
+            --primary-color: #3182ce;
+            --secondary-color: #2c5282;
+            --success-color: #38a169;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            align-items: flex-start;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-main);
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h2, h3 {
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .info-box {
+            background: #ebf8ff;
+            border-left: 5px solid #4299e1;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #2c5282;
+        }
+
+        .price-box {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #b2f5ea;
+            text-align: center;
+            font-size: 1.4rem;
+            color: #285e61;
+            font-weight: 800;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            transition: transform 0.1s, background 0.3s;
+            box-shadow: 0 4px 6px rgba(56, 161, 105, 0.2);
+        }
+
+        .btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #2f855a;
+            transform: translateY(-2px);
+        }
+
         .hidden { display: none; }
-        .rules-box { background: #fffaf0; border: 1px solid #fbd38d; padding: 15px; font-size: 0.9rem; border-radius: 8px; margin-bottom: 20px; color: #744210; max-height: 150px; overflow-y: auto; text-align: justify; }
-        
+
+        .rules-box {
+            background: #fffaf0;
+            border: 1px solid #fbd38d;
+            padding: 20px;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            color: #744210;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        /* استایل اختصاصی برای نمایش تصویر قرارداد در صفحه موفقیت */
+        #generated-contract-img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
         /* استایل قرارداد جهت چاپ عکس - سایز A4 */
         #contract-preview {
             position: absolute; left: -9999px; top: 0; 
             width: 794px; /* A4 Width at 96 DPI approx */
             min-height: 1123px; /* A4 Height */
-            background: white; padding: 40px; 
+            background: white; padding: 50px; 
             border: 1px solid #000; direction: rtl; color: #000;
             box-sizing: border-box;
             font-family: 'Vazirmatn', sans-serif;
             display: flex; flex-direction: column; justify-content: space-between;
         }
+        
+        /* واترمارک کوچک شده و منتقل شده به پایین */
         .watermark {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 5rem; color: rgba(255, 0, 0, 0.15); border: 8px solid rgba(255, 0, 0, 0.15); 
-            padding: 20px; font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
+            position: absolute; 
+            bottom: 60px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            font-size: 1.5rem; 
+            color: rgba(255, 0, 0, 0.3); 
+            border: 3px solid rgba(255, 0, 0, 0.3); 
+            padding: 10px 30px; 
+            font-weight: 900; 
+            z-index: 0; 
+            pointer-events: none; 
+            white-space: nowrap;
+            border-radius: 10px;
         }
-        .c-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
-        .c-header h2 { margin: 5px 0; font-size: 1.6rem; }
-        .c-meta { display: flex; justify-content: space-between; font-size: 0.9rem; color: #333; margin-top: 10px; }
+
+        .c-header { text-align: center; border-bottom: 3px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+        .c-header h2 { margin: 5px 0; font-size: 1.8rem; color: #000; }
+        .c-meta { display: flex; justify-content: space-between; font-size: 1rem; color: #444; margin-top: 15px; font-weight: bold; }
         
         .c-body { z-index: 1; position: relative; flex-grow: 1; }
-        .c-section-title { font-weight: bold; font-size: 1.1rem; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
-        .c-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 1rem; border-bottom: 1px dashed #eee; padding-bottom: 3px; }
+        .c-section-title { 
+            font-weight: 800; font-size: 1.2rem; margin-top: 25px; margin-bottom: 12px; 
+            border-bottom: 2px solid #eee; padding-bottom: 5px; color: #333; 
+        }
+        .c-row { 
+            display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 1.1rem; 
+            border-bottom: 1px dashed #f0f0f0; padding-bottom: 5px; 
+        }
         .highlight-text { font-weight: bold; color: #000; }
         
-        .c-footer { margin-top: 20px; border-top: 2px solid #000; padding-top: 10px; font-size: 0.85rem; text-align: justify; line-height: 1.6; }
-        .c-footer h3 { font-size: 1rem; margin: 10px 0 5px; text-align: right; }
-        .c-signature { margin-top: 30px; display: flex; justify-content: space-between; align-items: center; text-align: center; }
-        .c-box { border: 1px solid #000; padding: 10px; width: 45%; height: 80px; display: flex; flex-direction: column; justify-content: center; }
+        .c-footer { margin-top: 40px; border-top: 3px solid #333; padding-top: 20px; font-size: 0.9rem; text-align: justify; line-height: 1.8; }
+        .c-footer h3 { font-size: 1.1rem; margin: 10px 0 10px; text-align: right; color: #000; }
+        .c-signature { margin-top: 50px; display: flex; justify-content: space-between; align-items: center; text-align: center; padding: 0 40px; }
+        .c-box { border: 2px solid #333; padding: 15px; width: 40%; height: 100px; display: flex; flex-direction: column; justify-content: center; border-radius: 8px; }
+
+        /* لودر */
+        #loader { font-weight: bold; color: var(--primary-color); }
     </style>
 </head>
 <body>
 
 <div class="container" id="step-form">
     <h1>ثبت قرارداد طراحی سایت</h1>
-    <div id="loading-dates" style="text-align:center; color:#2b6cb0; margin-bottom:10px;">در حال دریافت تاریخ‌های آزاد...</div>
-
+    
     <div class="form-group">
         <label>نام و نام خانوادگی</label>
         <input type="text" id="fullName" placeholder="نام کامل خود را وارد کنید">
@@ -65,7 +225,7 @@
     <div class="form-group">
         <label>کد ملی</label>
         <input type="number" id="nationalCode" placeholder="۱۰ رقم بدون خط تیره">
-        <small id="nid-msg" style="color: red;"></small>
+        <small id="nid-msg" style="color: #e53e3e; font-weight:bold;"></small>
     </div>
 
     <div class="form-group">
@@ -74,12 +234,12 @@
             <option value="type1" data-price="1000000" data-name="سایت معرفی ساده">سایت معرفی ساده (۱,۰۰۰,۰۰۰ تومان)</option>
             <option value="type2" data-price="2000000" data-name="سایت متصل به گوگل">سایت متصل به گوگل (۲,۰۰۰,۰۰۰ تومان)</option>
         </select>
-        <small style="display:block; margin-top:5px; color:#555;">
+        <div class="info-box">
             <ul style="padding-right: 20px; margin:0;">
                 <li id="plan-desc-1">سایت معرفی: متن، تصویر، اطلاعات تماس (بدون فرم)</li>
                 <li id="plan-desc-2" class="hidden">سایت متصل به گوگل: فرم ثبت‌نام، ایمیل، اتصال به گوگل شیت</li>
             </ul>
-        </small>
+        </div>
     </div>
 
     <div class="form-group">
@@ -90,6 +250,9 @@
             <option value="Template-C">قالب فروشگاهی ساده (ویترین)</option>
             <option value="Template-D">قالب آموزشی</option>
         </select>
+        <div style="font-size: 0.85rem; color: #d69e2e; margin-top: 5px; background: #fffff0; padding: 8px; border-radius: 5px; border: 1px solid #faf089;">
+            توجه: طراحی دقیقاً بر پایه قالب انتخابی انجام می‌شود. تغییرات شامل رنگ، متن و تصاویر است و ساختار کلی قالب تغییر نمی‌کند.
+        </div>
     </div>
 
     <div class="form-group">
@@ -98,15 +261,16 @@
             <option value="no" data-price="0">خیر (ساب‌دامین رایگان GitHub)</option>
             <option value="yes" data-price="100000">بله (ثبت و تنظیم دامنه ir - هزینه ۱۰۰,۰۰۰ تومان)</option>
         </select>
-        <small style="color: #718096; font-size: 0.8rem;">در صورت انتخاب «بله»، ساخت شناسه ایرنیک بر عهده شماست.</small>
+        <small style="color: #718096; font-size: 0.8rem; display:block; margin-top:5px;">در صورت انتخاب «بله»، ساخت شناسه ایرنیک بر عهده شماست.</small>
     </div>
 
     <div class="form-group">
         <label>تاریخ شروع طراحی</label>
-        <select id="startDate" disabled>
-            <option value="">در حال بارگذاری لیست تاریخ‌ها...</option>
+        <!-- لودینگ داخل خود سلکت قرار گرفته است -->
+        <select id="startDate">
+            <option value="" disabled selected>⏳ در حال دریافت لیست تاریخ‌ها...</option>
         </select>
-        <small>انتخاب از فردا تا ۳۰ روز آینده (ظرفیت روزانه: ۳ عدد)</small>
+        <small style="color: #718096;">حداکثر ظرفیت روزانه: ۳ سفارش</small>
     </div>
 
     <div class="price-box">
@@ -118,44 +282,54 @@
         1. کلیک روی دکمه تأیید، جایگزین امضای دستی و به‌منزله قبول مفاد قرارداد است.<br>
         2. اعتبار این قرارداد تنها ۳ روز است. در صورت عدم پرداخت قسط اول، باطل می‌شود.<br>
         3. ارسال فیش صرفاً اعلام پرداخت است؛ قبول نهایی با تأیید طراح است.<br>
-        4. تغییر قالب پس از ثبت، فقط با موافقت طراح امکان‌پذیر است.<br>
+        4. <strong>قالب:</strong> سایت بر اساس قالب انتخابی پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
         5. سایت‌ها استاتیک (HTML/JS) بوده و فاقد دیتابیس اختصاصی یا وردپرس هستند.
     </div>
 
     <div class="form-group">
-        <input type="checkbox" id="termsCheck" style="width: auto;">
-        <label for="termsCheck" style="display: inline;">قوانین فوق و مفاد قرارداد را مطالعه کرده و می‌پذیرم.</label>
+        <input type="checkbox" id="termsCheck" style="width: auto; transform: scale(1.2); margin-left: 5px;">
+        <label for="termsCheck" style="display: inline; font-weight: normal;">قوانین فوق و مفاد قرارداد را مطالعه کرده و می‌پذیرم.</label>
     </div>
 
     <button class="btn" id="submitBtn" onclick="submitOrder()" disabled>تأیید مفاد قرارداد و صدور</button>
-    <div id="loader" class="hidden" style="text-align:center; margin-top:10px;">در حال ارتباط با سامانه...</div>
+    <div id="loader" class="hidden" style="text-align:center; margin-top:15px;">در حال ثبت اطلاعات و صدور قرارداد...</div>
 </div>
 
 <div class="container hidden" id="step-success">
-    <h2 style="color: green;">قرارداد با موفقیت صادر شد</h2>
-    <p style="text-align: center;">این قرارداد تا تاریخ <strong id="showExpire"></strong> اعتبار دارد.</p>
+    <h2 style="color: #2f855a; border-bottom: none;">قرارداد با موفقیت صادر شد</h2>
+    <p style="text-align: center; font-size: 1.1rem;">این قرارداد تا تاریخ <strong id="showExpire" style="color: #c53030;"></strong> اعتبار دارد.</p>
     
-    <div style="text-align: center; margin: 20px 0;">
-        <button class="btn" style="background: #3182ce;" onclick="downloadContract()">📥 دانلود تصویر قرارداد (A4)</button>
+    <div style="text-align: center;">
+        <p style="margin-bottom: 5px; font-weight: bold;">تصویر قرارداد شما:</p>
+        <!-- محل نمایش تصویر تولید شده -->
+        <div id="contract-img-container"></div>
+        
+        <button class="btn" style="background: #3182ce; margin-top: 15px;" onclick="downloadContract()">📥 دانلود تصویر قرارداد (کیفیت بالا)</button>
     </div>
 
-    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e0;">
-        <h3>اطلاعات پرداخت</h3>
-        <p>مبلغ کل: <strong id="finalAmount"></strong> تومان</p>
+    <div style="background: #f0fff4; padding: 20px; border-radius: 12px; border: 1px dashed #48bb78; margin-top: 25px;">
+        <h3 style="margin-top:0;">اطلاعات پرداخت</h3>
+        <p>مبلغ کل: <strong id="finalAmount" style="font-size: 1.2rem;"></strong> تومان</p>
         <p>شما می‌توانید مبلغ را کامل یا در دو قسط (۵۰٪ شروع، ۵۰٪ تحویل) پرداخت کنید.</p>
-        <p>شماره کارت:<br><strong style="font-size: 1.3rem; letter-spacing: 2px;">6063 7311 3256 0120</strong><br>به نام امیرحسین دادگستر</p>
-        <p style="color: #718096; font-size: 0.9rem;">لطفاً تصویر قرارداد دانلود شده + فیش واریزی را در ایتا ارسال کنید.</p>
+        <p style="text-align: center; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+            شماره کارت:<br>
+            <strong style="font-size: 1.4rem; letter-spacing: 3px; color: #2d3748;">6063 7311 3256 0120</strong><br>
+            به نام امیرحسین دادگستر
+        </p>
+        <p style="color: #2c5282; font-size: 0.95rem; text-align: center;">لطفاً تصویر قرارداد + فیش واریزی را در ایتا ارسال کنید.</p>
     </div>
 </div>
 
 <!-- Contract Template for Image Generation (A4 Size) -->
 <div id="contract-preview">
+    <!-- واترمارک در پایین صفحه و کوچک -->
     <div class="watermark">فاقد اعتبار بدون پرداخت</div>
     
     <div class="c-header">
-        <h2>قرارداد طراحی سایت | سامانه هوشمند</h2>
+        <!-- حذف کلمه سامانه هوشمند -->
+        <h2>قرارداد طراحی سایت</h2>
         <div class="c-meta">
-            <span>شماره سفارش (Order ID): <span id="c-orderId" style="font-family: monospace; font-size: 1rem;">---</span></span>
+            <span>شماره سفارش: <span id="c-orderId" style="font-family: monospace; font-size: 1.1rem;">---</span></span>
             <span>تاریخ ثبت: <span id="c-date">---</span></span>
             <span>تاریخ انقضا: <span id="c-expire">---</span></span>
         </div>
@@ -166,19 +340,20 @@
         <div class="c-row"><span>نام سفارش‌دهنده:</span> <span id="c-name" class="highlight-text"></span></div>
         <div class="c-row"><span>کد ملی:</span> <span id="c-nid" class="highlight-text"></span></div>
         <div class="c-row"><span>نام طراح:</span> <span class="highlight-text">امیرحسین دادگستر</span></div>
-        <div class="c-row"><span>موضوع قرارداد:</span> <span>طراحی و پیاده‌سازی وب‌سایت استاتیک</span></div>
+        <div class="c-row"><span>موضوع قرارداد:</span> <span>طراحی و پیاده‌سازی وب‌سایت استاتیک (بر پایه قالب)</span></div>
 
         <div class="c-section-title">جزئیات فنی و سفارش</div>
         <div class="c-row"><span>پلن انتخابی:</span> <span id="c-plan" class="highlight-text"></span></div>
         <div class="c-row"><span>قالب انتخابی:</span> <span id="c-template" class="highlight-text"></span></div>
         <div class="c-row"><span>وضعیت دامنه:</span> <span id="c-domain"></span></div>
         <div class="c-row"><span>تاریخ شروع پروژه:</span> <span id="c-start"></span></div>
-        <div class="c-row"><span>زمان تحویل:</span> <span>حداکثر ۲۰ روز کاری پس از شروع</span></div>
+        <!-- اصلاح زمان تحویل به 10 روز کاری -->
+        <div class="c-row"><span>زمان تحویل:</span> <span>حداکثر ۱۰ روز کاری پس از شروع</span></div>
 
         <div class="c-section-title">مبلغ و شرایط پرداخت</div>
         <div class="c-row">
             <span style="font-weight:bold;">مبلغ کل قرارداد:</span> 
-            <span id="c-total" style="font-weight:bold; font-size: 1.2rem;"></span>
+            <span id="c-total" style="font-weight:bold; font-size: 1.3rem;"></span>
         </div>
         <div class="c-row"><span>روش پرداخت:</span> <span>نقدی کامل یا ۵۰٪ پیش‌پرداخت + ۵۰٪ زمان تحویل</span></div>
         <div class="c-row"><span>وضعیت فعلی:</span> <span class="highlight-text">در انتظار تأیید پرداخت</span></div>
@@ -186,19 +361,22 @@
         <div class="c-footer">
             <h3>قوانین و شرایط اختصاصی</h3>
             <p><strong>۱. تعهدات فنی:</strong> سایت با تکنولوژی HTML/CSS/JS و Google Apps Script طراحی شده و فاقد دیتابیس اختصاصی یا پنل وردپرس می‌باشد. هاستینگ بر روی GitHub Pages انجام می‌شود. پشتیبانی فنی رفع ایراد تا ۱۰ روز پس از تحویل برقرار است.</p>
-            <p><strong>۲. دامنه:</strong> در صورت درخواست دامنه IR، ثبت اولیه توسط طراح انجام شده ولی ساخت شناسه ایرنیک و مالکیت نهایی بر عهده کارفرماست (مهلت انتقال ۱۰ روز). هزینه تمدید سالانه بر عهده کارفرماست.</p>
+            
+            <!-- اصلاح متن دامنه و تمدید -->
+            <p><strong>۲. دامنه:</strong> در صورت درخواست دامنه IR، ثبت اولیه توسط طراح انجام شده اما ساخت شناسه ایرنیک و مالکیت نهایی بر عهده کارفرماست. تمدید سالانه دامنه بر عهده سفارش‌دهنده می‌باشد.</p>
+            
             <p><strong>۳. فسخ و اعتبار:</strong> این سند به صورت الکترونیکی با تأیید IP کاربر ایجاد گردیده و اعتبار آن جهت پرداخت تنها ۳ روز است. در صورت عدم پرداخت در مهلت مقرر، سفارش لغو می‌شود.</p>
-            <p><strong>۴. محتوا:</strong> تأخیر در ارسال محتوا (متن/عکس) توسط کارفرما مستقیماً به زمان تحویل پروژه افزوده می‌شود. تغییر قالب پس از شروع کار امکان‌پذیر نیست.</p>
+            <p><strong>۴. محتوا و قالب:</strong> تأخیر در ارسال محتوا توسط کارفرما مستقیماً به زمان تحویل پروژه افزوده می‌شود. سایت دقیقاً بر اساس قالب انتخابی پیاده‌سازی می‌شود و تغییرات ساختاری خارج از قالب امکان‌پذیر نیست.</p>
         </div>
 
         <div class="c-signature">
             <div class="c-box">
                 <span>امضای طراح</span>
-                <span style="font-family: 'Vazirmatn'; font-size: 1.2rem; color: #2f855a; margin-top: 10px;">سیستمی تأیید شد</span>
+                <span style="font-family: 'Vazirmatn'; font-size: 1.2rem; color: #2f855a; margin-top: 15px;">سیستمی تأیید شد</span>
             </div>
             <div class="c-box">
                 <span>تأیید کارفرما</span>
-                <span style="font-size: 0.9rem; margin-top: 10px;">پذیرش الکترونیکی<br><span id="c-sign-date"></span></span>
+                <span style="font-size: 0.9rem; margin-top: 15px;">پذیرش الکترونیکی<br><span id="c-sign-date"></span></span>
             </div>
         </div>
     </div>
@@ -209,6 +387,9 @@
     // 🔴 لینک اسکریپت خود را اینجا قرار دهید
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqZyluO1tdjBTYu3xexJDlJanFpUJBSQYiipKYrRRQt92a6L68gN8JlyM8DNrGLc0p/exec"; 
     // ************************************************************
+
+    // متغیر سراسری برای ذخیره آدرس تصویر جهت دانلود
+    let contractImageDataUrl = "";
 
     // بارگذاری اولیه
     window.addEventListener('load', function() {
@@ -230,29 +411,39 @@
     // دریافت تاریخ‌ها از سرور
     function fetchDates() {
         const dateSelect = document.getElementById('startDate');
-        const loader = document.getElementById('loading-dates');
-        
+        // نمایش پیام لودینگ داخل خود فیلد
+        dateSelect.innerHTML = '<option value="" disabled selected>⏳ در حال دریافت...</option>';
+        dateSelect.disabled = true;
+
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify({ action: "get_dates" })
         })
         .then(res => res.json())
         .then(data => {
-            loader.style.display = 'none';
             dateSelect.innerHTML = ''; // پاک کردن گزینه لودینگ
             dateSelect.disabled = false;
             
+            // اضافه کردن گزینه پیش‌فرض
+            const defaultOpt = document.createElement('option');
+            defaultOpt.text = "انتخاب کنید...";
+            defaultOpt.value = "";
+            dateSelect.appendChild(defaultOpt);
+
             if (data.dates && data.dates.length > 0) {
                 let hasActive = false;
                 data.dates.forEach(item => {
                     const opt = document.createElement('option');
                     opt.value = item.date; // فرمت شمسی: 1404/11/01
-                    // متن نمایشی: تاریخ - وضعیت
+                    
+                    // نمایش ظرفیت در متن گزینه
                     if (item.full) {
                         opt.text = `${item.date} (تکمیل شد)`;
                         opt.disabled = true;
+                        opt.style.color = "#a0aec0";
                     } else {
-                        opt.text = `${item.date}`;
+                        // نمایش تعداد باقی‌مانده
+                        opt.text = `${item.date} (ظرفیت باقی‌مانده: ${item.remaining} نفر)`;
                         hasActive = true;
                     }
                     dateSelect.appendChild(opt);
@@ -272,7 +463,7 @@
         })
         .catch(err => {
             console.error(err);
-            loader.innerText = "خطا در برقراری ارتباط. لطفا صفحه را رفرش کنید.";
+            dateSelect.innerHTML = '<option>خطا در اتصال. رفرش کنید.</option>';
         });
     }
 
@@ -283,10 +474,20 @@
 
     // فعال‌سازی دکمه
     document.getElementById('termsCheck').addEventListener('change', function() {
+        validateForm();
+    });
+    document.getElementById('startDate').addEventListener('change', validateForm);
+
+    function validateForm() {
         const nidMsg = document.getElementById('nid-msg').innerText;
         const dateVal = document.getElementById('startDate').value;
-        document.getElementById('submitBtn').disabled = !this.checked || nidMsg !== '' || dateVal === '';
-    });
+        const terms = document.getElementById('termsCheck').checked;
+        const nidVal = document.getElementById('nationalCode').value;
+        const nameVal = document.getElementById('fullName').value;
+
+        let isValid = terms && nidMsg === '' && dateVal !== '' && nidVal.length === 10 && nameVal.length > 0;
+        document.getElementById('submitBtn').disabled = !isValid;
+    }
 
     // اعتبارسنجی کد ملی
     document.getElementById('nationalCode').addEventListener('input', function() {
@@ -294,7 +495,7 @@
         const msg = document.getElementById('nid-msg');
         if (!/^\d{10}$/.test(val)) {
             msg.innerText = "کد ملی باید ۱۰ رقم باشد";
-            document.getElementById('submitBtn').disabled = true;
+            validateForm();
             return;
         }
         
@@ -304,13 +505,10 @@
         
         if (valid) {
             msg.innerText = "";
-            if(document.getElementById('termsCheck').checked && document.getElementById('startDate').value) {
-                document.getElementById('submitBtn').disabled = false;
-            }
         } else {
             msg.innerText = "کد ملی نامعتبر است";
-            document.getElementById('submitBtn').disabled = true;
         }
+        validateForm();
     });
 
     // محاسبه قیمت
@@ -367,6 +565,9 @@
                 // پر کردن اطلاعات قرارداد پنهان
                 fillContractTemplate(response, data);
                 
+                // تولید تصویر و نمایش آن
+                generateAndShowContract(response.orderId);
+
                 // نمایش موفقیت
                 document.getElementById('step-form').classList.add('hidden');
                 document.getElementById('step-success').classList.remove('hidden');
@@ -406,15 +607,34 @@
         document.getElementById('c-total').innerText = formData.total_price.toLocaleString() + " تومان";
     }
 
-    function downloadContract() {
+    // تابع تولید و نمایش تصویر قرارداد در صفحه
+    function generateAndShowContract(orderId) {
         const contractDiv = document.getElementById('contract-preview');
-        // تنظیم scale بالا برای کیفیت چاپ
+        // استفاده از scale 2 برای کیفیت بالا
         html2canvas(contractDiv, { scale: 2 }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Contract-${document.getElementById('c-orderId').innerText}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
+            contractImageDataUrl = canvas.toDataURL("image/png");
+            
+            // ایجاد المان تصویر و افزودن به صفحه موفقیت
+            const img = document.createElement('img');
+            img.src = contractImageDataUrl;
+            img.id = "generated-contract-img";
+            img.alt = "تصویر قرارداد";
+            
+            const container = document.getElementById('contract-img-container');
+            container.innerHTML = ''; // پاک کردن محتوای قبلی
+            container.appendChild(img);
         });
+    }
+
+    function downloadContract() {
+        if (!contractImageDataUrl) {
+            alert("تصویر قرارداد در حال تولید است، لطفا لحظاتی صبر کنید...");
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = `Contract-${document.getElementById('c-orderId').innerText}.png`;
+        link.href = contractImageDataUrl;
+        link.click();
     }
 </script>
 
