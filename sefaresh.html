@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -126,6 +126,7 @@
             background: #cbd5e0;
             cursor: not-allowed;
             box-shadow: none;
+            opacity: 0.7;
         }
 
         .btn:hover:not(:disabled) {
@@ -390,6 +391,8 @@
 
     // متغیر سراسری برای ذخیره آدرس تصویر جهت دانلود
     let contractImageDataUrl = "";
+    // متغیر جهت اطمینان از صحت کد ملی
+    let isNidValid = false;
 
     // بارگذاری اولیه
     window.addEventListener('load', function() {
@@ -436,13 +439,13 @@
                     const opt = document.createElement('option');
                     opt.value = item.date; // فرمت شمسی: 1404/11/01
                     
-                    // نمایش ظرفیت در متن گزینه
+                    // نمایش ظرفیت در متن گزینه (رفع مشکل undefined)
                     if (item.full) {
                         opt.text = `${item.date} (تکمیل شد)`;
                         opt.disabled = true;
                         opt.style.color = "#a0aec0";
                     } else {
-                        // نمایش تعداد باقی‌مانده
+                        // نمایش تعداد باقی‌مانده واقعی
                         opt.text = `${item.date} (ظرفیت باقی‌مانده: ${item.remaining} نفر)`;
                         hasActive = true;
                     }
@@ -472,29 +475,46 @@
         calcTotal();
     });
 
-    // فعال‌سازی دکمه
+    // فعال‌سازی دکمه با استفاده از متغیر وضعیت و چک مجدد
     document.getElementById('termsCheck').addEventListener('change', function() {
         validateForm();
     });
     document.getElementById('startDate').addEventListener('change', validateForm);
+    document.getElementById('fullName').addEventListener('input', validateForm);
 
     function validateForm() {
-        const nidMsg = document.getElementById('nid-msg').innerText;
         const dateVal = document.getElementById('startDate').value;
         const terms = document.getElementById('termsCheck').checked;
         const nidVal = document.getElementById('nationalCode').value;
         const nameVal = document.getElementById('fullName').value;
 
-        let isValid = terms && nidMsg === '' && dateVal !== '' && nidVal.length === 10 && nameVal.length > 0;
-        document.getElementById('submitBtn').disabled = !isValid;
+        // بررسی دقیق مجدد کد ملی علاوه بر متغیر isNidValid
+        const isValidNidLength = /^\d{10}$/.test(nidVal);
+        
+        // دکمه فقط زمانی فعال شود که همه چیز عالی باشد
+        const formIsValid = terms && isNidValid && isValidNidLength && dateVal !== '' && nameVal.trim().length > 0;
+        
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = !formIsValid;
+        
+        // تغییر استایل دکمه برای حس بهتر
+        if(formIsValid) {
+            btn.style.opacity = "1";
+            btn.style.cursor = "pointer";
+        } else {
+            btn.style.opacity = "0.7";
+            btn.style.cursor = "not-allowed";
+        }
     }
 
-    // اعتبارسنجی کد ملی
+    // اعتبارسنجی کد ملی (آپدیت متغیر isNidValid)
     document.getElementById('nationalCode').addEventListener('input', function() {
         const val = this.value;
         const msg = document.getElementById('nid-msg');
+        
         if (!/^\d{10}$/.test(val)) {
             msg.innerText = "کد ملی باید ۱۰ رقم باشد";
+            isNidValid = false;
             validateForm();
             return;
         }
@@ -505,8 +525,10 @@
         
         if (valid) {
             msg.innerText = "";
+            isNidValid = true; // وضعیت معتبر شد
         } else {
             msg.innerText = "کد ملی نامعتبر است";
+            isNidValid = false; // وضعیت نامعتبر شد
         }
         validateForm();
     });
@@ -526,6 +548,12 @@
 
     // ارسال سفارش
     function submitOrder() {
+        // چک نهایی امنیتی قبل از ارسال
+        if (!isNidValid || !document.getElementById('termsCheck').checked) {
+            alert("لطفا اطلاعات را به درستی تکمیل کنید.");
+            return;
+        }
+
         const btn = document.getElementById('submitBtn');
         const loader = document.getElementById('loader');
         const startDate = document.getElementById('startDate').value;
@@ -542,16 +570,14 @@
         const prices = calcTotal();
         const planName = document.getElementById('planType').options[document.getElementById('planType').selectedIndex].dataset.name;
         
+        // داده‌های ارسالی به سرور
         const data = {
             action: "submit_order",
             full_name: document.getElementById('fullName').value,
             national_code: document.getElementById('nationalCode').value,
-            plan_type: planName,
-            plan_price: prices.planPrice,
+            plan_type_key: document.getElementById('planType').value, // ارسال کلید پلن جهت اعتبارسنجی سرور
             template_name: document.getElementById('templateName').value,
-            domain_request: document.getElementById('domainRequest').options[document.getElementById('domainRequest').selectedIndex].text,
-            domain_price: prices.domainPrice,
-            total_price: prices.total,
+            domain_request_key: document.getElementById('domainRequest').value, // ارسال کلید دامنه جهت اعتبارسنجی سرور
             start_date: startDate
         };
 
@@ -563,7 +589,7 @@
         .then(response => {
             if (response.success) {
                 // پر کردن اطلاعات قرارداد پنهان
-                fillContractTemplate(response, data);
+                fillContractTemplate(response, data, prices);
                 
                 // تولید تصویر و نمایش آن
                 generateAndShowContract(response.orderId);
@@ -572,7 +598,7 @@
                 document.getElementById('step-form').classList.add('hidden');
                 document.getElementById('step-success').classList.remove('hidden');
                 document.getElementById('showExpire').innerText = response.expireDate;
-                document.getElementById('finalAmount').innerText = data.total_price.toLocaleString();
+                document.getElementById('finalAmount').innerText = prices.total.toLocaleString();
             } else {
                 alert("خطا: " + response.message);
                 btn.disabled = false;
@@ -581,7 +607,7 @@
             }
         })
         .catch(err => {
-            alert("خطای اتصال به سرور. لطفا مجدد تلاش کنید.");
+            alert("خطای اتصال به سرور. لطفا اتصال اینترنت را بررسی کنید.");
             console.error(err);
             btn.disabled = false;
             btn.classList.remove('hidden');
@@ -589,7 +615,7 @@
         });
     }
 
-    function fillContractTemplate(serverData, formData) {
+    function fillContractTemplate(serverData, formData, prices) {
         document.getElementById('c-orderId').innerText = serverData.orderId;
         
         // تاریخ جاری به شمسی
@@ -600,11 +626,17 @@
         
         document.getElementById('c-name').innerText = formData.full_name;
         document.getElementById('c-nid').innerText = formData.national_code;
-        document.getElementById('c-plan').innerText = formData.plan_type;
+        
+        // نام پلن را دوباره از روی کلید یا تکست باکس میخوانیم
+        const planText = document.querySelector(`#planType option[value="${formData.plan_type_key}"]`).dataset.name;
+        document.getElementById('c-plan').innerText = planText;
         document.getElementById('c-template').innerText = formData.template_name;
-        document.getElementById('c-domain').innerText = formData.domain_request;
+        
+        const domainText = document.querySelector(`#domainRequest option[value="${formData.domain_request_key}"]`).text;
+        document.getElementById('c-domain').innerText = domainText;
+        
         document.getElementById('c-start').innerText = formData.start_date;
-        document.getElementById('c-total').innerText = formData.total_price.toLocaleString() + " تومان";
+        document.getElementById('c-total').innerText = prices.total.toLocaleString() + " تومان";
     }
 
     // تابع تولید و نمایش تصویر قرارداد در صفحه
