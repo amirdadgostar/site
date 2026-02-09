@@ -1,4 +1,4 @@
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -297,10 +297,11 @@
         </div>
     </div>
 
+    <!-- ویرایش: تغییر سلکت قالب به ورودی کد ۳ رقمی -->
     <div class="form-group">
-        <label>کد قالب (۳ رقم عدد)</label>
-        <!-- ویرایش درخواستی: تبدیل به اینپوت عددی ۳ رقمی -->
-        <input type="number" id="templateName" placeholder="کد ۳ رقمی قالب را وارد کنید (مثلا 123)">
+        <label>کد قالب (عدد ۳ رقمی)</label>
+        <input type="number" id="templateName" placeholder="کد ۳ رقمی قالب را وارد کنید (مثلا ۱۲۳)" 
+               oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3);">
         <div style="font-size: 0.85rem; color: #d69e2e; margin-top: 5px; background: #fffff0; padding: 8px; border-radius: 5px; border: 1px solid #faf089;">
             توجه: طراحی دقیقاً بر پایه کد قالب انتخابی انجام می‌شود.
         </div>
@@ -335,7 +336,7 @@
         ۱. کلیک روی دکمه تأیید، جایگزین امضای دستی و به‌منزله قبول مفاد قرارداد است.<br>
         ۲. اعتبار این قرارداد تنها ۳ روز است. در صورت عدم پرداخت قسط اول، باطل می‌شود.<br>
         ۳. ارسال فیش صرفاً اعلام پرداخت است؛ قبول نهایی با تأیید طراح است.<br>
-        ۴. <strong>قالب:</strong> سایت بر اساس کد قالب انتخابی پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
+        ۴. <strong>قالب:</strong> سایت بر اساس کد قالب وارد شده پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
         ۵. سایت‌ها استاتیک (HTML/JS) بوده و فاقد دیتابیس اختصاصی یا وردپرس هستند.
     </div>
 
@@ -394,7 +395,7 @@
 
         <div class="c-section-title">جزئیات فنی و سفارش</div>
         <div class="c-row"><span>پلن انتخابی:</span> <span id="c-plan" class="highlight-text"></span></div>
-        <div class="c-row"><span>قالب انتخابی:</span> <span id="c-template" class="highlight-text"></span></div>
+        <div class="c-row"><span>کد قالب انتخابی:</span> <span id="c-template" class="highlight-text"></span></div>
         <div class="c-row"><span>وضعیت دامنه:</span> <span id="c-domain"></span></div>
         <div class="c-row"><span>تاریخ شروع پروژه:</span> <span id="c-start"></span></div>
         <div class="c-row"><span>زمان تحویل:</span> <span>حداکثر ۱۰ روز کاری پس از شروع</span></div>
@@ -529,20 +530,18 @@
     document.getElementById('termsCheck').addEventListener('change', validateForm);
     document.getElementById('startDate').addEventListener('change', validateForm);
     document.getElementById('fullName').addEventListener('input', validateForm);
-    // لیسنر جدید برای فیلد کد قالب
-    document.getElementById('templateName').addEventListener('input', validateForm);
+    document.getElementById('templateName').addEventListener('input', validateForm); // اضافه شدن لیسنر برای اینپوت جدید
 
     function validateForm() {
         const dateVal = document.getElementById('startDate').value;
         const terms = document.getElementById('termsCheck').checked;
         const nidVal = document.getElementById('nationalCode').value;
         const nameVal = document.getElementById('fullName').value;
-        const tempCode = document.getElementById('templateName').value;
+        const tempVal = document.getElementById('templateName').value;
 
         const isValidNidLength = /^\d{10}$/.test(nidVal);
-        
-        // اعتبارسنجی ۳ رقمی بودن کد قالب
-        const isValidTemplate = /^\d{3}$/.test(tempCode);
+        // بررسی ۳ رقمی بودن کد قالب
+        const isValidTemplate = /^\d{3}$/.test(tempVal);
         
         // شرط: قوانین تیک خورده باشد + کد ملی معتبر باشد + تاریخ انتخاب شده باشد + نام پر باشد + کد قالب ۳ رقمی باشد
         const formIsValid = terms && isNidValid && isValidNidLength && dateVal !== '' && nameVal.trim().length > 0 && isValidTemplate;
@@ -606,17 +605,16 @@
             return;
         }
 
+        const templateVal = document.getElementById('templateName').value;
+        if (!/^\d{3}$/.test(templateVal)) {
+            alert("لطفا کد قالب را به صورت ۳ رقمی وارد کنید.");
+            return;
+        }
+
         const btn = document.getElementById('submitBtn');
         const loader = document.getElementById('loader');
         const startDate = document.getElementById('startDate').value;
         
-        // بررسی مجدد کد قالب قبل از ارسال
-        const tplCode = document.getElementById('templateName').value;
-        if (!/^\d{3}$/.test(tplCode)) {
-            alert("کد قالب باید دقیقاً ۳ رقم باشد.");
-            return;
-        }
-
         if (!startDate) {
             alert("لطفا یک تاریخ معتبر انتخاب کنید.");
             return;
@@ -633,7 +631,7 @@
             full_name: document.getElementById('fullName').value,
             national_code: document.getElementById('nationalCode').value,
             plan_type_key: document.getElementById('planType').value,
-            template_name: tplCode, // ارسال کد ۳ رقمی
+            template_name: document.getElementById('templateName').value, // ارسال کد ۳ رقمی
             domain_request_key: document.getElementById('domainRequest').value,
             start_date: startDate
         };
@@ -684,7 +682,7 @@
         const planText = document.querySelector(`#planType option[value="${formData.plan_type_key}"]`).dataset.name;
         document.getElementById('c-plan').innerText = planText;
         // نمایش کد قالب در قرارداد
-        document.getElementById('c-template').innerText = "کد قالب: " + toPersianNum(formData.template_name);
+        document.getElementById('c-template').innerText = "کد " + toPersianNum(formData.template_name);
         
         const domainText = document.querySelector(`#domainRequest option[value="${formData.domain_request_key}"]`).innerText;
         document.getElementById('c-domain').innerText = domainText;
