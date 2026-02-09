@@ -529,7 +529,7 @@
     document.getElementById('termsCheck').addEventListener('change', validateForm);
     document.getElementById('startDate').addEventListener('change', validateForm);
     document.getElementById('fullName').addEventListener('input', validateForm);
-    document.getElementById('templateName').addEventListener('input', validateForm);
+    document.getElementById('templateName').addEventListener('input', validateForm); // اضافه شدن لیسنر برای اینپوت جدید
 
     function validateForm() {
         const dateVal = document.getElementById('startDate').value;
@@ -630,7 +630,7 @@
             full_name: document.getElementById('fullName').value,
             national_code: document.getElementById('nationalCode').value,
             plan_type_key: document.getElementById('planType').value,
-            template_name: document.getElementById('templateName').value, 
+            template_name: document.getElementById('templateName').value, // ارسال کد ۳ رقمی
             domain_request_key: document.getElementById('domainRequest').value,
             start_date: startDate
         };
@@ -680,6 +680,7 @@
         
         const planText = document.querySelector(`#planType option[value="${formData.plan_type_key}"]`).dataset.name;
         document.getElementById('c-plan').innerText = planText;
+        // نمایش کد قالب در قرارداد
         document.getElementById('c-template').innerText = "کد " + toPersianNum(formData.template_name);
         
         const domainText = document.querySelector(`#domainRequest option[value="${formData.domain_request_key}"]`).innerText;
