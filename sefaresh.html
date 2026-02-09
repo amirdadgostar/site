@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -298,17 +298,11 @@
     </div>
 
     <div class="form-group">
-        <label>انتخاب قالب</label>
-        <div class="select-wrapper">
-            <select id="templateName">
-                <option value="Template-A">قالب شرکتی مدرن</option>
-                <option value="Template-B">قالب شخصی/رزومه</option>
-                <option value="Template-C">قالب فروشگاهی ساده (ویترین)</option>
-                <option value="Template-D">قالب آموزشی</option>
-            </select>
-        </div>
+        <label>کد قالب (۳ رقم عدد)</label>
+        <!-- ویرایش درخواستی: تبدیل به اینپوت عددی ۳ رقمی -->
+        <input type="number" id="templateName" placeholder="کد ۳ رقمی قالب را وارد کنید (مثلا 123)">
         <div style="font-size: 0.85rem; color: #d69e2e; margin-top: 5px; background: #fffff0; padding: 8px; border-radius: 5px; border: 1px solid #faf089;">
-            توجه: طراحی دقیقاً بر پایه قالب انتخابی انجام می‌شود.
+            توجه: طراحی دقیقاً بر پایه کد قالب انتخابی انجام می‌شود.
         </div>
     </div>
 
@@ -341,7 +335,7 @@
         ۱. کلیک روی دکمه تأیید، جایگزین امضای دستی و به‌منزله قبول مفاد قرارداد است.<br>
         ۲. اعتبار این قرارداد تنها ۳ روز است. در صورت عدم پرداخت قسط اول، باطل می‌شود.<br>
         ۳. ارسال فیش صرفاً اعلام پرداخت است؛ قبول نهایی با تأیید طراح است.<br>
-        ۴. <strong>قالب:</strong> سایت بر اساس قالب انتخابی پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
+        ۴. <strong>قالب:</strong> سایت بر اساس کد قالب انتخابی پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
         ۵. سایت‌ها استاتیک (HTML/JS) بوده و فاقد دیتابیس اختصاصی یا وردپرس هستند.
     </div>
 
@@ -418,7 +412,7 @@
             <p><strong>۱. تعهدات فنی:</strong> سایت با تکنولوژی HTML/CSS/JS و Google Apps Script طراحی شده و فاقد دیتابیس اختصاصی یا پنل وردپرس می‌باشد. هاستینگ بر روی GitHub Pages انجام می‌شود. پشتیبانی فنی رفع ایراد تا ۱۰ روز پس از تحویل برقرار است.</p>
             <p><strong>۲. دامنه:</strong> در صورت درخواست دامنه IR، ثبت اولیه توسط طراح انجام شده اما ساخت شناسه ایرنیک و مالکیت نهایی بر عهده کارفرماست. تمدید سالانه دامنه بر عهده سفارش‌دهنده می‌باشد.</p>
             <p><strong>۳. فسخ و اعتبار:</strong> این سند به صورت الکترونیکی با تأیید IP کاربر ایجاد گردیده و اعتبار آن جهت پرداخت تنها ۳ روز است. در صورت عدم پرداخت در مهلت مقرر، سفارش لغو می‌شود.</p>
-            <p><strong>۴. محتوا و قالب:</strong> تأخیر در ارسال محتوا توسط کارفرما مستقیماً به زمان تحویل پروژه افزوده می‌شود. سایت دقیقاً بر اساس قالب انتخابی پیاده‌سازی می‌شود و تغییرات ساختاری خارج از قالب امکان‌پذیر نیست.</p>
+            <p><strong>۴. محتوا و قالب:</strong> تأخیر در ارسال محتوا توسط کارفرما مستقیماً به زمان تحویل پروژه افزوده می‌شود. سایت دقیقاً بر اساس کد قالب انتخابی پیاده‌سازی می‌شود و تغییرات ساختاری خارج از قالب امکان‌پذیر نیست.</p>
         </div>
 
         <div class="c-signature">
@@ -535,17 +529,23 @@
     document.getElementById('termsCheck').addEventListener('change', validateForm);
     document.getElementById('startDate').addEventListener('change', validateForm);
     document.getElementById('fullName').addEventListener('input', validateForm);
+    // لیسنر جدید برای فیلد کد قالب
+    document.getElementById('templateName').addEventListener('input', validateForm);
 
     function validateForm() {
         const dateVal = document.getElementById('startDate').value;
         const terms = document.getElementById('termsCheck').checked;
         const nidVal = document.getElementById('nationalCode').value;
         const nameVal = document.getElementById('fullName').value;
+        const tempCode = document.getElementById('templateName').value;
 
         const isValidNidLength = /^\d{10}$/.test(nidVal);
         
-        // شرط: قوانین تیک خورده باشد + کد ملی معتبر باشد + تاریخ انتخاب شده باشد + نام پر باشد
-        const formIsValid = terms && isNidValid && isValidNidLength && dateVal !== '' && nameVal.trim().length > 0;
+        // اعتبارسنجی ۳ رقمی بودن کد قالب
+        const isValidTemplate = /^\d{3}$/.test(tempCode);
+        
+        // شرط: قوانین تیک خورده باشد + کد ملی معتبر باشد + تاریخ انتخاب شده باشد + نام پر باشد + کد قالب ۳ رقمی باشد
+        const formIsValid = terms && isNidValid && isValidNidLength && dateVal !== '' && nameVal.trim().length > 0 && isValidTemplate;
         
         const btn = document.getElementById('submitBtn');
         btn.disabled = !formIsValid;
@@ -610,6 +610,13 @@
         const loader = document.getElementById('loader');
         const startDate = document.getElementById('startDate').value;
         
+        // بررسی مجدد کد قالب قبل از ارسال
+        const tplCode = document.getElementById('templateName').value;
+        if (!/^\d{3}$/.test(tplCode)) {
+            alert("کد قالب باید دقیقاً ۳ رقم باشد.");
+            return;
+        }
+
         if (!startDate) {
             alert("لطفا یک تاریخ معتبر انتخاب کنید.");
             return;
@@ -626,7 +633,7 @@
             full_name: document.getElementById('fullName').value,
             national_code: document.getElementById('nationalCode').value,
             plan_type_key: document.getElementById('planType').value,
-            template_name: document.getElementById('templateName').value,
+            template_name: tplCode, // ارسال کد ۳ رقمی
             domain_request_key: document.getElementById('domainRequest').value,
             start_date: startDate
         };
@@ -676,7 +683,8 @@
         
         const planText = document.querySelector(`#planType option[value="${formData.plan_type_key}"]`).dataset.name;
         document.getElementById('c-plan').innerText = planText;
-        document.getElementById('c-template').innerText = formData.template_name;
+        // نمایش کد قالب در قرارداد
+        document.getElementById('c-template').innerText = "کد قالب: " + toPersianNum(formData.template_name);
         
         const domainText = document.querySelector(`#domainRequest option[value="${formData.domain_request_key}"]`).innerText;
         document.getElementById('c-domain').innerText = domainText;
