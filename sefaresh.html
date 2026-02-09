@@ -1,4 +1,6 @@
- <!DOCTYPE html>
+      --- START OF FILE Paste February 10, 2026 - 1:54AM ---
+
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -40,19 +42,22 @@
             background: var(--card-bg);
             width: 100%;
             max-width: 600px; /* عرض مناسب برای خوانایی */
-            padding: 25px;
+            padding: 30px; /* افزایش پدینگ برای نظم بیشتر */
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
-            margin: 0 auto;
+            margin: 10px auto; /* تنظیم مارجین برای وسط چین بهتر */
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* ایجاد فاصله منظم بین المان‌ها */
         }
 
         h1 {
             text-align: center;
             color: var(--secondary-color);
             font-size: 1.6rem;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 15px;
             font-weight: 800;
@@ -63,8 +68,9 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
+            width: 100%; /* اطمینان از تمام عرض بودن */
         }
 
         label {
@@ -85,6 +91,8 @@
             background: #fff;
             appearance: none; /* حذف استایل پیشفرض مرورگر */
             transition: all 0.3s ease;
+            height: 50px; /* یکسان سازی ارتفاع تمام ورودی ها */
+            line-height: normal;
         }
 
         input:focus, select:focus {
@@ -127,7 +135,7 @@
             text-align: center;
             font-size: 1.2rem;
             font-weight: 500;
-            margin: 30px 0;
+            margin: 20px 0;
             box-shadow: 0 10px 20px rgba(44, 82, 130, 0.3);
         }
         
@@ -194,6 +202,7 @@
             margin-left: 10px;
             margin-top: 4px;
             transform: scale(1.3);
+            height: auto; /* ریست ارتفاع برای چک باکس */
         }
 
         /* استایل اختصاصی برای نمایش تصویر قرارداد در صفحه موفقیت */
@@ -258,7 +267,7 @@
         
         /* Media Query برای موبایل */
         @media (max-width: 480px) {
-            .container { padding: 15px; }
+            .container { padding: 20px; }
             h1 { font-size: 1.4rem; }
             .price-box { font-size: 1rem; }
             .price-box span { font-size: 1.4rem; }
@@ -297,12 +306,12 @@
         </div>
     </div>
 
+    <!-- ویرایش: جایگزینی لیست انتخاب با فیلد عددی ۳ رقمی -->
     <div class="form-group">
-        <label>کد قالب (عدد ۳ رقمی)</label>
-        <input type="number" id="templateName" placeholder="کد ۳ رقمی قالب را وارد کنید (مثلا ۱۲۳)" 
-               oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3);">
+        <label>کد قالب (۳ رقم)</label>
+        <input type="number" id="templateName" placeholder="کد ۳ رقمی قالب (مثال: ۱۲۳)" maxlength="3" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3);">
         <div style="font-size: 0.85rem; color: #d69e2e; margin-top: 5px; background: #fffff0; padding: 8px; border-radius: 5px; border: 1px solid #faf089;">
-            توجه: طراحی دقیقاً بر پایه کد قالب انتخابی انجام می‌شود.
+            توجه: طراحی دقیقاً بر پایه کد قالب وارد شده انجام می‌شود.
         </div>
     </div>
 
@@ -490,14 +499,14 @@
                     const opt = document.createElement('option');
                     opt.value = item.date;
                     
-                    // منطق نمایش ظرفیت دقیق (حذف undefined)
+                    // ویرایش: عدم نمایش ظرفیت، فقط نمایش تاریخ یا وضعیت تکمیل
                     if (item.full) {
                         opt.text = toPersianNum(`${item.date} (تکمیل شد)`);
                         opt.disabled = true;
                         opt.style.color = "#a0aec0";
                     } else {
-                        // نمایش دقیق تعداد نفرات مانده
-                        opt.text = toPersianNum(`${item.date} (ظرفیت: ${item.remaining} نفر)`);
+                        // فقط نمایش تاریخ
+                        opt.text = toPersianNum(item.date);
                         hasActive = true;
                     }
                     dateSelect.appendChild(opt);
@@ -529,21 +538,20 @@
     document.getElementById('termsCheck').addEventListener('change', validateForm);
     document.getElementById('startDate').addEventListener('change', validateForm);
     document.getElementById('fullName').addEventListener('input', validateForm);
-    document.getElementById('templateName').addEventListener('input', validateForm); // اضافه شدن لیسنر برای اینپوت جدید
+    document.getElementById('templateName').addEventListener('input', validateForm); // افزودن لیسنر برای اینپوت قالب
 
     function validateForm() {
         const dateVal = document.getElementById('startDate').value;
         const terms = document.getElementById('termsCheck').checked;
         const nidVal = document.getElementById('nationalCode').value;
         const nameVal = document.getElementById('fullName').value;
-        const tempVal = document.getElementById('templateName').value;
+        const templateVal = document.getElementById('templateName').value;
 
         const isValidNidLength = /^\d{10}$/.test(nidVal);
-        // بررسی ۳ رقمی بودن کد قالب
-        const isValidTemplate = /^\d{3}$/.test(tempVal);
+        const isTemplateValid = /^\d{3}$/.test(templateVal); // بررسی ۳ رقمی بودن کد قالب
         
-        // شرط: قوانین تیک خورده باشد + کد ملی معتبر باشد + تاریخ انتخاب شده باشد + نام پر باشد + کد قالب ۳ رقمی باشد
-        const formIsValid = terms && isNidValid && isValidNidLength && dateVal !== '' && nameVal.trim().length > 0 && isValidTemplate;
+        // شرط: قوانین تیک خورده + کد ملی معتبر + تاریخ انتخاب شده + نام پر باشد + کد قالب ۳ رقم باشد
+        const formIsValid = terms && isNidValid && isValidNidLength && dateVal !== '' && nameVal.trim().length > 0 && isTemplateValid;
         
         const btn = document.getElementById('submitBtn');
         btn.disabled = !formIsValid;
@@ -599,14 +607,15 @@
 
     // ارسال سفارش
     function submitOrder() {
-        if (!isNidValid || !document.getElementById('termsCheck').checked) {
-            alert("لطفا اطلاعات را به درستی تکمیل کنید.");
-            return;
-        }
-
+        // بررسی مجدد اعتبارسنجی قبل از ارسال
         const templateVal = document.getElementById('templateName').value;
         if (!/^\d{3}$/.test(templateVal)) {
-            alert("لطفا کد قالب را به صورت ۳ رقمی وارد کنید.");
+             alert("کد قالب باید دقیقاً ۳ رقم باشد.");
+             return;
+        }
+
+        if (!isNidValid || !document.getElementById('termsCheck').checked) {
+            alert("لطفا اطلاعات را به درستی تکمیل کنید.");
             return;
         }
 
@@ -630,7 +639,7 @@
             full_name: document.getElementById('fullName').value,
             national_code: document.getElementById('nationalCode').value,
             plan_type_key: document.getElementById('planType').value,
-            template_name: document.getElementById('templateName').value, // ارسال کد ۳ رقمی
+            template_name: document.getElementById('templateName').value, // ارسال کد عددی
             domain_request_key: document.getElementById('domainRequest').value,
             start_date: startDate
         };
@@ -680,8 +689,7 @@
         
         const planText = document.querySelector(`#planType option[value="${formData.plan_type_key}"]`).dataset.name;
         document.getElementById('c-plan').innerText = planText;
-        // نمایش کد قالب در قرارداد
-        document.getElementById('c-template').innerText = "کد " + toPersianNum(formData.template_name);
+        document.getElementById('c-template').innerText = toPersianNum(formData.template_name); // نمایش کد قالب به فارسی
         
         const domainText = document.querySelector(`#domainRequest option[value="${formData.domain_request_key}"]`).innerText;
         document.getElementById('c-domain').innerText = domainText;
