@@ -1,9 +1,9 @@
-     <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>سامانه ثبت قرارداد طراحی سایت | نسخه حرفه‌ای</title>
+    <title>سامانه ثبت قرارداد طراحی سایت | نسخه نهایی</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -14,13 +14,11 @@
             --accent-color: #10b981;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
-            --bg-body: #f8fafc;
+            --bg-body: #f1f5f9;
             --card-bg: #ffffff;
             --border-color: #cbd5e1;
             --input-bg: #ffffff;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -32,8 +30,6 @@
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: var(--bg-body);
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px;
             margin: 0;
             padding: 20px 10px;
             display: flex;
@@ -41,382 +37,285 @@
             align-items: flex-start;
             min-height: 100vh;
             color: var(--text-primary);
+            overflow-x: hidden; /* جلوگیری از اسکرول افقی مزاحم */
         }
 
-        /* کانتینر اصلی با طراحی مدرن */
+        /* کانتینر اصلی با فیکس شدن وسط چین */
         .main-card {
             background: var(--card-bg);
             width: 100%;
-            max-width: 750px;
-            padding: 40px;
-            border-radius: 24px;
+            max-width: 650px; /* عرض استاندارد */
+            padding: 30px;
+            border-radius: 20px;
             box-shadow: var(--shadow-lg);
             border: 1px solid white;
-            margin: 20px auto;
+            margin: 0 auto; /* وسط چین دقیق */
             position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
+            z-index: 10;
         }
 
-        /* هدر جذاب */
         .header-section {
             text-align: center;
-            margin-bottom: 35px;
-            position: relative;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
         }
 
         .header-section h1 {
             color: var(--text-primary);
-            font-size: 1.75rem;
-            font-weight: 900;
+            font-size: 1.6rem;
+            font-weight: 800;
             margin: 0;
-            letter-spacing: -0.5px;
         }
 
-        .header-section::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--brand-color), var(--accent-color));
-            margin: 15px auto 0;
-            border-radius: 10px;
-        }
-
-        /* سیستم گرید بندی فرم */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 15px;
         }
 
-        /* استایل اختصاصی برای موبایل - تمام عرض */
-        .col-span-full {
-            grid-column: 1 / -1;
+        @media (min-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr; /* دو ستونه در دسکتاپ */
+            }
+            .col-span-full {
+                grid-column: 1 / -1;
+            }
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            margin-bottom: 15px;
         }
 
         label {
+            display: block;
             font-size: 0.9rem;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
-            display: flex;
-            align-items: center;
         }
 
-        /* استایل ورودی‌ها و سلکت‌ها */
         input, select {
             width: 100%;
-            height: 54px;
-            padding: 0 16px;
+            height: 50px;
+            padding: 0 15px;
             border: 2px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 12px;
             font-family: 'Vazirmatn', sans-serif;
             font-size: 1rem;
             background-color: var(--input-bg);
             color: var(--text-primary);
-            transition: all 0.2s ease-in-out;
-            appearance: none; /* حذف استایل پیشفرض مرورگر */
-        }
-
-        input:hover, select:hover {
-            border-color: #94a3b8;
+            transition: all 0.2s;
+            appearance: none;
         }
 
         input:focus, select:focus {
             border-color: var(--brand-color);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-            background-color: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* استایل اختصاصی برای پنجره‌های انتخاب (Select) */
-        .custom-select-wrapper {
+        /* استایل سفارشی برای Select Box */
+        .select-wrapper {
             position: relative;
         }
-
-        .custom-select-wrapper::after {
+        .select-wrapper::after {
             content: '';
             position: absolute;
-            left: 16px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            border-left: 2px solid var(--text-secondary);
-            border-bottom: 2px solid var(--text-secondary);
-            transform: translateY(-70%) rotate(-45deg);
+            width: 0; 
+            height: 0; 
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #64748b;
             pointer-events: none;
-            transition: all 0.2s;
         }
 
-        .custom-select-wrapper:hover::after {
-            border-color: var(--brand-color);
-        }
-
-        /* باکس اطلاعات (پلن) */
+        /* باکس توضیحات پلن */
         .info-card {
             background: var(--brand-light);
             border: 1px dashed #bfdbfe;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 12px;
             margin-top: 8px;
             font-size: 0.85rem;
             color: var(--brand-dark);
             line-height: 1.6;
-            display: flex;
-            align-items: flex-start;
         }
-        
-        .info-card ul {
-            margin: 0;
-            padding-right: 20px;
-        }
+        .info-card ul { margin: 0; padding-right: 20px; }
 
-        /* نمایش قیمت */
+        /* باکس قیمت */
         .price-card {
-            grid-column: 1 / -1;
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             text-align: center;
-            margin: 10px 0 25px 0;
-            box-shadow: var(--shadow-sm);
+            margin: 20px 0;
         }
-
-        .price-label {
-            display: block;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
         .price-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            color: var(--brand-dark);
-            font-feature-settings: "ss01";
-        }
-
-        .price-currency {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            font-weight: normal;
+            color: var(--brand-color);
         }
 
         /* قوانین */
         .rules-container {
             background-color: #fffbeb;
-            border-right: 4px solid #f59e0b;
-            padding: 15px 20px;
-            border-radius: 8px;
+            border: 1px solid #fcd34d;
+            padding: 15px;
+            border-radius: 12px;
             font-size: 0.85rem;
             color: #92400e;
             line-height: 1.8;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: justify;
             max-height: 150px;
             overflow-y: auto;
         }
 
-        /* چک باکس */
+        /* اصلاح دکمه چک باکس - کلیک روی کل باکس */
         .checkbox-wrapper {
             display: flex;
-            align-items: center;
-            margin-bottom: 25px;
+            align-items: flex-start; /* تراز بالا برای متن های طولانی */
             padding: 15px;
-            background: #f1f5f9;
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
             border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
+            cursor: pointer; /* نشانگر موس */
+            transition: all 0.2s;
+            user-select: none; /* جلوگیری از انتخاب متن */
         }
         
-        .checkbox-wrapper:hover {
-            background: #e2e8f0;
+        /* وقتی چک باکس تیک خورد، استایل رپر تغییر کنه */
+        .checkbox-wrapper:has(input:checked) {
+            background-color: #f0fdf4;
+            border-color: var(--accent-color);
         }
 
         .checkbox-wrapper input {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             margin-left: 12px;
-            accent-color: var(--brand-color);
+            margin-top: 3px;
+            flex-shrink: 0;
             cursor: pointer;
+            accent-color: var(--accent-color);
         }
 
-        .checkbox-wrapper label {
-            margin: 0;
-            cursor: pointer;
+        .checkbox-wrapper span {
             font-weight: 500;
             color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
 
-        /* دکمه اصلی */
         .btn-submit {
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(90deg, var(--accent-color), #059669);
+            padding: 16px;
+            background: var(--accent-color);
             color: white;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 1.1rem;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .btn-submit:disabled {
             background: #cbd5e0;
-            box-shadow: none;
             cursor: not-allowed;
-            opacity: 0.8;
+            box-shadow: none;
+            transform: none;
         }
 
         .btn-submit:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
-        }
-
-        /* مسیج‌های خطا و لودر */
-        .error-text {
-            color: #ef4444;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-top: 5px;
-            display: block;
-        }
-
-        #loader {
-            text-align: center;
-            margin-top: 15px;
-            color: var(--brand-color);
-            font-weight: 600;
-            font-size: 0.9rem;
+            background: #059669;
+            transform: translateY(-2px);
         }
 
         .hidden { display: none !important; }
+        .error-text { color: #ef4444; font-size: 0.8rem; margin-top: 5px; display: block; }
+        #loader { text-align: center; margin-top: 15px; color: var(--brand-color); font-weight: bold; }
 
         /* صفحه موفقیت */
-        #step-success {
-            text-align: center;
+        #step-success { text-align: center; }
+        #contract-img-container {
+            border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: #dcfce7;
-            color: #16a34a;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 40px;
-        }
-
-        .contract-preview-box {
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 20px 0;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .contract-preview-box img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        #contract-img-container img { width: 100%; height: auto; display: block; }
 
         .payment-info {
-            background: #f8fafc;
-            border: 1px dashed var(--border-color);
+            background: #f0fdf4;
+            border: 1px dashed var(--accent-color);
             border-radius: 16px;
             padding: 20px;
             margin-top: 25px;
         }
-        
+
+        /* استایل کارت بانکی با قابلیت کپی */
+        .card-box {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .card-box:active { transform: scale(0.98); background: #f8fafc; }
         .card-number {
             font-family: monospace;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--text-primary);
             letter-spacing: 2px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            display: inline-block;
-            margin: 10px 0;
+            color: var(--text-primary);
             direction: ltr;
+            display: block;
+        }
+        .copy-hint {
+            font-size: 0.75rem;
+            color: var(--brand-color);
+            margin-top: 5px;
+            display: block;
         }
 
-        /* ریسپانسیو موبایل */
-        @media (max-width: 640px) {
-            .main-card {
-                padding: 25px 20px;
-                border-radius: 20px;
-            }
-            .form-grid {
-                grid-template-columns: 1fr; /* تک ستونه شدن */
-                gap: 15px;
-            }
-            .col-span-full {
-                grid-column: auto;
-            }
-            .header-section h1 {
-                font-size: 1.4rem;
-            }
-            .price-value {
-                font-size: 1.6rem;
-            }
-        }
-
-        /* 
-           استایل قرارداد جهت چاپ عکس (سایز A4)
-           این بخش مخفی است و نباید تغییر استایل صفحه روی آن اثر بگذارد
-        */
+        /* بخش قرارداد برای تولید عکس (خارج از صفحه) */
+        /* تغییر حیاتی: استفاده از Fixed برای جلوگیری از اسکرول */
         #contract-preview {
-            position: absolute; left: -9999px; top: 0; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: -9999; /* زیر تمام المان‌ها */
+            opacity: 0;     /* مخفی */
+            pointer-events: none; /* غیرقابل کلیک */
             width: 794px; min-height: 1123px; 
             background: white; padding: 60px; 
             border: 1px solid #000; direction: rtl; color: #000;
             box-sizing: border-box;
             font-family: 'Vazirmatn', sans-serif;
             display: flex; flex-direction: column; justify-content: space-between;
-            line-height: 1.5;
         }
         
         .watermark {
-            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) rotate(-10deg);
             font-size: 1.8rem; color: rgba(255, 0, 0, 0.2); border: 4px solid rgba(255, 0, 0, 0.2); 
-            padding: 15px 40px; font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap; border-radius: 15px; transform: translateX(-50%) rotate(-10deg);
+            padding: 10px 40px; font-weight: 900; border-radius: 15px;
         }
-
-        .c-header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 25px; margin-bottom: 35px; }
+        .c-header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
         .c-header h2 { margin: 5px 0; font-size: 2rem; color: #000; font-weight: 900; }
         .c-meta { display: flex; justify-content: space-between; font-size: 1.1rem; color: #000; margin-top: 20px; font-weight: bold; }
-        
-        .c-body { z-index: 1; position: relative; flex-grow: 1; }
-        .c-section-title { 
-            font-weight: 800; font-size: 1.3rem; margin-top: 30px; margin-bottom: 15px; 
-            border-bottom: 2px solid #ccc; padding-bottom: 8px; color: #000; 
-        }
-        .c-row { 
-            display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.15rem; 
-            border-bottom: 1px dashed #ddd; padding-bottom: 6px; 
-        }
+        .c-body { position: relative; flex-grow: 1; }
+        .c-section-title { font-weight: 800; font-size: 1.3rem; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px; color: #000; }
+        .c-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.15rem; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
         .highlight-text { font-weight: bold; color: #000; }
-        
-        .c-footer { margin-top: 50px; border-top: 3px solid #000; padding-top: 25px; font-size: 1rem; text-align: justify; line-height: 1.9; }
-        .c-footer h3 { font-size: 1.2rem; margin: 10px 0 10px; text-align: right; color: #000; font-weight: bold; }
-        .c-signature { margin-top: 60px; display: flex; justify-content: space-between; align-items: center; text-align: center; padding: 0 50px; }
+        .c-footer { margin-top: 50px; border-top: 3px solid #000; padding-top: 20px; font-size: 1rem; text-align: justify; line-height: 1.9; }
+        .c-signature { margin-top: 60px; display: flex; justify-content: space-between; align-items: center; text-align: center; padding: 0 40px; }
         .c-box { border: 2px solid #000; padding: 15px; width: 40%; height: 120px; display: flex; flex-direction: column; justify-content: center; border-radius: 10px; }
     </style>
 </head>
@@ -428,7 +327,7 @@
     </div>
     
     <div class="form-grid">
-        <!-- نام و نام خانوادگی -->
+        <!-- نام -->
         <div class="form-group">
             <label>نام و نام خانوادگی</label>
             <input type="text" id="fullName" placeholder="مثال: علی محمدی">
@@ -440,114 +339,119 @@
             <input type="number" id="nationalCode" placeholder="۱۰ رقم بدون خط تیره">
             <small id="nid-msg" class="error-text"></small>
         </div>
+    </div>
 
-        <!-- پلن طراحی -->
-        <div class="form-group col-span-full">
-            <label>انتخاب پلن طراحی</label>
-            <div class="custom-select-wrapper">
-                <select id="planType" onchange="calcTotal()">
-                    <option value="type1" data-price="1000000" data-name="سایت معرفی ساده">سایت معرفی ساده (۱,۰۰۰,۰۰۰ تومان)</option>
-                    <option value="type2" data-price="2000000" data-name="سایت متصل به گوگل">سایت متصل به گوگل (۲,۰۰۰,۰۰۰ تومان)</option>
-                </select>
-            </div>
-            <div class="info-card">
-                <ul style="margin:0;">
-                    <li id="plan-desc-1">سایت معرفی: متن، تصویر، اطلاعات تماس (بدون فرم)</li>
-                    <li id="plan-desc-2" class="hidden">سایت متصل به گوگل: فرم ثبت‌نام، ایمیل، اتصال به گوگل شیت</li>
-                </ul>
-            </div>
+    <!-- پلن -->
+    <div class="form-group">
+        <label>انتخاب پلن طراحی</label>
+        <div class="select-wrapper">
+            <select id="planType" onchange="calcTotal()">
+                <option value="type1" data-price="1000000" data-name="سایت معرفی ساده">سایت معرفی ساده (۱,۰۰۰,۰۰۰ تومان)</option>
+                <option value="type2" data-price="2000000" data-name="سایت متصل به گوگل">سایت متصل به گوگل (۲,۰۰۰,۰۰۰ تومان)</option>
+            </select>
         </div>
+        <div class="info-card">
+            <ul>
+                <li id="plan-desc-1">سایت معرفی: متن، تصویر، اطلاعات تماس (بدون فرم)</li>
+                <li id="plan-desc-2" class="hidden">سایت متصل به گوگل: فرم ثبت‌نام، ایمیل، اتصال به گوگل شیت</li>
+            </ul>
+        </div>
+    </div>
 
-        <!-- کد قالب (فقط 3 رقم) -->
+    <div class="form-grid">
+        <!-- کد قالب -->
         <div class="form-group">
             <label>کد قالب (۳ رقم)</label>
             <input type="number" id="templateName" placeholder="کد ۳ رقمی (مثال: ۱۲۳)" 
                    oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3);">
-            <div style="font-size: 0.75rem; color: #d97706; margin-top: 5px;">
-                فقط کد عددی ۳ رقمی قالب معتبر است.
-            </div>
+            <small style="color: #d97706; margin-top: 5px; display:block; font-size:0.8rem;">فقط کد ۳ رقمی معتبر است.</small>
         </div>
 
-        <!-- تاریخ شروع -->
+        <!-- تاریخ -->
         <div class="form-group">
             <label>تاریخ شروع طراحی</label>
-            <div class="custom-select-wrapper">
+            <div class="select-wrapper">
                 <select id="startDate">
-                    <option value="" disabled selected>⏳ در حال بارگذاری تقویم...</option>
+                    <option value="" disabled selected>⏳ در حال بارگذاری...</option>
                 </select>
             </div>
-            <small style="color: #64748b; margin-top: 5px; font-size: 0.75rem;">فقط تاریخ‌های دارای ظرفیت فعال هستند.</small>
-        </div>
-
-        <!-- دامنه -->
-        <div class="form-group col-span-full">
-            <label>دامنه اختصاصی (.ir)</label>
-            <div class="custom-select-wrapper">
-                <select id="domainRequest" onchange="calcTotal()">
-                    <option value="no" data-price="0">خیر (ساب‌دامین رایگان GitHub)</option>
-                    <option value="yes" data-price="100000">بله (ثبت و تنظیم دامنه ir - هزینه ۱۰۰,۰۰۰ تومان)</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- نمایش قیمت -->
-        <div class="price-card">
-            <span class="price-label">مبلغ نهایی قرارداد (قابل پرداخت پس از صدور)</span>
-            <span class="price-value" id="displayTotal">۱,۰۰۰,۰۰۰</span> <span class="price-currency">تومان</span>
-        </div>
-
-        <!-- قوانین -->
-        <div class="col-span-full">
-            <div class="rules-container">
-                <strong>شرایط و قوانین مهم:</strong><br>
-                ۱. کلیک روی دکمه تأیید، جایگزین امضای دستی و به‌منزله قبول مفاد قرارداد است.<br>
-                ۲. اعتبار این قرارداد تنها ۳ روز است. در صورت عدم پرداخت قسط اول، باطل می‌شود.<br>
-                ۳. ارسال فیش صرفاً اعلام پرداخت است؛ قبول نهایی با تأیید طراح است.<br>
-                ۴. <strong>قالب:</strong> سایت بر اساس کد قالب وارد شده پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
-                ۵. سایت‌ها استاتیک (HTML/JS) بوده و فاقد دیتابیس اختصاصی یا وردپرس هستند.
-            </div>
-
-            <div class="checkbox-wrapper">
-                <input type="checkbox" id="termsCheck">
-                <label for="termsCheck">قوانین فوق و مفاد قرارداد را مطالعه کرده و می‌پذیرم.</label>
-            </div>
+            <small style="color: #64748b; margin-top: 5px; display:block; font-size:0.8rem;">تاریخ‌های دارای ظرفیت نمایش داده می‌شوند.</small>
         </div>
     </div>
 
+    <!-- دامنه -->
+    <div class="form-group">
+        <label>دامنه اختصاصی (.ir)</label>
+        <div class="select-wrapper">
+            <select id="domainRequest" onchange="calcTotal()">
+                <option value="no" data-price="0">خیر (ساب‌دامین رایگان GitHub)</option>
+                <option value="yes" data-price="100000">بله (ثبت و تنظیم دامنه ir - هزینه ۱۰۰,۰۰۰ تومان)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- قیمت -->
+    <div class="price-card">
+        <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 5px;">مبلغ نهایی قرارداد</div>
+        <span id="displayTotal" class="price-value">۱,۰۰۰,۰۰۰</span> 
+        <span style="font-size: 1.1rem; color: #64748b;">تومان</span>
+        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">پرداخت پس از صدور قرارداد</div>
+    </div>
+
+    <!-- قوانین -->
+    <div class="rules-container">
+        <strong>شرایط و قوانین مهم:</strong><br>
+        ۱. کلیک روی دکمه تأیید، جایگزین امضای دستی و به‌منزله قبول مفاد قرارداد است.<br>
+        ۲. اعتبار این قرارداد تنها ۳ روز است. در صورت عدم پرداخت قسط اول، باطل می‌شود.<br>
+        ۳. ارسال فیش صرفاً اعلام پرداخت است؛ قبول نهایی با تأیید طراح است.<br>
+        ۴. <strong>قالب:</strong> سایت بر اساس کد قالب وارد شده پیاده‌سازی می‌شود و سفارش‌دهنده آگاه است که طراحی از صفر صورت نمی‌گیرد.<br>
+        ۵. سایت‌ها استاتیک (HTML/JS) بوده و فاقد دیتابیس اختصاصی یا وردپرس هستند.
+    </div>
+
+    <!-- چک باکس اصلاح شده (کلیک روی کل لیبل) -->
+    <label class="checkbox-wrapper" for="termsCheck">
+        <input type="checkbox" id="termsCheck">
+        <span>قوانین فوق و مفاد قرارداد را مطالعه کرده و می‌پذیرم.</span>
+    </label>
+
     <button class="btn-submit" id="submitBtn" onclick="submitOrder()" disabled>تأیید اطلاعات و صدور قرارداد</button>
-    <div id="loader" class="hidden">در حال ثبت اطلاعات و پردازش نهایی...</div>
+    <div id="loader" class="hidden">در حال پردازش و صدور قرارداد...</div>
 </div>
 
 <!-- صفحه موفقیت -->
 <div class="main-card hidden" id="step-success">
-    <div class="success-icon">✓</div>
-    <h2 style="color: var(--text-primary); margin-bottom: 10px;">قرارداد با موفقیت صادر شد</h2>
+    <div style="font-size: 3rem; color: #10b981; margin-bottom: 10px;">✓</div>
+    <h2 style="color: var(--text-primary); margin: 0 0 10px 0;">قرارداد با موفقیت صادر شد</h2>
     <p style="color: var(--text-secondary);">اعتبار تا: <strong id="showExpire" style="color: #ef4444;"></strong></p>
     
-    <div style="margin-top: 30px;">
+    <div>
         <p style="font-weight: bold; margin-bottom: 10px;">تصویر قرارداد شما:</p>
-        <div class="contract-preview-box" id="contract-img-container"></div>
-        
-        <button class="btn-submit" style="background: var(--brand-color); margin-top: 15px;" onclick="downloadContract()">
-            📥 دانلود تصویر اصلی قرارداد
+        <div id="contract-img-container"></div>
+        <button class="btn-submit" style="background: var(--brand-color); margin-top: 10px;" onclick="downloadContract()">
+            📥 دانلود تصویر قرارداد
         </button>
     </div>
 
     <div class="payment-info">
-        <h3 style="margin-top:0; color: var(--accent-color);">اطلاعات پرداخت</h3>
+        <h3 style="margin-top:0; color: #166534;">اطلاعات پرداخت</h3>
         <p>مبلغ کل: <strong id="finalAmount" style="font-size: 1.2rem;"></strong> تومان</p>
-        <p style="font-size: 0.9rem; margin-bottom: 15px;">امکان پرداخت کامل یا دو مرحله‌ای (۵۰٪ شروع، ۵۰٪ تحویل)</p>
+        <p style="font-size: 0.9rem;">امکان پرداخت کامل یا دو مرحله‌ای (۵۰٪ شروع، ۵۰٪ تحویل)</p>
         
-        <div class="card-number">۶۰۶۳ ۷۳۱۱ ۳۲۵۶ ۰۱۲۰</div>
-        <p style="font-size: 0.9rem; margin-top: 5px;">به نام امیرحسین دادگستر</p>
+        <!-- کارت بانکی با قابلیت کپی -->
+        <div class="card-box" onclick="copyCardNumber()" title="برای کپی کلیک کنید">
+            <span style="font-size: 0.9rem; color: #64748b; display:block; margin-bottom:5px;">شماره کارت (برای کپی کلیک کنید):</span>
+            <span class="card-number" id="cardNumberText">6063 7311 3256 0120</span>
+            <span class="copy-hint" id="copyMsg">کلیک کنید تا کپی شود</span>
+        </div>
         
-        <p style="color: var(--brand-dark); font-size: 0.9rem; margin-top: 15px; font-weight: 500;">
-            لطفاً تصویر قرارداد + فیش واریزی را در پیام‌رسان ایتا ارسال کنید.
+        <p style="font-size: 0.9rem; font-weight: bold;">به نام امیرحسین دادگستر</p>
+        <p style="color: var(--brand-dark); font-size: 0.9rem; margin-top: 15px;">
+            لطفاً تصویر قرارداد + فیش واریزی را در ایتا ارسال کنید.
         </p>
     </div>
 </div>
 
-<!-- Contract Template (A4 Structure - Hidden) -->
+<!-- Contract Template (Fixed Position to avoid scroll issues) -->
 <div id="contract-preview">
     <div class="watermark">فاقد اعتبار بدون پرداخت</div>
     
@@ -612,7 +516,6 @@
     let contractImageDataUrl = "";
     let isNidValid = false;
 
-    // تابع تبدیل اعداد به فارسی برای نمایش زیباتر
     function toPersianNum(str) {
         if(!str) return "";
         return str.toString().replace(/[0-9]/g, function (w) {
@@ -621,25 +524,47 @@
         });
     }
 
-    // بارگذاری اولیه
     window.addEventListener('load', function() {
         fetchDates();
         updatePlanDesc();
-        calcTotal(); // محاسبه قیمت اولیه با اعداد فارسی
+        calcTotal(); 
     });
+
+    // تابع کپی شماره کارت (درخواست جدید)
+    function copyCardNumber() {
+        const cardNumber = "6063731132560120"; // شماره بدون فاصله برای کپی
+        navigator.clipboard.writeText(cardNumber).then(() => {
+            const msg = document.getElementById('copyMsg');
+            const originalText = msg.innerText;
+            msg.innerText = "✓ کپی شد (۶۰۶۳۷۳۱۱۳۲۵۶۰۱۲۰)";
+            msg.style.color = "#16a34a";
+            msg.style.fontWeight = "bold";
+            
+            setTimeout(() => {
+                msg.innerText = originalText;
+                msg.style.color = "var(--brand-color)";
+                msg.style.fontWeight = "normal";
+            }, 3000);
+        }).catch(err => {
+            alert("کپی نشد. لطفا دستی کپی کنید.");
+        });
+    }
 
     function updatePlanDesc() {
         const type = document.getElementById('planType').value;
+        const desc1 = document.getElementById('plan-desc-1');
+        const desc2 = document.getElementById('plan-desc-2');
+        
+        // اصلاح باگ عدم نمایش توضیحات
         if(type === 'type1') {
-            document.getElementById('plan-desc-1').style.display = 'list-item';
-            document.getElementById('plan-desc-2').style.display = 'none';
+            desc1.classList.remove('hidden');
+            desc2.classList.add('hidden');
         } else {
-            document.getElementById('plan-desc-1').style.display = 'none';
-            document.getElementById('plan-desc-2').style.display = 'list-item';
+            desc1.classList.add('hidden');
+            desc2.classList.remove('hidden');
         }
     }
 
-    // دریافت تاریخ‌ها از سرور
     function fetchDates() {
         const dateSelect = document.getElementById('startDate');
         dateSelect.innerHTML = '<option value="" disabled selected>⏳ در حال دریافت...</option>';
@@ -728,7 +653,6 @@
         }
     }
 
-    // اعتبارسنجی کد ملی
     document.getElementById('nationalCode').addEventListener('input', function() {
         const val = this.value;
         const msg = document.getElementById('nid-msg');
@@ -754,7 +678,6 @@
         validateForm();
     });
 
-    // محاسبه قیمت و نمایش فارسی
     function calcTotal() {
         const planSelect = document.getElementById('planType');
         const domainSelect = document.getElementById('domainRequest');
@@ -767,7 +690,6 @@
         return { planPrice, domainPrice, total };
     }
 
-    // ارسال سفارش
     function submitOrder() {
         const templateVal = document.getElementById('templateName').value;
         if (!/^\d{3}$/.test(templateVal)) {
@@ -818,7 +740,7 @@
                 document.getElementById('step-form').classList.add('hidden');
                 document.getElementById('step-success').classList.remove('hidden');
                 
-                // ویرایش درخواستی: اسکرول به بالای صفحه تا قرارداد دیده شود
+                // اسکرول به بالا
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
                 document.getElementById('showExpire').innerText = toPersianNum(response.expireDate);
@@ -864,6 +786,9 @@
 
     function generateAndShowContract(orderId) {
         const contractDiv = document.getElementById('contract-preview');
+        // نمایش موقت برای گرفتن عکس
+        contractDiv.style.opacity = "1";
+        
         html2canvas(contractDiv, { scale: 2 }).then(canvas => {
             contractImageDataUrl = canvas.toDataURL("image/png");
             const img = document.createElement('img');
@@ -874,6 +799,9 @@
             const container = document.getElementById('contract-img-container');
             container.innerHTML = '';
             container.appendChild(img);
+            
+            // مخفی کردن مجدد
+            contractDiv.style.opacity = "0";
         });
     }
 
