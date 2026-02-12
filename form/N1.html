@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -16,12 +15,10 @@
             width: 100%; max-width: 650px; background: var(--white); 
             padding: 40px; border-radius: 20px; 
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.3s ease;
-            position: relative;
-            margin-top: 20px;
+            position: relative; margin-top: 20px;
         }
 
-        /* --- Modern Cube Loader --- */
+        /* لودینگ مکعبی */
         .loader-container {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255,255,255,0.9); z-index: 9999;
@@ -48,7 +45,7 @@
         }
         .loading-text { margin-top: 20px; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
 
-        /* --- Success Modal --- */
+        /* مودال موفقیت */
         .success-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 10000;
@@ -62,11 +59,14 @@
         
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* --- Form Elements --- */
+        /* استایل فیلدها */
         #f-title { font-size: 1.8rem; color: var(--text); margin-bottom: 10px; text-align: center; }
         #f-desc { color: #6b7280; text-align: center; margin-bottom: 30px; line-height: 1.6; background: #f9fafb; padding: 15px; border-radius: 12px; }
         
         label { display: block; font-weight: 700; color: #374151; margin-bottom: 8px; margin-top: 20px; }
+        
+        /* علامت ستاره قرمز برای فیلد اجباری */
+        .req-star { color: #ef4444; margin-right: 4px; }
         
         input[type="text"], input[type="number"], textarea {
             width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 10px;
@@ -82,61 +82,52 @@
         }
         .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
         .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: 0.7; transform: none; cursor: wait; }
 
-        /* Option Inputs */
         .option-label { display: flex; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
         .option-label:hover { background: #f3f4f6; border-color: var(--primary); }
         .option-label input { margin-left: 10px; width: 18px; height: 18px; accent-color: var(--primary); }
 
-        /* Fallback List View */
         .list-view-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; display: flex; justify-content: space-between; }
         .list-view-item:hover { border-color: var(--primary); background: #f9fafb; }
     </style>
 </head>
 <body>
 
-<!-- Cube Loader -->
 <div class="loader-container" id="loader">
     <div class="cube-loader">
         <div class="cube-face"></div><div class="cube-face"></div><div class="cube-face"></div>
         <div class="cube-face"></div><div class="cube-face"></div><div class="cube-face"></div>
     </div>
-    <div class="loading-text">در حال بارگذاری فرم...</div>
+    <div class="loading-text">در حال بارگذاری...</div>
 </div>
 
-<!-- Success Modal -->
 <div class="success-modal" id="successModal">
     <div class="success-card">
         <div class="checkmark">✓</div>
         <h2 style="margin:0 0 10px 0;">ثبت موفقیت‌آمیز</h2>
-        <p style="color:#666;">اطلاعات شما با موفقیت در سیستم ذخیره شد.</p>
+        <p style="color:#666;">اطلاعات شما با موفقیت ذخیره شد.</p>
         <button onclick="location.reload()" class="submit-btn" style="margin-top:20px; padding:10px;">باشه</button>
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="container" id="main-container" style="display:none;">
-    
-    <!-- Single Form View -->
     <div id="single-form-view">
         <h1 id="f-title"></h1>
         <div id="f-desc"></div>
-        <form id="dynamic-form"></form>
+        <form id="dynamic-form" onsubmit="event.preventDefault(); sendData();"></form>
     </div>
 
-    <!-- Fallback List View (Only if no ID provided) -->
     <div id="list-view" style="display:none;">
-        <h2>لیست فرم‌ها</h2>
+        <h2 style="text-align:center;">فرم‌های موجود</h2>
         <div id="forms-list"></div>
     </div>
-
 </div>
 
 <script>
     // 👇👇 لینک اسکریپت گوگل 👇👇
     const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; 
 
-    // شروع
     init();
 
     function init() {
@@ -145,7 +136,6 @@
         const container = document.getElementById('main-container');
 
         if (formId) {
-            // حالت 1: نمایش تکی فرم (وقتی لینک اختصاصی است)
             showLoader(true);
             fetch(`${API_URL}?action=getForm&formId=${formId}`)
             .then(r => r.json())
@@ -158,9 +148,8 @@
                     container.innerHTML = "<h3 style='text-align:center'>فرمی با این آدرس پیدا نشد.</h3>";
                 }
             })
-            .catch(() => { showLoader(false); container.innerHTML = "خطا در اتصال"; });
+            .catch(() => { showLoader(false); container.innerHTML = "<h3 style='text-align:center'>خطا در اتصال به سرور</h3>"; });
         } else {
-            // حالت 2: نمایش لیست (اگر لینکی بدون ID باز شد)
             showLoader(true);
             document.getElementById('single-form-view').style.display = 'none';
             document.getElementById('list-view').style.display = 'block';
@@ -176,7 +165,7 @@
                         listDiv.innerHTML += `<div class="list-view-item" onclick="location.href='?id=${f.id}'">
                             <strong>${f.title}</strong><span>←</span></div>`;
                     });
-                } else listDiv.innerHTML = "فرمی موجود نیست";
+                } else listDiv.innerHTML = "<p style='text-align:center'>فرمی موجود نیست</p>";
             });
         }
     }
@@ -193,22 +182,29 @@
 
         data.fields.forEach(f => {
             const div = document.createElement('div');
+            
+            // نمایش علامت اجباری
+            const reqHtml = f.required ? '<span class="req-star">*</span>' : '';
+            const reqAttr = f.required ? 'required' : '';
+
             if (f.type === 'static') {
                 div.innerHTML = `<div style="background:#e0f2fe; color:#0c4a6e; padding:15px; border-radius:10px; margin:20px 0; line-height:1.5">${f.content}</div>`;
             } else {
-                div.innerHTML = `<label>${f.label}</label>`;
+                div.innerHTML = `<label>${f.label} ${reqHtml}</label>`;
                 
                 if (['short_text', 'long_text', 'number', 'national_code', 'phone'].includes(f.type)) {
                     let type = f.type === 'short_text' ? 'text' : (f.type === 'long_text' ? 'textarea' : 'number');
                     let tag = f.type === 'long_text' ? 'textarea' : 'input';
                     let attrs = type === 'textarea' ? 'rows="4"' : `type="${type}"`;
-                    div.innerHTML += `<${tag} ${attrs} name="${f.label}" class="input-field"></${tag}>`;
+                    div.innerHTML += `<${tag} ${attrs} name="${f.label}" class="input-field" ${reqAttr}></${tag}>`;
                 }
                 else if (f.type === 'single_choice' || f.type === 'multi_choice') {
                     let type = f.type === 'single_choice' ? 'radio' : 'checkbox';
-                    f.options.forEach(opt => {
+                    // برای رادیو باتن، اولین گزینه required میشود تا گروه اجباری شود
+                    f.options.forEach((opt, idx) => {
+                        let r = (f.type === 'single_choice' && f.required && idx===0) ? 'required' : '';
                         div.innerHTML += `<label class="option-label">
-                            <input type="${type}" name="${f.label}" value="${opt}">
+                            <input type="${type}" name="${f.label}" value="${opt}" ${r}>
                             <span>${opt}</span>
                         </label>`;
                     });
@@ -218,15 +214,20 @@
         });
 
         const btn = document.createElement('button');
-        btn.type = 'button';
+        btn.type = 'submit'; // تغییر به submit برای فعال شدن اعتبارسنجی مرورگر
         btn.className = 'submit-btn';
         btn.innerText = 'ارسال اطلاعات';
-        btn.onclick = sendData;
         form.appendChild(btn);
     }
 
     function sendData() {
         const form = document.getElementById('dynamic-form');
+        // بررسی اعتبارسنجی مرورگر (اجباری بودن)
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
         const id = form.getAttribute('data-id');
         const formData = new FormData(form);
         let ans = {};
@@ -236,9 +237,8 @@
         }
 
         const btn = document.querySelector('.submit-btn');
-        btn.innerText = "در حال ارسال..."; btn.disabled = true;
+        btn.innerText = "⏳ در حال ارسال..."; btn.disabled = true;
         
-        // نمایش لودینگ حین ارسال
         showLoader(true);
 
         fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "submitResponse", formId: id, answers: ans }) })
