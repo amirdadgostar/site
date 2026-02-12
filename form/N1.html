@@ -3,129 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فرم دریافت اطلاعات</title>
+    <title>فرم هوشمند</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
         :root {
-            --primary: #4f46e5; --bg: #f3f4f6; --text: #111827; --white: #ffffff;
+            --primary: #4f46e5; --bg-grad: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --white: #ffffff; --text: #1e293b;
         }
-        body { font-family: 'Vazirmatn', sans-serif; background: var(--bg); margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        body {
+            font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 20px;
+            min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
+            /* پس‌زمینه حرفه‌ای Mesh Gradient */
+            background-color: #e0e7ff;
+            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                              radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                              radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-size: cover; background-attachment: fixed;
+        }
         
         .container { 
-            width: 100%; max-width: 650px; background: var(--white); 
-            padding: 40px; border-radius: 20px; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            position: relative; margin-top: 20px;
+            width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); padding: 40px; border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            margin-top: 30px; animation: fadeIn 0.5s ease-out;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* لودینگ مکعبی */
+        /* Loader جدید Infinity Pulse */
         .loader-container {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); z-index: 9999;
+            background: rgba(0,0,0,0.8); z-index: 9999;
             justify-content: center; align-items: center; flex-direction: column;
         }
-        .cube-loader {
-            width: 70px; height: 70px; position: relative; transform-style: preserve-3d;
-            animation: cube-spin 1.5s infinite linear;
+        .pulse-loader {
+            width: 80px; height: 80px; border-radius: 50%; background: white;
+            animation: pulse 1.5s infinite ease-in-out;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
         }
-        .cube-face {
-            position: absolute; width: 70px; height: 70px; background: rgba(79, 70, 229, 0.2);
-            border: 2px solid var(--primary);
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 30px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
-        .cube-face:nth-child(1) { transform: translateZ(35px); }
-        .cube-face:nth-child(2) { transform: rotateY(180deg) translateZ(35px); }
-        .cube-face:nth-child(3) { transform: rotateY(90deg) translateZ(35px); }
-        .cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(35px); }
-        .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(35px); }
-        .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(35px); }
-        
-        @keyframes cube-spin {
-            0% { transform: rotateX(0deg) rotateY(0deg); }
-            100% { transform: rotateX(360deg) rotateY(360deg); }
-        }
-        .loading-text { margin-top: 20px; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
+        .loading-text { color: white; margin-top: 20px; font-weight: 300; letter-spacing: 1px; font-size: 1.1rem; }
 
-        /* مودال موفقیت */
-        .success-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 10000;
-            justify-content: center; align-items: center;
+        /* Success View */
+        .success-view { text-align: center; display: none; padding: 20px; }
+        .success-icon {
+            width: 80px; height: 80px; background: #d1fae5; color: #10b981;
+            border-radius: 50%; font-size: 40px; display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 20px; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .success-card {
-            background: white; padding: 40px; border-radius: 20px; text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .checkmark { width: 80px; height: 80px; background: #d1fae5; color: #10b981; border-radius: 50%; font-size: 40px; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px; }
-        
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 
-        /* استایل فیلدها */
-        #f-title { font-size: 1.8rem; color: var(--text); margin-bottom: 10px; text-align: center; }
-        #f-desc { color: #6b7280; text-align: center; margin-bottom: 30px; line-height: 1.6; background: #f9fafb; padding: 15px; border-radius: 12px; }
-        
-        label { display: block; font-weight: 700; color: #374151; margin-bottom: 8px; margin-top: 20px; }
-        
-        /* علامت ستاره قرمز برای فیلد اجباری */
-        .req-star { color: #ef4444; margin-right: 4px; }
-        
+        /* Form Styling */
+        h1 { text-align: center; color: var(--text); margin-bottom: 10px; }
+        .desc { background: #f1f5f9; padding: 15px; border-radius: 12px; color: #64748b; line-height: 1.6; margin-bottom: 30px; text-align: center; font-size: 0.95rem; }
+
+        label { display: block; font-weight: 700; color: #334155; margin-bottom: 8px; margin-top: 20px; }
+        .req { color: #ef4444; margin-right: 4px; }
+
         input[type="text"], input[type="number"], textarea {
-            width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 10px;
-            font-family: inherit; font-size: 1rem; transition: all 0.3s;
-            box-sizing: border-box; background: #f9fafb;
+            width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px;
+            font-family: inherit; font-size: 1rem; transition: 0.3s; background: #fff; box-sizing: border-box;
         }
-        input:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
-        
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        input.error { border-color: #ef4444; }
+        .err-msg { color: #ef4444; font-size: 0.8rem; margin-top: 5px; display: none; }
+
         .submit-btn {
             width: 100%; padding: 16px; background: linear-gradient(135deg, #4f46e5, #4338ca);
             color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold;
-            cursor: pointer; margin-top: 30px; transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer; margin-top: 30px; transition: 0.2s;
         }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
-        .submit-btn:active { transform: translateY(0); }
-        .submit-btn:disabled { opacity: 0.7; transform: none; cursor: wait; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4); }
 
-        .option-label { display: flex; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
-        .option-label:hover { background: #f3f4f6; border-color: var(--primary); }
-        .option-label input { margin-left: 10px; width: 18px; height: 18px; accent-color: var(--primary); }
-
-        .list-view-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; display: flex; justify-content: space-between; }
-        .list-view-item:hover { border-color: var(--primary); background: #f9fafb; }
+        .action-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-reload { flex: 1; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; }
+        .btn-close { flex: 1; padding: 12px; background: #e2e8f0; color: #334155; border: none; border-radius: 10px; cursor: pointer; }
+        
+        .opt-label { display: flex; align-items: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
+        .opt-label:hover { border-color: var(--primary); background: #f8fafc; }
+        .opt-label input { margin-left: 10px; width: 18px; height: 18px; accent-color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="loader-container" id="loader">
-    <div class="cube-loader">
-        <div class="cube-face"></div><div class="cube-face"></div><div class="cube-face"></div>
-        <div class="cube-face"></div><div class="cube-face"></div><div class="cube-face"></div>
-    </div>
-    <div class="loading-text">در حال بارگذاری...</div>
-</div>
-
-<div class="success-modal" id="successModal">
-    <div class="success-card">
-        <div class="checkmark">✓</div>
-        <h2 style="margin:0 0 10px 0;">ثبت موفقیت‌آمیز</h2>
-        <p style="color:#666;">اطلاعات شما با موفقیت ذخیره شد.</p>
-        <button onclick="location.reload()" class="submit-btn" style="margin-top:20px; padding:10px;">باشه</button>
-    </div>
+    <div class="pulse-loader"></div>
+    <div class="loading-text">لطفاً صبر کنید...</div>
 </div>
 
 <div class="container" id="main-container" style="display:none;">
-    <div id="single-form-view">
+    
+    <!-- فرم ورود اطلاعات -->
+    <div id="form-view">
         <h1 id="f-title"></h1>
-        <div id="f-desc"></div>
-        <form id="dynamic-form" onsubmit="event.preventDefault(); sendData();"></form>
+        <div id="f-desc" class="desc"></div>
+        <form id="dynamic-form" onsubmit="event.preventDefault(); validateAndSend();"></form>
     </div>
 
+    <!-- نمای موفقیت (مخفی) -->
+    <div id="success-view" class="success-view">
+        <div class="success-icon">✓</div>
+        <h2>ارسال موفق!</h2>
+        <p style="color:#64748b;">اطلاعات شما با موفقیت در سامانه ثبت شد.</p>
+        <div class="action-btns">
+            <button onclick="location.reload()" class="btn-reload">پر کردن مجدد</button>
+            <button onclick="closeApp()" class="btn-close">بستن</button>
+        </div>
+    </div>
+    
+    <!-- حالت بسته شده -->
+    <div id="closed-view" style="display:none; text-align:center;">
+        <div class="success-icon" style="background:#e0e7ff; color:var(--primary)">✓</div>
+        <h3>فرم بسته شد</h3>
+    </div>
+
+    <!-- لیست فرم‌ها (اگر آدرس بدون ID باشد) -->
     <div id="list-view" style="display:none;">
-        <h2 style="text-align:center;">فرم‌های موجود</h2>
+        <h2 style="text-align:center;">فرم‌های فعال</h2>
         <div id="forms-list"></div>
     </div>
 </div>
 
 <script>
-    // 👇👇 لینک اسکریپت گوگل 👇👇
+    // 👇👇 لینک اسکریپت گوگل را اینجا بگذارید 👇👇
     const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; 
 
     init();
@@ -145,13 +148,13 @@
                 if (data.status === 'success') {
                     renderForm(data.structure, formId);
                 } else {
-                    container.innerHTML = "<h3 style='text-align:center'>فرمی با این آدرس پیدا نشد.</h3>";
+                    container.innerHTML = "<h3 style='text-align:center; padding:40px;'>⚠️ فرم یافت نشد.</h3>";
                 }
             })
-            .catch(() => { showLoader(false); container.innerHTML = "<h3 style='text-align:center'>خطا در اتصال به سرور</h3>"; });
+            .catch(() => { showLoader(false); container.innerHTML = "<h3 style='text-align:center'>خطا در اتصال</h3>"; });
         } else {
             showLoader(true);
-            document.getElementById('single-form-view').style.display = 'none';
+            document.getElementById('form-view').style.display = 'none';
             document.getElementById('list-view').style.display = 'block';
             
             fetch(`${API_URL}?action=getFormList`)
@@ -162,51 +165,54 @@
                 const listDiv = document.getElementById('forms-list');
                 if(data.status==='success' && data.list.length > 0) {
                     data.list.forEach(f => {
-                        listDiv.innerHTML += `<div class="list-view-item" onclick="location.href='?id=${f.id}'">
-                            <strong>${f.title}</strong><span>←</span></div>`;
+                        listDiv.innerHTML += `<div style="padding:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="location.href='?id=${f.id}'"><strong>${f.title}</strong></div>`;
                     });
                 } else listDiv.innerHTML = "<p style='text-align:center'>فرمی موجود نیست</p>";
             });
         }
     }
 
-    function showLoader(show) {
-        document.getElementById('loader').style.display = show ? 'flex' : 'none';
-    }
+    function showLoader(show) { document.getElementById('loader').style.display = show ? 'flex' : 'none'; }
 
     function renderForm(data, id) {
         document.getElementById('f-title').innerText = data.title;
-        document.getElementById('f-desc').innerText = data.description;
+        document.getElementById('f-desc').innerText = data.description || "لطفاً اطلاعات زیر را با دقت تکمیل نمایید.";
         const form = document.getElementById('dynamic-form');
         form.setAttribute('data-id', id);
 
         data.fields.forEach(f => {
             const div = document.createElement('div');
-            
-            // نمایش علامت اجباری
-            const reqHtml = f.required ? '<span class="req-star">*</span>' : '';
+            const reqMark = f.required ? '<span class="req">*</span>' : '';
             const reqAttr = f.required ? 'required' : '';
 
             if (f.type === 'static') {
-                div.innerHTML = `<div style="background:#e0f2fe; color:#0c4a6e; padding:15px; border-radius:10px; margin:20px 0; line-height:1.5">${f.content}</div>`;
+                div.innerHTML = `<div style="background:#e0f2fe; color:#0369a1; padding:15px; border-radius:10px; margin:20px 0;">${f.content}</div>`;
             } else {
-                div.innerHTML = `<label>${f.label} ${reqHtml}</label>`;
+                div.innerHTML = `<label>${f.label} ${reqMark}</label>`;
                 
-                if (['short_text', 'long_text', 'number', 'national_code', 'phone'].includes(f.type)) {
-                    let type = f.type === 'short_text' ? 'text' : (f.type === 'long_text' ? 'textarea' : 'number');
+                // فیلد متنی، عدد، توضیحات
+                if (['short_text', 'long_text', 'number'].includes(f.type)) {
                     let tag = f.type === 'long_text' ? 'textarea' : 'input';
-                    let attrs = type === 'textarea' ? 'rows="4"' : `type="${type}"`;
+                    let type = f.type === 'short_text' ? 'text' : (f.type==='long_text'?'':'number');
+                    let attrs = type ? `type="${type}"` : 'rows="4"';
                     div.innerHTML += `<${tag} ${attrs} name="${f.label}" class="input-field" ${reqAttr}></${tag}>`;
                 }
-                else if (f.type === 'single_choice' || f.type === 'multi_choice') {
+                // کد ملی
+                else if (f.type === 'national_code') {
+                    div.innerHTML += `<input type="number" name="${f.label}" class="input-field national-code" placeholder="10 رقم" ${reqAttr} oninput="checkNational(this)">
+                                      <div class="err-msg">کد ملی معتبر نیست</div>`;
+                }
+                // موبایل
+                else if (f.type === 'phone') {
+                    div.innerHTML += `<input type="number" name="${f.label}" class="input-field phone-num" placeholder="09xxxxxxxxx" ${reqAttr} oninput="checkPhone(this)">
+                                      <div class="err-msg">شماره موبایل باید 11 رقم باشد و با 09 شروع شود</div>`;
+                }
+                // گزینه‌ها
+                else if (f.type.includes('choice')) {
                     let type = f.type === 'single_choice' ? 'radio' : 'checkbox';
-                    // برای رادیو باتن، اولین گزینه required میشود تا گروه اجباری شود
-                    f.options.forEach((opt, idx) => {
-                        let r = (f.type === 'single_choice' && f.required && idx===0) ? 'required' : '';
-                        div.innerHTML += `<label class="option-label">
-                            <input type="${type}" name="${f.label}" value="${opt}" ${r}>
-                            <span>${opt}</span>
-                        </label>`;
+                    f.options.forEach((opt, i) => {
+                        let r = (f.type === 'single_choice' && f.required && i===0) ? 'required' : '';
+                        div.innerHTML += `<label class="opt-label"><input type="${type}" name="${f.label}" value="${opt}" ${r}><span>${opt}</span></label>`;
                     });
                 }
             }
@@ -214,46 +220,91 @@
         });
 
         const btn = document.createElement('button');
-        btn.type = 'submit'; // تغییر به submit برای فعال شدن اعتبارسنجی مرورگر
-        btn.className = 'submit-btn';
-        btn.innerText = 'ارسال اطلاعات';
+        btn.type = 'submit'; btn.className = 'submit-btn'; btn.innerText = 'ارسال اطلاعات';
         form.appendChild(btn);
     }
 
-    function sendData() {
-        const form = document.getElementById('dynamic-form');
-        // بررسی اعتبارسنجی مرورگر (اجباری بودن)
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
+    // اعتبارسنجی‌ها
+    function checkNational(input) {
+        const val = input.value;
+        const err = input.nextElementSibling;
+        if (!isValidNationalCode(val)) {
+            input.classList.add('error');
+            err.style.display = 'block';
+            return false;
+        } else {
+            input.classList.remove('error');
+            err.style.display = 'none';
+            return true;
         }
+    }
+
+    function isValidNationalCode(code) {
+        if (!/^\d{10}$/.test(code)) return false;
+        const check = +code[9];
+        const sum = code.split('').slice(0, 9).reduce((acc, x, i) => acc + +x * (10 - i), 0) % 11;
+        return sum < 2 ? check === sum : check === 11 - sum;
+    }
+
+    function checkPhone(input) {
+        const val = input.value;
+        const err = input.nextElementSibling;
+        if (!/^09\d{9}$/.test(val)) {
+            input.classList.add('error');
+            err.style.display = 'block';
+            return false;
+        } else {
+            input.classList.remove('error');
+            err.style.display = 'none';
+            return true;
+        }
+    }
+
+    function validateAndSend() {
+        const form = document.getElementById('dynamic-form');
+        let isValid = true;
+        
+        // چک کردن فیلدهای خاص
+        const nats = form.querySelectorAll('.national-code');
+        nats.forEach(n => { if(!checkNational(n)) isValid = false; });
+        
+        const phones = form.querySelectorAll('.phone-num');
+        phones.forEach(p => { if(!checkPhone(p)) isValid = false; });
+
+        if (!isValid) return alert("لطفاً خطاهای فرم را برطرف کنید.");
 
         const id = form.getAttribute('data-id');
         const formData = new FormData(form);
         let ans = {};
-        
         for (let [key, val] of formData.entries()) {
             if (ans[key]) ans[key] += ", " + val; else ans[key] = val;
         }
 
         const btn = document.querySelector('.submit-btn');
-        btn.innerText = "⏳ در حال ارسال..."; btn.disabled = true;
-        
+        const orgText = btn.innerText;
+        btn.innerText = "درحال پردازش..."; btn.disabled = true;
         showLoader(true);
 
         fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "submitResponse", formId: id, answers: ans }) })
         .then(r => r.json()).then(d => {
             showLoader(false);
             if(d.status === 'success') {
-                document.getElementById('successModal').style.display = 'flex';
+                // نمایش موفقیت
+                document.getElementById('form-view').style.display = 'none';
+                document.getElementById('success-view').style.display = 'block';
             } else {
                 alert("خطا: " + d.message);
-                btn.innerText = "ارسال اطلاعات"; btn.disabled = false;
+                btn.innerText = orgText; btn.disabled = false;
             }
         }).catch(() => {
             showLoader(false); alert("خطا در ارتباط");
-            btn.innerText = "ارسال اطلاعات"; btn.disabled = false;
+            btn.innerText = orgText; btn.disabled = false;
         });
+    }
+
+    function closeApp() {
+        document.getElementById('success-view').style.display = 'none';
+        document.getElementById('closed-view').style.display = 'block';
     }
 </script>
 </body>
