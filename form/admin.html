@@ -1,1 +1,416 @@
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت فرم‌ها</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root {
+            --primary-color: #2563eb; --secondary-color: #1e293b; --accent-color: #3b82f6;
+            --success-color: #10b981; --danger-color: #ef4444; --warning-color: #f59e0b;
+            --bg-color: #f3f4f6; --card-bg: #ffffff; --text-main: #1f2937;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1); --radius-md: 0.5rem;
+        }
+        * { box-sizing: border-box; outline: none; transition: all 0.2s ease-in-out; }
+        body { font-family: 'Vazirmatn', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding-bottom: 80px; }
+        
+        /* طراحی جدید صفحه ورود */
+        #login-panel { display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); }
+        .login-card { 
+            background: var(--card-bg); padding: 40px; width: 100%; max-width: 420px; 
+            border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); 
+            text-align: center; display: flex; flex-direction: column; gap: 15px;
+        }
+        .login-card h2 { margin-top: 0; color: var(--primary-color); font-size: 1.5rem; }
+        .login-card input { margin-bottom: 5px; }
+
+        /* پنل مدیریت */
+        #admin-panel { display: none; }
+        header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 30px; box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--primary-color); }
+        
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+        .card { background: var(--card-bg); border-radius: var(--radius-md); padding: 25px; box-shadow: var(--shadow-md); margin-bottom: 20px; }
+        
+        input[type="text"], input[type="password"], select, textarea { 
+            width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #e5e7eb; 
+            border-radius: var(--radius-md); background: #f9fafb; font-family: inherit;
+        }
+        input:focus { border-color: var(--primary-color); background: white; }
+        
+        /* دکمه‌ها */
+        .btn { padding: 10px 20px; border: none; border-radius: var(--radius-md); cursor: pointer; color: white; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-primary { background: var(--primary-color); }
+        .btn-success { background: var(--success-color); }
+        .btn-danger { background: var(--danger-color); }
+        .btn-warning { background: var(--warning-color); }
+        .btn-secondary { background: #e5e7eb; color: var(--text-main); }
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        /* آیتم‌های لیست فرم */
+        .form-item { background: #fff; border: 1px solid #f3f4f6; border-radius: var(--radius-md); padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .action-group { display: flex; gap: 5px; flex-wrap: wrap; }
+        
+        /* باکس فیلدها */
+        .field-box { background: #f8fafc; border-right: 4px solid var(--primary-color); padding: 20px; margin-bottom: 15px; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .field-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .field-type-badge { background: #e0e7ff; color: var(--primary-color); padding: 3px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+        
+        /* استایل چک‌باکس اجباری */
+        .required-wrapper { margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; }
+        .required-wrapper input { width: auto; margin: 0; cursor: pointer; }
+
+        /* استایل گزینه‌ها (عمودی) */
+        .opt-container { margin-top: 10px; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 8px; background: #fff; }
+        .opt-row { display: flex; gap: 10px; margin-bottom: 8px; width: 100%; align-items: center; }
+        .opt-input { flex-grow: 1; margin-bottom: 0 !important; }
+        .btn-del-opt { background: #fee2e2; color: #ef4444; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        /* مودال */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 30px; border-radius: 1rem; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; text-align: right; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; position: sticky; top: 0; }
+    </style>
+</head>
+<body>
+
+<div id="login-panel">
+    <div class="login-card">
+        <h2>ورود به پنل مدیریت</h2>
+        <input type="text" id="username" placeholder="نام کاربری">
+        <input type="password" id="password" placeholder="رمز عبور">
+        <button onclick="login()" class="btn btn-primary" style="width:100%; padding: 14px; font-size: 1.1rem;">ورود امن</button>
+        <p id="login-msg" style="color:var(--danger-color); margin:0; font-size:0.9rem;"></p>
+    </div>
+</div>
+
+<div id="admin-panel">
+    <header>
+        <div class="brand">مدیریت فرم‌ساز</div>
+        <div>
+            <button onclick="openChangePassModal()" class="btn btn-secondary">تغییر رمز</button>
+            <button onclick="logout()" class="btn btn-danger">خروج</button>
+        </div>
+    </header>
+
+    <div class="container dashboard-grid">
+        <div class="card">
+            <h3>📝 طراحی و ساخت فرم</h3>
+            <input type="text" id="formTitle" placeholder="عنوان فرم (الزامی)">
+            <textarea id="formDesc" rows="3" placeholder="توضیحات فرم (اختیاری)"></textarea>
+            <div id="fields-container"></div>
+            
+            <div style="background:#eff6ff; padding:15px; border-radius:8px; margin-top:20px;">
+                <label style="display:block; margin-bottom:5px; font-weight:bold; color:var(--primary-color);">افزودن فیلد جدید:</label>
+                <div style="display:flex; gap:10px;">
+                    <select id="fieldType" style="margin-bottom:0; flex:1;">
+                        <option value="short_text">متن کوتاه</option>
+                        <option value="long_text">متن بلند</option>
+                        <option value="number">فقط عدد</option>
+                        <option value="national_code">کد ملی</option>
+                        <option value="phone">شماره تلفن</option>
+                        <option value="single_choice">چند گزینه‌ای (تک انتخابی)</option>
+                        <option value="multi_choice">چند گزینه‌ای (چند انتخابی)</option>
+                        <option value="static">متن نمایشی</option>
+                    </select>
+                    <button onclick="addField()" class="btn btn-primary">➕ افزودن</button>
+                </div>
+            </div>
+            <button onclick="saveForm()" class="btn btn-success" style="width:100%; margin-top:20px; padding:15px; font-size:1.1rem;">💾 ذخیره و انتشار فرم</button>
+        </div>
+
+        <div class="card">
+            <h3>📂 مدیریت فرم‌ها</h3>
+            <div id="loading-list">در حال بارگذاری لیست...</div>
+            <div id="forms-list-items"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal مشاهده داده -->
+<div id="dataModal" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 id="modalTitle" style="margin:0;">داده‌ها</h3>
+            <div>
+                <button onclick="printData()" class="btn btn-primary">🖨️ چاپ داده‌ها</button>
+                <button onclick="closeModal('dataModal')" class="btn btn-secondary">بستن</button>
+            </div>
+        </div>
+        <div id="tableContainer" style="overflow-x:auto;"></div>
+    </div>
+</div>
+
+<!-- Modal تغییر رمز -->
+<div id="passModal" class="modal">
+    <div class="modal-content" style="max-width:400px;">
+        <div style="display:flex; justify-content:space-between;">
+            <h3>تغییر رمز عبور</h3>
+            <button onclick="closeModal('passModal')" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+        </div>
+        <input type="password" id="oldPass" placeholder="رمز فعلی">
+        <input type="password" id="newPass" placeholder="رمز جدید">
+        <button onclick="changePassword()" class="btn btn-primary" style="width:100%">تغییر رمز</button>
+    </div>
+</div>
+
+<script>
+    // 👇👇 لینک اسکریپت گوگل 👇👇
+    const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; 
+    const BASE_FORM_URL = "https://amirdadgostar.github.io/site/form/N1.html";
+
+    let fields = [];
+    let currentUser = "";
+
+    // دیکشنری نام‌های فارسی فیلدها
+    const FIELD_NAMES = {
+        'short_text': 'متن کوتاه',
+        'long_text': 'متن بلند',
+        'number': 'فقط عدد',
+        'national_code': 'کد ملی',
+        'phone': 'شماره تلفن',
+        'single_choice': 'چند گزینه‌ای (تک)',
+        'multi_choice': 'چند گزینه‌ای (چند)',
+        'static': 'متن نمایشی'
+    };
+
+    function login() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        const btn = document.querySelector('#login-panel button');
+        btn.innerText = "⏳ در حال بررسی..."; btn.disabled = true;
+        
+        fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "login", username: u, password: p }) })
+        .then(r => r.json()).then(d => {
+            if (d.status === 'success') {
+                currentUser = u;
+                document.getElementById('login-panel').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadFormsList();
+            } else {
+                document.getElementById('login-msg').innerText = d.message;
+                btn.innerText = "ورود امن"; btn.disabled = false;
+            }
+        }).catch(() => { btn.innerText = "ورود امن"; btn.disabled = false; alert("خطا در اتصال"); });
+    }
+
+    function logout() { location.reload(); }
+
+    function addField(data = null) {
+        const typeRaw = data ? data.type : document.getElementById('fieldType').value;
+        const typeLabel = FIELD_NAMES[typeRaw] || typeRaw;
+        const id = Date.now() + Math.floor(Math.random() * 1000);
+        
+        let html = `
+        <div class="field-box" id="f-${id}">
+            <div class="field-title-bar">
+                <span class="field-type-badge">${typeLabel}</span>
+                <button onclick="removeField(${id})" style="background:#fee2e2; color:#ef4444; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">حذف</button>
+            </div>
+            <input type="text" class="lbl" placeholder="عنوان فیلد را اینجا بنویسید" value="${data ? data.label : ''}" style="margin-top:5px; font-weight:bold;">`;
+        
+        if (typeRaw.includes('choice')) {
+            html += `<div class="opt-container" id="opt-wrap-${id}">
+                     <small style="color:#666; display:block; margin-bottom:5px;">لیست گزینه‌ها:</small>`;
+            if (data && data.options) data.options.forEach(o => html += createOpt(o));
+            else html += createOpt('');
+            html += `<button onclick="addOpt(${id})" class="btn btn-secondary" style="width:100%; margin-top:5px; font-size:0.9rem;">➕ افزودن گزینه دیگر</button></div>`;
+        }
+        
+        if (typeRaw === 'static') {
+            html += `<textarea class="cnt" placeholder="متن نمایشی برای کاربر...">${data ? data.content : ''}</textarea>`;
+        }
+
+        // چک‌باکس اجباری (فقط برای فیلدهای غیر استاتیک)
+        if (typeRaw !== 'static') {
+            const isReq = data && data.required ? 'checked' : '';
+            html += `<div class="required-wrapper">
+                        <input type="checkbox" class="req-chk" ${isReq} id="req-${id}">
+                        <label for="req-${id}">پاسخ به این فیلد <b>اجباری</b> است</label>
+                     </div>`;
+        }
+
+        html += `</div>`;
+        document.getElementById('fields-container').insertAdjacentHTML('beforeend', html);
+        fields.push({ id, type: typeRaw });
+    }
+
+    function createOpt(val) {
+        return `<div class="opt-row">
+                <input type="text" class="opt-input" placeholder="عنوان گزینه" value="${val}">
+                <button onclick="this.parentElement.remove()" class="btn-del-opt">حذف</button>
+                </div>`;
+    }
+    
+    function addOpt(id) {
+        document.querySelector(`#opt-wrap-${id} button`).insertAdjacentHTML('beforebegin', createOpt(''));
+    }
+    
+    function removeField(id) { document.getElementById(`f-${id}`).remove(); fields = fields.filter(f => f.id !== id); }
+
+    function saveForm() {
+        const title = document.getElementById('formTitle').value;
+        if (!title || fields.length === 0) return alert("عنوان و حداقل یک فیلد الزامی است");
+        
+        let finalFields = [];
+        for (let f of fields) {
+            const el = document.getElementById(`f-${f.id}`);
+            let obj = { 
+                type: f.type, 
+                label: el.querySelector('.lbl') ? el.querySelector('.lbl').value : "",
+                required: el.querySelector('.req-chk') ? el.querySelector('.req-chk').checked : false
+            };
+            
+            if (f.type.includes('choice')) {
+                let opts = [];
+                el.querySelectorAll('.opt-input').forEach(i => { if(i.value.trim()) opts.push(i.value.trim()); });
+                if(opts.length === 0) return alert("لطفاً برای فیلدهای چندگزینه‌ای حداقل یک گزینه وارد کنید");
+                obj.options = opts;
+            }
+            if (f.type === 'static') obj.content = el.querySelector('.cnt').value;
+            finalFields.push(obj);
+        }
+
+        const btn = document.querySelector('.btn-success'); 
+        const oldText = btn.innerHTML;
+        btn.innerHTML = "⏳ در حال ذخیره و ساخت شیت..."; btn.disabled = true;
+        
+        fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "createForm", data: { title, description: document.getElementById('formDesc').value, fields: finalFields } }) })
+        .then(r => r.json()).then(d => {
+            if(d.status === 'success') { alert("✅ فرم با موفقیت ساخته شد."); location.reload(); }
+            else { alert(d.message); btn.innerHTML = oldText; btn.disabled = false; }
+        }).catch(() => { alert("خطا در ارتباط"); btn.innerHTML = oldText; btn.disabled = false; });
+    }
+
+    function loadFormsList() {
+        const listDiv = document.getElementById('forms-list-items');
+        listDiv.innerHTML = "";
+        fetch(`${API_URL}?action=getFormList`).then(r => r.json()).then(d => {
+            document.getElementById('loading-list').style.display = 'none';
+            if (d.status === 'success') {
+                d.list.forEach(f => {
+                    // لینک دانلود مستقیم بدون لاگین
+                    const dlLink = `${API_URL}?action=downloadCSV&formId=${f.id}`;
+                    const formLink = `${BASE_FORM_URL}?id=${f.id}`;
+                    
+                    listDiv.innerHTML += `
+                        <div class="form-item">
+                            <div>
+                                <strong style="font-size:1.1rem; color:var(--primary-color);">${f.title}</strong><br>
+                                <small style="color:#666;">${new Date(f.date).toLocaleDateString('fa-IR')}</small>
+                            </div>
+                            <div class="action-group">
+                                <button onclick="copyLink('${formLink}', this)" class="btn btn-secondary btn-sm">🔗 کپی لینک</button>
+                                <button onclick="cloneForm('${f.id}', this)" class="btn btn-warning btn-sm">الگو</button>
+                                <button onclick="viewData('${f.sheetName}', '${f.title}', this)" class="btn btn-secondary btn-sm">مشاهده</button>
+                                <a href="${dlLink}" class="btn btn-primary btn-sm" style="text-decoration:none;" onclick="clickDl(this)">دانلود Excel</a>
+                                <button onclick="deleteForm('${f.id}', this)" class="btn btn-danger btn-sm">حذف</button>
+                            </div>
+                        </div>`;
+                });
+            }
+        });
+    }
+    
+    function clickDl(el) {
+        const original = el.innerText;
+        el.innerText = "⏳ دانلود...";
+        setTimeout(() => el.innerText = original, 3000);
+    }
+
+    function copyLink(url, btn) {
+        const original = btn.innerText;
+        btn.innerText = "کپی شد!";
+        navigator.clipboard.writeText(url);
+        setTimeout(() => btn.innerText = original, 2000);
+    }
+
+    function cloneForm(id, btn) {
+        if(!confirm("آیا می‌خواهید از این فرم یک کپی برای ویرایش بسازید؟")) return;
+        const original = btn.innerText;
+        btn.innerText = "⏳..."; btn.disabled = true;
+        
+        fetch(`${API_URL}?action=getForm&formId=${id}`).then(r => r.json()).then(d => {
+            if(d.status==='success') {
+                document.getElementById('fields-container').innerHTML = ""; fields = [];
+                document.getElementById('formTitle').value = d.structure.title + " (جدید)";
+                document.getElementById('formDesc').value = d.structure.description;
+                d.structure.fields.forEach(f => addField(f));
+                window.scrollTo({top:0, behavior:'smooth'});
+            }
+            btn.innerText = original; btn.disabled = false;
+        });
+    }
+    
+    function deleteForm(id, btn) {
+        if(!confirm("آیا مطمئن هستید؟ تمام اطلاعات این فرم پاک خواهد شد!")) return;
+        const original = btn.innerText;
+        btn.innerText = "⏳..."; btn.disabled = true;
+        
+        fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "deleteForm", formId: id }) })
+        .then(r => r.json()).then(d => { alert(d.message); loadFormsList(); });
+    }
+
+    function viewData(sh, t, btn) {
+        const original = btn.innerText;
+        btn.innerText = "⏳..."; btn.disabled = true;
+        
+        document.getElementById('modalTitle').innerText = t;
+        const c = document.getElementById('tableContainer'); c.innerHTML = "در حال دریافت داده‌ها...";
+        document.getElementById('dataModal').style.display = 'flex';
+        
+        fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "getSheetData", sheetName: sh }) })
+        .then(r => r.json()).then(d => {
+            btn.innerText = original; btn.disabled = false;
+            if(d.status==='success' && d.data.length) {
+                let h = '<table id="printTable">';
+                d.data.forEach((r, i) => {
+                    h += i===0 ? '<thead><tr>' : '<tr>';
+                    r.forEach(c => h += i===0 ? `<th>${c}</th>` : `<td>${c}</td>`);
+                    h += i===0 ? '</tr></thead><tbody>' : '</tr>';
+                });
+                c.innerHTML = h + '</tbody></table>';
+            } else c.innerHTML = "<p style='text-align:center'>هنوز داده‌ای ثبت نشده است.</p>";
+        }).catch(() => { btn.innerText = original; btn.disabled = false; });
+    }
+
+    function printData() {
+        const content = document.getElementById('tableContainer').innerHTML;
+        const win = window.open('', '', 'height=600,width=800');
+        win.document.write('<html dir="rtl"><head><title>چاپ داده‌ها</title>');
+        win.document.write('<style>body{font-family:Tahoma,sans-serif;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #000;padding:8px;text-align:right;} th{background:#eee;}</style>');
+        win.document.write('</head><body>');
+        win.document.write(document.getElementById('modalTitle').innerText + '<br><br>');
+        win.document.write(content);
+        win.document.write('</body></html>');
+        win.document.close();
+        win.print();
+    }
+
+    function openChangePassModal() { document.getElementById('passModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    
+    function changePassword() {
+        const o = document.getElementById('oldPass').value; const n = document.getElementById('newPass').value;
+        const btn = document.querySelector('#passModal button');
+        const oldText = btn.innerText;
+        btn.innerText = "⏳..."; btn.disabled = true;
+        
+        fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "changePassword", username: currentUser, oldPassword: o, newPassword: n }) })
+        .then(r => r.json()).then(d => { 
+            alert(d.message); 
+            btn.innerText = oldText; btn.disabled = false;
+            if(d.status==='success') closeModal('passModal'); 
+        });
+    }
+</script>
+</body>
+</html>
