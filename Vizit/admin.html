@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -11,28 +11,34 @@
         button { background: #007bff; color: white; cursor: pointer; font-weight: bold; border: none; }
         button:hover { background: #0056b3; }
         .hidden { display: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background: #f9f9f9; }
-        .tabs { display: flex; border-bottom: 2px solid #ddd; margin-bottom: 20px; }
-        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; background: #eee; }
-        .tab.active { background: #007bff; color: white; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        th, td { border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; padding: 12px 8px; text-align: center; }
+        th { background: #f9f9f9; border-top: none; }
+        tr:last-child td { border-bottom: none; }
+        tr td:last-child, tr th:last-child { border-left: none; }
         
-        /* استایل‌های جدید برای آکاردئون نوبت‌ها */
-        .accordion { background-color: #eee; color: #444; cursor: pointer; padding: 15px; width: 100%; border: none; text-align: right; outline: none; font-size: 15px; transition: 0.4s; margin-top: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-        .accordion.active, .accordion:hover { background-color: #ccc; }
-        .accordion:after { content: '\002B'; color: #777; font-weight: bold; float: left; margin-left: 5px; }
-        .accordion.active:after { content: "\2212"; }
-        .panel { padding: 0 18px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out; border-bottom: 1px solid #eee; }
-        .panel table { margin-bottom: 15px; }
-        .count-badge { background: #007bff; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.9em; }
+        .tabs { display: flex; border-bottom: 2px solid #ddd; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; background: #eee; transition: 0.3s; }
+        .tab.active { background: #007bff; color: white; }
+        .tab:first-child { border-top-right-radius: 8px; }
+        .tab:last-child { border-top-left-radius: 8px; }
 
-        /* استایل لودینگ اسکلتی (Bone Style) */
+        /* استایل‌های مدرن برای آکاردئون نوبت‌ها */
+        .accordion { background-color: #fff; color: #444; cursor: pointer; padding: 15px; width: 100%; border: 1px solid #eee; text-align: right; outline: none; font-size: 15px; transition: 0.3s; margin-top: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .accordion.active, .accordion:hover { background-color: #f8f9fa; border-color: #ddd; }
+        .accordion:after { content: '\002B'; color: #777; font-weight: bold; float: left; margin-left: 5px; font-size: 18px; }
+        .accordion.active:after { content: "\2212"; }
+        .panel { padding: 0 18px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out; border-bottom: none; margin-bottom: 5px; }
+        .panel table { margin-bottom: 15px; width: 100%; }
+        .count-badge { background: #007bff; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.85em; }
+
+        /* استایل ردیف‌های جمعه */
+        .friday-row { color: #dc3545; font-weight: bold; }
+        .friday-bg { background-color: #fff5f5; }
+
+        /* لودینگ */
         #loader { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index: 9999; }
-        .skeleton-box { width: 300px; height: 20px; background: #ddd; margin: 10px auto; border-radius: 4px; position: relative; overflow: hidden; }
-        .skeleton-box::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0)); animation: shimmer 2s infinite; content: ''; }
         .skeleton-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-        @keyframes shimmer { 100% { transform: translateX(100%); } }
         .loader-text { margin-top: 15px; color: #555; font-weight: bold; }
     </style>
 </head>
@@ -43,17 +49,12 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbwDwkurakHk2G6qFDFof0LJIXysyDSOVU5XvD46RNpO0RjS-x7_nO5hs7vUr2_3B0AH/exec"; 
 </script>
 
-<!-- لودینگ با استایل جدید -->
 <div id="loader">
     <div class="skeleton-container">
-        <div class="skeleton-box" style="width: 200px; height: 30px;"></div>
-        <div class="skeleton-box" style="width: 250px;"></div>
-        <div class="skeleton-box" style="width: 180px;"></div>
         <div class="loader-text">در حال پردازش اطلاعات...</div>
     </div>
 </div>
 
-<!-- صفحه لاگین -->
 <div id="loginPage" class="box" style="max-width: 350px; margin-top: 50px;">
     <h3 style="text-align: center;">ورود مدیر</h3>
     <input type="text" id="u" placeholder="نام کاربری">
@@ -62,7 +63,6 @@
     <p id="msg" style="color:red; text-align:center;"></p>
 </div>
 
-<!-- پنل اصلی -->
 <div id="mainPage" class="box hidden">
     <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3>پنل مدیریت</h3>
@@ -75,22 +75,18 @@
         <div class="tab" onclick="showTab('pass')">تغییر رمز</div>
     </div>
 
-    <!-- تنظیمات -->
     <div id="settings" class="content">
         <button onclick="saveSettings()">ذخیره همه تغییرات</button>
         <table>
-            <!-- ویرایش: اضافه شدن ستون رزرو شده -->
             <thead><tr><th>تاریخ</th><th>رزرو شده</th><th>ظرفیت</th><th>شروع</th><th>پایان</th></tr></thead>
             <tbody id="tblSettings"></tbody>
         </table>
     </div>
 
-    <!-- لیست نوبت ها (ویرایش: تغییر ساختار برای آکاردئون) -->
     <div id="list" class="content hidden">
         <input type="text" id="search" placeholder="جستجوی نام..." style="width: 70%; display:inline-block;">
         <button onclick="loadList(1)" style="width: 28%; display:inline-block;">جستجو</button>
         
-        <!-- محل قرارگیری لیست آکاردئونی -->
         <div id="accordionContainer" style="margin-top: 15px;"></div>
         
         <div style="text-align:center; margin-top:10px;">
@@ -100,7 +96,6 @@
         </div>
     </div>
 
-    <!-- تغییر رمز -->
     <div id="pass" class="content hidden">
         <input type="password" id="oldP" placeholder="رمز فعلی">
         <input type="password" id="newP" placeholder="رمز جدید">
@@ -112,7 +107,7 @@
     let token = localStorage.getItem("admToken");
     let page = 1;
 
-    // --- تابع تبدیل تاریخ میلادی به شمسی (جهت نمایش) ---
+    // --- توابع تبدیل تاریخ و شمسی سازی ---
     function gregorianToJalali(gy, gm, gd) {
         var g_d_m, jy, jm, jd, gy2, days;
         g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
@@ -127,21 +122,27 @@
         return jy + '/' + jm + '/' + jd;
     }
 
-    function toJalaliStr(dateStr) {
-        if(!dateStr) return "";
+    function getDayAndDate(dateStr) {
+        if(!dateStr) return { text: "", isFriday: false };
         let parts = dateStr.split('-');
-        if(parts.length !== 3) return dateStr;
-        return gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
-    }
-    
-    // تابع کمکی برای گرفتن نام روز هفته
-    function getPersianDayName(dateStr) {
-        let parts = dateStr.split('-');
-        // ایجاد تاریخ دقیق بدون مشکل منطقه زمانی
-        let d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-        let dayIndex = d.getDay(); // 0=Sunday, ..., 5=Friday, 6=Saturday
+        let gy = parseInt(parts[0]);
+        let gm = parseInt(parts[1]);
+        let gd = parseInt(parts[2]);
+        
+        // محاسبه تاریخ شمسی
+        let jDate = gregorianToJalali(gy, gm, gd);
+        
+        // محاسبه روز هفته
+        let d = new Date(gy, gm - 1, gd);
+        let dayIndex = d.getDay(); // 0=یکشنبه تا 6=شنبه در JS استاندارد نیست اما اینجا چک میکنیم
+        // استاندارد: Sunday=0, Monday=1, ... Friday=5, Saturday=6
         const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-        return { name: days[dayIndex], isFriday: dayIndex === 5 };
+        let dayName = days[dayIndex];
+        
+        return { 
+            text: dayName + " " + jDate, 
+            isFriday: dayIndex === 5 
+        };
     }
     // ---------------------------------------------------
 
@@ -151,24 +152,21 @@
         loadSettings();
     }
 
-    // تابع اصلی ارسال درخواست که مشکل اتصال را حل می‌کند
     async function api(payload) {
         payload.token = token;
-        document.getElementById("loader").style.display = "block"; // نمایش لودینگ
+        document.getElementById("loader").style.display = "block";
         try {
             let req = await fetch(API_URL, {
                 method: "POST",
-                // نکته کلیدی: استفاده از text/plain برای جلوگیری از گیر دادن مرورگر
                 headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify(payload)
             });
             let res = await req.json();
-            document.getElementById("loader").style.display = "none"; // مخفی کردن لودینگ
+            document.getElementById("loader").style.display = "none";
             return res;
         } catch(e) {
             document.getElementById("loader").style.display = "none";
-            alert("خطا در اتصال به سرور. اینترنت را چک کنید یا لینک اسکریپت اشتباه است.");
-            console.log(e);
+            alert("خطا در اتصال.");
             return {success: false};
         }
     }
@@ -176,8 +174,6 @@
     function login() {
         let u = document.getElementById("u").value;
         let p = document.getElementById("p").value;
-        // document.getElementById("msg").innerText = "در حال اتصال..."; // لودینگ اصلی هندل میکند
-        
         api({action: "login", username: u, password: p}).then(res => {
             if(res.success) {
                 token = res.token;
@@ -206,10 +202,12 @@
         api({action: "getSettings"}).then(res => {
             let h = "";
             res.data.forEach(d => {
-                // نمایش تاریخ شمسی اما ذخیره تاریخ میلادی در attribute برای بازگرداندن صحیح به سرور
-                let jalaliDate = toJalaliStr(d.date);
-                h += `<tr>
-                    <td data-gdate="${d.date}">${jalaliDate}</td>
+                let dateInfo = getDayAndDate(d.date);
+                // استایل قرمز برای جمعه در جدول تنظیمات
+                let rowStyle = dateInfo.isFriday ? "color: red; font-weight: bold; background-color: #fff5f5;" : "";
+                
+                h += `<tr style="${rowStyle}">
+                    <td data-gdate="${d.date}">${dateInfo.text}</td>
                     <td>${d.booked}</td>
                     <td><input value="${d.capacity}" class="cap"></td>
                     <td><input type="time" value="${d.start}" class="start"></td>
@@ -224,7 +222,6 @@
         let rows = document.querySelectorAll("#tblSettings tr");
         let data = [];
         rows.forEach(row => {
-            // خواندن تاریخ میلادی از attribute برای جلوگیری از بهم ریختن منطق سرور
             let gDate = row.cells[0].getAttribute("data-gdate");
             data.push({
                 date: gDate,
@@ -248,36 +245,28 @@
                 return;
             }
 
-            // گروه‌بندی نوبت‌ها بر اساس تاریخ
             let grouped = {};
             res.list.forEach(item => {
-                let dateKey = item[0]; // تاریخ
+                let dateKey = item[0];
                 if(!grouped[dateKey]) grouped[dateKey] = [];
                 grouped[dateKey].push(item);
             });
 
-            // ساخت آکاردئون
             for (let date in grouped) {
                 let items = grouped[date];
-                let jalaliDate = toJalaliStr(date);
-                let dayInfo = getPersianDayName(date); // دریافت نام روز و وضعیت جمعه
+                let dateInfo = getDayAndDate(date);
                 let count = items.length;
 
-                // استایل قرمز برای جمعه
-                let dateStyle = dayInfo.isFriday ? "color: red; font-weight: bold;" : "";
-                let displayTitle = `${dayInfo.name} ${jalaliDate}`;
-
-                // دکمه آکاردئون
-                let btn = document.createElement("button");
-                btn.className = "accordion";
-                btn.innerHTML = `<span style="${dateStyle}">${displayTitle}</span> <span class="count-badge">${count} نفر</span>`;
+                // استایل مخصوص جمعه برای هدر آکاردئون
+                let headerClass = dateInfo.isFriday ? "accordion friday-row" : "accordion";
                 
-                // پنل محتوا
+                let btn = document.createElement("button");
+                btn.className = headerClass;
+                btn.innerHTML = `<span>${dateInfo.text}</span> <span class="count-badge">${count} نفر</span>`;
+                
                 let panel = document.createElement("div");
                 panel.className = "panel";
                 
-                // جدول داخل پنل
-                // دقت کنید: ستون موبایل دقیقا نمایش داده می‌شود
                 let tableHtml = `<table><thead><tr><th>نام</th><th>موبایل</th><th>نوبت</th><th>ساعت</th></tr></thead><tbody>`;
                 items.forEach(r => {
                     tableHtml += `<tr><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`;
@@ -285,7 +274,6 @@
                 tableHtml += `</tbody></table>`;
                 panel.innerHTML = tableHtml;
 
-                // رویداد کلیک
                 btn.addEventListener("click", function() {
                     this.classList.toggle("active");
                     let pnl = this.nextElementSibling;
@@ -299,7 +287,6 @@
                 container.appendChild(btn);
                 container.appendChild(panel);
             }
-
             document.getElementById("pageNum").innerText = p;
         });
     }
@@ -319,6 +306,5 @@
         });
     }
 </script>
-
 </body>
 </html>
