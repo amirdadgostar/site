@@ -1,541 +1,270 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سامانه نوبت دهی آنلاین</title>
-<style>
-:root {
-    --primary-color: #2563eb; /* آبی مدرن */
-    --primary-hover: #1d4ed8;
-    --secondary-bg: #f3f4f6;
-    --text-color: #1f2937;
-    --text-muted: #6b7280;
-    --border-color: #e5e7eb;
-    --success-color: #10b981;
-    --bg-gradient: linear-gradient(135deg, #f6f8fd 0%, #e1e7f5 100%);
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --radius: 16px;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg-gradient);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    color: var(--text-color);
-    padding: 20px;
-}
-
-.container {
-    background: white;
-    padding: 2.5rem;
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    width: 100%;
-    max-width: 500px;
-    text-align: right;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-h2 {
-    text-align: center;
-    color: #111827;
-    margin-bottom: 2rem;
-    font-size: 1.6rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
-
-/* ورودی‌ها */
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--text-color);
-}
-
-input {
-    width: 100%;
-    padding: 14px;
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    background: #f9fafb;
-    font-family: inherit;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-input:focus {
-    border-color: var(--primary-color);
-    background: white;
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-}
-
-/* گرید تاریخ و ساعت */
-.section-title {
-    font-weight: 700;
-    margin: 1.5rem 0 0.8rem 0;
-    font-size: 1rem;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.section-title::before {
-    content: '';
-    width: 4px;
-    height: 18px;
-    background: var(--primary-color);
-    border-radius: 4px;
-    display: inline-block;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-
-/* استایل باکس‌های تاریخ */
-.date-card {
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    padding: 12px 5px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: white;
-    user-select: none;
-}
-
-.date-card:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-.date-card.selected {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
-
-.date-card .day-name {
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-bottom: 4px;
-    display: block;
-}
-
-.date-card .date-number {
-    font-weight: 800;
-    font-size: 1.1rem;
-    display: block;
-}
-
-/* استایل باکس‌های ساعت */
-.time-card {
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    background: white;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.time-card:hover {
-    border-color: var(--primary-color);
-    background: #eff6ff;
-}
-
-.time-card.selected {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-}
-
-/* دکمه اصلی */
-button#submitBtn {
-    width: 100%;
-    padding: 16px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: 700;
-    margin-top: 1.5rem;
-    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-}
-
-button#submitBtn:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
-}
-
-button:disabled {
-    background-color: #cbd5e1;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
-
-/* لودینگ مدرن */
-.loader-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(2px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 10;
-    border-radius: var(--radius);
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #e5e7eb;
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 10px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loading-text { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
-
-/* صفحه نتیجه */
-#resultCard {
-    display: none;
-    text-align: center;
-}
-
-.success-icon {
-    width: 70px;
-    height: 70px;
-    background: #d1fae5;
-    color: var(--success-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px auto;
-    font-size: 2rem;
-}
-
-.ticket-info {
-    background: #f8fafc;
-    border: 1px dashed #cbd5e1;
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.ticket-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 1rem;
-}
-.ticket-row:last-child { margin-bottom: 0; }
-.ticket-label { color: var(--text-muted); }
-.ticket-value { font-weight: 700; color: #111827; }
-.big-number { font-size: 1.8rem; color: var(--primary-color); display: block; margin-top: 5px;}
-
-.reload-btn {
-    margin-top: 25px;
-    background-color: #f3f4f6;
-    color: var(--text-color);
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.reload-btn:hover { background-color: #e5e7eb; }
-
-/* انیمیشن ورود */
-.fade-in { animation: fadeIn 0.4s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-.hidden { display: none !important; }
-
-/* متن راهنما برای زمان خالی */
-.empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 20px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    background: #f9fafb;
-    border-radius: 8px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; direction: rtl; text-align: right; }
+        .box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #007bff; color: white; cursor: pointer; font-weight: bold; border: none; }
+        button:hover { background: #0056b3; }
+        .hidden { display: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background: #f9f9f9; }
+        .tabs { display: flex; border-bottom: 2px solid #ddd; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; background: #eee; }
+        .tab.active { background: #007bff; color: white; }
+        
+        /* استایل روز جمعه */
+        .is-friday { color: red; font-weight: bold; }
+        .date-cell { font-size: 0.9em; }
+        .day-name { font-size: 0.8em; display: block; color: #666; }
+        .is-friday .day-name { color: red; }
+        
+        /* استایل لینک تماس */
+        .phone-link { color: #007bff; text-decoration: none; font-weight: bold; direction: ltr; display: inline-block; }
+        .phone-link:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
 
-<!-- فرم اصلی -->
-<div class="container fade-in" id="bookingForm">
-    <!-- لودینگ داخلی -->
-    <div class="loader-overlay" id="mainLoader">
-        <div class="spinner"></div>
-        <div class="loading-text">لطفا صبر کنید...</div>
-    </div>
+<script>
+    // *** لینک اسکریپت خود را اینجا بگذارید ***
+    const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; 
+    
+    // --- توابع تبدیل تاریخ و شمسی ---
+    function gregorianToJalali(gy, gm, gd) {
+        var g_d_m, jy, jm, jd, gy2, days;
+        g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        gy2 = (gm > 2) ? (gy + 1) : gy;
+        days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+        jy = -1595 + (33 * ~~(days / 12053));
+        days %= 12053;
+        jy += 4 * ~~(days / 1461);
+        days %= 1461;
+        if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
+        if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); } 
+        else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
+        return { y: jy, m: jm, d: jd };
+    }
 
-    <h2>دریافت نوبت</h2>
-    
-    <div class="form-group">
-        <label for="name">نام و نام خانوادگی</label>
-        <input type="text" id="name" placeholder="مثال: علی محمدی">
-    </div>
-    
-    <div class="form-group">
-        <label for="phone">شماره موبایل</label>
-        <input type="tel" id="phone" placeholder="مثال: 0912..." pattern="[0-9]*">
-    </div>
-    
-    <!-- بخش تاریخ -->
-    <div class="section-title">انتخاب تاریخ مراجعه</div>
-    <div id="dateGrid" class="grid-container">
-        <!-- تاریخ‌ها اینجا ساخته می‌شوند -->
-        <div class="empty-state">در حال بارگذاری تاریخ‌ها...</div>
-    </div>
+    function getPersianDetails(dateStr) {
+        if (!dateStr) return { text: "", isFriday: false };
+        let parts = dateStr.split('-');
+        let gy = parseInt(parts[0]);
+        let gm = parseInt(parts[1]);
+        let gd = parseInt(parts[2]);
+        
+        let jDate = gregorianToJalali(gy, gm, gd);
+        
+        let dateObj = new Date(dateStr);
+        let dayOfWeek = dateObj.getDay(); // 0 = Sunday, 5 = Friday, 6 = Saturday (Note: JS getDay depends on locale but usually 5 is Friday)
+        // تطبیق دقیق روز هفته:
+        // یکشنبه=0, دوشنبه=1, ..., جمعه=5, شنبه=6
+        
+        const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+        let dayName = days[dayOfWeek];
+        let isFriday = (dayOfWeek === 5);
+        
+        const monthNames = ["", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+        
+        let text = `${dayName} ${jDate.d} ${monthNames[jDate.m]}`;
+        
+        return { text: text, isFriday: isFriday, fullJalali: `${jDate.y}/${jDate.m}/${jDate.d}` };
+    }
+</script>
 
-    <!-- بخش ساعت -->
-    <div id="timeSection" class="hidden">
-        <div class="section-title">انتخاب ساعت</div>
-        <div id="timeGrid" class="grid-container">
-            <!-- ساعت‌ها اینجا ساخته می‌شوند -->
-        </div>
-    </div>
-    
-    <button onclick="submitBooking()" id="submitBtn">ثبت نهایی نوبت</button>
+<!-- صفحه لاگین -->
+<div id="loginPage" class="box" style="max-width: 350px; margin-top: 50px;">
+    <h3 style="text-align: center;">ورود مدیر</h3>
+    <input type="text" id="u" placeholder="نام کاربری">
+    <input type="password" id="p" placeholder="رمز عبور">
+    <button onclick="login()">ورود</button>
+    <p id="msg" style="color:red; text-align:center;"></p>
 </div>
 
-<!-- کارت نتیجه -->
-<div class="container fade-in" id="resultCard">
-    <div class="success-icon">✓</div>
-    <h3 style="margin:0 0 10px 0; color:#065f46;">رزرو موفقیت‌آمیز بود</h3>
-    <p style="color:#6b7280; margin:0;">اطلاعات نوبت شما به شرح زیر است:</p>
-    
-    <div class="ticket-info">
-        <div class="ticket-row">
-            <span class="ticket-label">تاریخ:</span>
-            <span class="ticket-value" id="resDate">-</span>
-        </div>
-        <div class="ticket-row" style="align-items: center;">
-            <span class="ticket-label">شماره نوبت:</span>
-            <span class="ticket-value big-number" id="resQueue">-</span>
-        </div>
-        <div class="ticket-row">
-            <span class="ticket-label">ساعت تقریبی:</span>
-            <span class="ticket-value" id="resTime" style="color:var(--primary-color)">-</span>
+<!-- پنل اصلی -->
+<div id="mainPage" class="box hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>پنل مدیریت</h3>
+        <button onclick="logout()" style="width: auto; background: #dc3545;">خروج</button>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('settings')">تنظیمات ۳۰ روزه</div>
+        <div class="tab" onclick="showTab('list')">لیست نوبت‌ها</div>
+        <div class="tab" onclick="showTab('pass')">تغییر رمز</div>
+    </div>
+
+    <!-- تنظیمات -->
+    <div id="settings" class="content">
+        <button onclick="saveSettings()">ذخیره همه تغییرات</button>
+        <table>
+            <thead><tr><th>تاریخ</th><th>ظرفیت</th><th>رزرو شده</th><th>شروع</th><th>پایان</th></tr></thead>
+            <tbody id="tblSettings"></tbody>
+        </table>
+    </div>
+
+    <!-- لیست نوبت ها -->
+    <div id="list" class="content hidden">
+        <input type="text" id="search" placeholder="جستجوی نام..." style="width: 70%; display:inline-block;">
+        <button onclick="loadList(1)" style="width: 28%; display:inline-block;">جستجو</button>
+        <table>
+            <thead><tr><th>تاریخ</th><th>نام</th><th>موبایل</th><th>نوبت</th><th>ساعت</th></tr></thead>
+            <tbody id="tblList"></tbody>
+        </table>
+        <div style="text-align:center; margin-top:10px;">
+            <button onclick="prevPage()" style="width:auto;">قبلی</button>
+            <span id="pageNum">1</span>
+            <button onclick="nextPage()" style="width:auto;">بعدی</button>
         </div>
     </div>
 
-    <button class="reload-btn" onclick="location.reload()">دریافت نوبت جدید</button>
+    <!-- تغییر رمز -->
+    <div id="pass" class="content hidden">
+        <input type="password" id="oldP" placeholder="رمز فعلی">
+        <input type="password" id="newP" placeholder="رمز جدید">
+        <button onclick="changePass()">تغییر رمز</button>
+    </div>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; // لینک اسکریپت گوگل را اینجا بگذارید
+    let token = localStorage.getItem("admToken");
+    let page = 1;
 
-// متغیرهای ذخیره وضعیت
-let selectedDate = null;
-let selectedTime = null;
-
-// توابع کمکی تبدیل تاریخ (بدون نیاز به کتابخانه خارجی)
-function gregorianToJalali(gy, gm, gd) {
-    var g_d_m, jy, jm, jd, gy2, days;
-    g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-    gy2 = (gm > 2) ? (gy + 1) : gy;
-    days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
-    jy = -1595 + (33 * ~~(days / 12053));
-    days %= 12053;
-    jy += 4 * ~~(days / 1461);
-    days %= 1461;
-    if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
-    if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); } 
-    else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
-    return [jy, jm, jd];
-}
-
-function getPersianDayName(dateStr) {
-    const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-    const d = new Date(dateStr);
-    return days[d.getDay()];
-}
-
-function formatPersianDate(dateStr) {
-    // dateStr format: YYYY-MM-DD
-    const parts = dateStr.split('-');
-    const jDate = gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
-    const dayName = getPersianDayName(dateStr);
-    const monthNames = ["", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
-    
-    return {
-        dayName: dayName,
-        fullDate: `${jDate[2]} ${monthNames[jDate[1]]} ${jDate[0]}`,
-        dayNumber: jDate[2],
-        monthName: monthNames[jDate[1]]
-    };
-}
-
-// شروع برنامه
-window.addEventListener('DOMContentLoaded', () => {
-    loadDates();
-});
-
-function showLoader(show) {
-    document.getElementById("mainLoader").style.display = show ? "flex" : "none";
-}
-
-function loadDates() {
-    showLoader(true);
-    fetch(API_URL + "?action=getDates")
-        .then(r => r.json())
-        .then(json => {
-            showLoader(false);
-            const grid = document.getElementById("dateGrid");
-            grid.innerHTML = "";
-            
-            if (json.data && json.data.length > 0) {
-                json.data.forEach(date => {
-                    const pDate = formatPersianDate(date);
-                    
-                    const card = document.createElement("div");
-                    card.className = "date-card";
-                    card.innerHTML = `
-                        <span class="day-name">${pDate.dayName}</span>
-                        <span class="date-number">${pDate.dayNumber} ${pDate.monthName}</span>
-                    `;
-                    card.onclick = () => selectDate(card, date, pDate.fullDate);
-                    grid.appendChild(card);
-                });
-            } else {
-                grid.innerHTML = '<div class="empty-state">هیچ نوبتی برای رزرو موجود نیست.</div>';
-                document.getElementById("submitBtn").disabled = true;
-            }
-        })
-        .catch(err => {
-            showLoader(false);
-            document.getElementById("dateGrid").innerHTML = '<div class="empty-state" style="color:red">خطا در دریافت اطلاعات</div>';
-        });
-}
-
-function selectDate(element, dateValue, displayDate) {
-    // حذف کلاس انتخاب شده از همه
-    document.querySelectorAll('.date-card').forEach(el => el.classList.remove('selected'));
-    
-    // انتخاب آیتم جدید
-    element.classList.add('selected');
-    selectedDate = dateValue;
-    selectedTime = null; // ریست کردن ساعت
-
-    // نمایش بخش ساعت و لودینگ ساعت
-    const timeSection = document.getElementById("timeSection");
-    timeSection.classList.remove("hidden");
-    const timeGrid = document.getElementById("timeGrid");
-    timeGrid.innerHTML = '<div class="empty-state">در حال دریافت ساعت‌ها...</div>';
-
-    // اسکرول نرم به پایین
-    timeSection.scrollIntoView({ behavior: 'smooth' });
-
-    fetch(API_URL + "?action=getTimes&date=" + dateValue)
-        .then(r => r.json())
-        .then(res => {
-            timeGrid.innerHTML = "";
-            if (res.data && res.data.length > 0) {
-                res.data.forEach(t => {
-                    const tCard = document.createElement("div");
-                    tCard.className = "time-card";
-                    tCard.innerText = t;
-                    tCard.onclick = () => selectTime(tCard, t);
-                    timeGrid.appendChild(tCard);
-                });
-            } else {
-                timeGrid.innerHTML = '<div class="empty-state">ظرفیت این روز تکمیل شده است.</div>';
-            }
-        });
-}
-
-function selectTime(element, timeValue) {
-    document.querySelectorAll('.time-card').forEach(el => el.classList.remove('selected'));
-    element.classList.add('selected');
-    selectedTime = timeValue;
-}
-
-function submitBooking() {
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    
-    if (!name || !phone) {
-        alert("لطفا نام و شماره موبایل را وارد کنید.");
-        return;
-    }
-    if (!selectedDate) {
-        alert("لطفا یک تاریخ را انتخاب کنید.");
-        return;
-    }
-    if (!selectedTime) {
-        alert("لطفا یک ساعت را انتخاب کنید.");
-        return;
+    if(token) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("mainPage").classList.remove("hidden");
+        loadSettings();
     }
 
-    showLoader(true);
-    
-    fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ name, phone, date: selectedDate, time: selectedTime })
-    })
-    .then(r => r.json())
-    .then(res => {
-        showLoader(false);
-        if (res.success) {
-            document.getElementById("bookingForm").style.display = "none";
-            document.getElementById("resultCard").style.display = "block";
-            
-            // نمایش تاریخ شمسی در نتیجه
-            const pResDate = formatPersianDate(res.date);
-            document.getElementById("resDate").innerText = `${pResDate.dayName} ${pResDate.fullDate}`;
-            document.getElementById("resQueue").innerText = res.queue;
-            document.getElementById("resTime").innerText = res.time;
-        } else {
-            alert("خطا: " + res.message);
+    // تابع اصلی ارسال درخواست که مشکل اتصال را حل می‌کند
+    async function api(payload) {
+        payload.token = token;
+        try {
+            let req = await fetch(API_URL, {
+                method: "POST",
+                // نکته کلیدی: استفاده از text/plain برای جلوگیری از گیر دادن مرورگر
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(payload)
+            });
+            return await req.json();
+        } catch(e) {
+            alert("خطا در اتصال به سرور. اینترنت را چک کنید یا لینک اسکریپت اشتباه است.");
+            console.log(e);
+            return {success: false};
         }
-    })
-    .catch(err => {
-        showLoader(false);
-        alert("خطا در ارتباط با سرور");
-    });
-}
+    }
+
+    function login() {
+        let u = document.getElementById("u").value;
+        let p = document.getElementById("p").value;
+        document.getElementById("msg").innerText = "در حال اتصال...";
+        
+        api({action: "login", username: u, password: p}).then(res => {
+            if(res.success) {
+                token = res.token;
+                localStorage.setItem("admToken", token);
+                location.reload();
+            } else {
+                document.getElementById("msg").innerText = res.message;
+            }
+        });
+    }
+
+    function logout() {
+        localStorage.removeItem("admToken");
+        location.reload();
+    }
+
+    function showTab(id) {
+        document.querySelectorAll(".content").forEach(d => d.classList.add("hidden"));
+        document.getElementById(id).classList.remove("hidden");
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        event.target.classList.add("active");
+        if(id === 'list') loadList(1);
+    }
+
+    function loadSettings() {
+        api({action: "getSettings"}).then(res => {
+            let h = "";
+            res.data.forEach(d => {
+                let pInfo = getPersianDetails(d.date);
+                let dateClass = pInfo.isFriday ? "date-cell is-friday" : "date-cell";
+                
+                h += `<tr>
+                    <td class="${dateClass}" data-date="${d.date}">
+                        ${pInfo.text}
+                        <span class="day-name">${d.date}</span>
+                    </td>
+                    <td><input value="${d.capacity}" class="cap"></td>
+                    <td>${d.reserved}</td>
+                    <td><input type="time" value="${d.start}" class="start"></td>
+                    <td><input type="time" value="${d.end}" class="end"></td>
+                </tr>`;
+            });
+            document.getElementById("tblSettings").innerHTML = h;
+        });
+    }
+
+    function saveSettings() {
+        let rows = document.querySelectorAll("#tblSettings tr");
+        let data = [];
+        rows.forEach(r => {
+            // خواندن تاریخ میلادی از خاصیت data-date برای ارسال به سرور
+            let dateCell = r.querySelector("td[data-date]");
+            let realDate = dateCell ? dateCell.getAttribute("data-date") : "";
+            
+            data.push({
+                date: realDate,
+                capacity: r.querySelector(".cap").value,
+                start: r.querySelector(".start").value,
+                end: r.querySelector(".end").value
+            });
+        });
+        api({action: "saveSettings", data: data}).then(res => alert(res.message));
+    }
+
+    function loadList(p) {
+        page = p;
+        let s = document.getElementById("search").value;
+        api({action: "getAppointments", page: p, search: s}).then(res => {
+            let h = "";
+            if(res.list.length === 0) h = "<tr><td colspan='5'>خالی</td></tr>";
+            res.list.forEach(r => {
+                let pInfo = getPersianDetails(r[0]); // r[0] تاریخ است
+                let dateClass = pInfo.isFriday ? "is-friday" : "";
+                
+                h += `<tr>
+                    <td class="${dateClass}">${pInfo.text}<br><small>${r[0]}</small></td>
+                    <td>${r[1]}</td>
+                    <td><a href="tel:${r[2]}" class="phone-link">${r[2]}</a></td>
+                    <td>${r[3]}</td>
+                    <td>${r[4]}</td>
+                </tr>`;
+            });
+            document.getElementById("tblList").innerHTML = h;
+            document.getElementById("pageNum").innerText = p;
+        });
+    }
+    
+    function nextPage() { loadList(page + 1); }
+    function prevPage() { if(page > 1) loadList(page - 1); }
+
+    function changePass() {
+        let o = document.getElementById("oldP").value;
+        let n = document.getElementById("newP").value;
+        api({action: "changePassword", oldPass: o, newPass: n}).then(res => {
+            alert(res.message);
+            if(res.success) {
+                document.getElementById("oldP").value = "";
+                document.getElementById("newP").value = "";
+            }
+        });
+    }
 </script>
 
 </body>
