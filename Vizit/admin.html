@@ -66,11 +66,8 @@
         th { background: #f8fafc; color: var(--secondary); font-weight: 600; }
         tr:last-child td { border-bottom: none; }
         
-        /* Red Friday Style */
         .is-friday { color: var(--danger); font-weight: bold; background-color: rgba(239, 68, 68, 0.05); }
         .day-name { display: block; font-size: 0.8em; opacity: 0.8; margin-top: 4px; }
-
-        /* Input inside table */
         .table-input { border: 1px solid #cbd5e1; padding: 8px; border-radius: 8px; text-align: center; width: 100%; max-width: 100px; }
 
         /* --- Accordion (Appointments) --- */
@@ -80,10 +77,8 @@
         .accordion-header.active { background: #eff6ff; border-bottom: 1px solid #e2e8f0; }
         .acc-date { font-weight: 700; color: var(--text-main); }
         .acc-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: white; }
         
-        /* Modern Cards inside Accordion */
         .appt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; }
         .appt-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; position: relative; transition: var(--transition); }
         .appt-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08); }
@@ -92,6 +87,15 @@
         .appt-value { font-weight: 600; color: var(--text-main); }
         .tel-link { color: var(--primary); text-decoration: none; font-weight: 700; direction: ltr; display: inline-block; }
         .tel-link:hover { text-decoration: underline; }
+
+        /* --- Search Bar Styling --- */
+        .search-container { display: flex; gap: 8px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 4px; flex-grow: 1; }
+        .search-input { border: none !important; background: transparent; padding: 10px; flex-grow: 1; outline: none; }
+        .search-input:focus { box-shadow: none !important; }
+        .search-btn-icon { width: 40px; height: 40px; border-radius: 10px; padding: 0; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .search-btn-icon:hover { background: var(--primary-dark); }
+        .delete-btn-icon { width: 45px; height: 45px; border-radius: 12px; background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: var(--transition); font-size: 1.2rem; }
+        .delete-btn-icon:hover { background: var(--danger); color: white; }
 
         /* --- Skeleton Loader --- */
         .skeleton-wrapper { padding: 20px; }
@@ -104,7 +108,19 @@
         .pagination button { width: auto; padding: 8px 16px; font-size: 0.9rem; }
         .page-info { font-weight: 600; color: var(--secondary); }
 
-        /* Mobile Adjustments */
+        /* --- Modern Modal --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.9); transition: transform 0.3s ease; text-align: center; }
+        .modal-overlay.show { opacity: 1; }
+        .modal-overlay.show .modal-box { transform: scale(1); }
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .modal-text { color: var(--text-muted); margin-bottom: 25px; font-size: 1rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 10px; }
+        .modal-btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; flex: 1; }
+        .modal-btn.primary { background: var(--primary); color: white; }
+        .modal-btn.secondary { background: #e2e8f0; color: var(--text-main); }
+        .modal-btn.danger { background: var(--danger); color: white; }
+
         @media (max-width: 600px) {
             .container { padding: 0 10px; margin-top: 10px; }
             .box { padding: 15px; border-radius: 12px; }
@@ -120,6 +136,15 @@
     // *** لینک اسکریپت خود را اینجا بگذارید ***
     const API_URL = "https://script.google.com/macros/s/AKfycbyTvD222XKt9Oh9CuQH7C8metSOd5vF3odi1iBCdKDSfmUKMd-d1JQK1NLMzpNST3T0Dg/exec"; 
 </script>
+
+<!-- Custom Modal Structure -->
+<div id="customModal" class="modal-overlay">
+    <div class="modal-box">
+        <div id="modalTitle" class="modal-title">عنوان</div>
+        <div id="modalText" class="modal-text">متن پیام</div>
+        <div id="modalActions" class="modal-actions"></div>
+    </div>
+</div>
 
 <!-- صفحه لاگین -->
 <div id="loginPage">
@@ -145,18 +170,17 @@
         <div class="header-bar">
             <h3>پنل مدیریت نوبت‌دهی</h3>
             <div class="header-left">
-                <!-- دکمه تغییر رمز (آیکون کلید) -->
                 <button class="icon-btn" onclick="showTab('pass')" title="تغییر رمز عبور">
-                    &#128273; <!-- Unicode Key Icon -->
+                    &#128273; 
                 </button>
-                <button class="danger" onclick="logout()" style="width:auto; padding:8px 16px; font-size:0.9rem;">خروج</button>
+                <button class="danger" onclick="confirmLogout()" style="width:auto; padding:8px 16px; font-size:0.9rem;">خروج</button>
             </div>
         </div>
 
         <div class="tabs">
             <div class="tab active" onclick="showTab('settings')">تنظیمات ۳۰ روزه</div>
             <div class="tab" onclick="showTab('list')">لیست نوبت‌ها</div>
-            <div class="tab" onclick="showTab('users')">لیست مراجعین</div> <!-- تب جدید جایگزین رمز عبور -->
+            <div class="tab" onclick="showTab('users')">لیست مراجعین</div>
         </div>
 
         <!-- تب تنظیمات -->
@@ -190,14 +214,16 @@
 
         <!-- تب لیست نوبت ها -->
         <div id="list" class="content hidden">
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-                <div style="display:flex; gap:10px; flex:1;">
-                    <input type="text" id="search" placeholder="جستجوی نام بیمار...">
-                    <button onclick="loadList(1)" style="width:auto; min-width:100px;">جستجو</button>
+            <div style="display:flex; justify-content:space-between; align-items: center; gap:10px; margin-bottom:20px;">
+                <!-- جستجوی مدرن با آیکون -->
+                <div class="search-container">
+                    <input type="text" id="search" class="search-input" placeholder="جستجوی نام بیمار...">
+                    <button onclick="loadList(1)" class="search-btn-icon">&#128269;</button>
                 </div>
-                <!-- دکمه حذف سوابق قدیمی -->
-                <button class="danger" onclick="deletePastApps()" style="width:auto;">
-                    &#128465; حذف نوبت‌های گذشته
+                
+                <!-- دکمه حذف سوابق قدیمی (آیکون سطل زباله) -->
+                <button class="delete-btn-icon" onclick="deletePastApps()" title="حذف نوبت‌های گذشته">
+                    &#128465;
                 </button>
             </div>
 
@@ -215,11 +241,11 @@
             </div>
         </div>
 
-        <!-- تب جدید لیست مراجعین (Users) -->
+        <!-- تب لیست مراجعین -->
         <div id="users" class="content hidden">
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <input type="text" id="searchUser" placeholder="جستجوی نام یا موبایل...">
-                <button onclick="loadUsers(1)" style="width:auto; min-width:100px;">جستجو</button>
+            <div class="search-container" style="margin-bottom:20px;">
+                <input type="text" id="searchUser" class="search-input" placeholder="جستجوی نام یا موبایل...">
+                <button onclick="loadUsers(1)" class="search-btn-icon">&#128269;</button>
             </div>
 
             <div id="users-loader" class="hidden skeleton-wrapper">
@@ -248,7 +274,7 @@
             </div>
         </div>
 
-        <!-- تب تغییر رمز (مخفی، نمایش با دکمه هدر) -->
+        <!-- تب تغییر رمز -->
         <div id="pass" class="content hidden">
             <div style="max-width:400px; margin:0 auto; padding:20px 0;">
                 <h4 style="text-align:center; margin-bottom:20px;">تغییر رمز عبور مدیر</h4>
@@ -265,6 +291,52 @@
     let page = 1;
     let userPage = 1;
     const DAY_NAMES = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
+
+    // --- Modal Functions ---
+    const modal = document.getElementById('customModal');
+    
+    function showModal(title, text) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalText').innerText = text;
+        const actions = document.getElementById('modalActions');
+        actions.innerHTML = `<button class="modal-btn primary" onclick="closeModal()">تائید</button>`;
+        
+        modal.style.display = 'flex';
+        // Small delay for animation
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function showConfirm(title, text, callback) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalText').innerText = text;
+        const actions = document.getElementById('modalActions');
+        
+        const confirmBtn = document.createElement('button');
+        confirmBtn.className = 'modal-btn danger';
+        confirmBtn.innerText = 'بله، انجام شود';
+        confirmBtn.onclick = function() {
+            closeModal();
+            callback();
+        };
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'modal-btn secondary';
+        cancelBtn.innerText = 'لغو';
+        cancelBtn.onclick = closeModal;
+
+        actions.innerHTML = '';
+        actions.appendChild(cancelBtn);
+        actions.appendChild(confirmBtn);
+
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+    // -----------------------
 
     // --- توابع کمکی تاریخ ---
     function gregorianToJalali(gy, gm, gd) {
@@ -288,7 +360,6 @@
 
     function toJalaliStr(dateStr) {
         if(!dateStr) return "";
-        // تشخیص اینکه آیا رشته ورودی حاوی T (ISO datetime) هست یا فقط تاریخ
         let dStr = String(dateStr);
         if(dStr.includes('T')) dStr = dStr.split('T')[0];
         else if(dStr.includes(' ')) dStr = dStr.split(' ')[0];
@@ -315,7 +386,7 @@
             });
             return await req.json();
         } catch(e) {
-            alert("خطا در اتصال به سرور.");
+            showModal("خطا", "خطا در اتصال به سرور.");
             console.log(e);
             return {success: false};
         }
@@ -347,9 +418,11 @@
         });
     }
 
-    function logout() {
-        localStorage.removeItem("admToken");
-        location.reload();
+    function confirmLogout() {
+        showConfirm("خروج", "آیا مطمئن هستید که می‌خواهید خارج شوید؟", function() {
+            localStorage.removeItem("admToken");
+            location.reload();
+        });
     }
 
     function showTab(id) {
@@ -357,15 +430,11 @@
         document.getElementById(id).classList.remove("hidden");
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         
-        // اگر تب "pass" نبود، کلاس اکتیو را به دکمه تب بده
         if(id !== 'pass') {
-             // پیدا کردن دکمه تب مربوطه و فعال کردن آن
              let tabBtns = document.querySelectorAll(".tab");
              if(id === 'settings') tabBtns[0].classList.add("active");
              if(id === 'list') tabBtns[1].classList.add("active");
              if(id === 'users') tabBtns[2].classList.add("active");
-        } else {
-             // اگر تب تغییر رمز بود، هیچ تبی فعال نباشد
         }
 
         if(id === 'list') loadList(1);
@@ -418,7 +487,7 @@
 
             if(cap && cap > 0 && start && end) {
                 if(end < start) {
-                    alert("خطا: در تاریخ " + toJalaliStr(gDate) + " ساعت پایان نمی‌تواند کمتر از ساعت شروع باشد.");
+                    showModal("خطا", "در تاریخ " + toJalaliStr(gDate) + " ساعت پایان نمی‌تواند کمتر از ساعت شروع باشد.");
                     hasError = true;
                 }
             }
@@ -438,7 +507,7 @@
         }
 
         api({action: "saveSettings", data: data}).then(res => {
-            alert(res.message);
+            showModal("موفق", res.message);
             btn.textContent = "ذخیره تمام تغییرات";
             btn.disabled = false;
         });
@@ -470,6 +539,13 @@
 
             for (let date in grouped) {
                 let items = grouped[date];
+                
+                // --- ویرایش: مرتب سازی بر اساس شماره نوبت (ستون 3 در آرایه، چون از 0 شروع میشه) ---
+                items.sort(function(a, b) {
+                    return parseInt(a[3]) - parseInt(b[3]);
+                });
+                // ---------------------------------------------------------------
+
                 let jalaliDate = toJalaliStr(date);
                 let dayInfo = getDayName(date);
                 let count = items.length;
@@ -532,15 +608,14 @@
     }
     
     function deletePastApps() {
-        if(!confirm("آیا مطمئن هستید؟ تمام نوبت‌های مربوط به تاریخ‌های قبل از امروز برای همیشه حذف خواهند شد.")) return;
-        
-        // نمایش لودر
-        document.getElementById("list-loader").classList.remove("hidden");
-        document.getElementById("accordionContainer").innerHTML = "";
+        showConfirm("حذف سوابق", "آیا مطمئن هستید؟ تمام نوبت‌های مربوط به تاریخ‌های قبل از امروز حذف خواهند شد.", function() {
+            document.getElementById("list-loader").classList.remove("hidden");
+            document.getElementById("accordionContainer").innerHTML = "";
 
-        api({action: "deletePast"}).then(res => {
-            alert(res.message);
-            loadList(1); // رفرش لیست
+            api({action: "deletePast"}).then(res => {
+                showModal("انجام شد", res.message);
+                loadList(1);
+            });
         });
     }
 
@@ -562,7 +637,7 @@
                  h = "<tr><td colspan='3'>موردی یافت نشد</td></tr>";
             } else {
                 res.list.forEach(u => {
-                    // Col A=Name, B=Phone, C=Date
+                    // --- ویرایش: نمایش تاریخ شمسی مراجعه کننده ---
                     let jalaliReg = toJalaliStr(u[2]);
                     h += `<tr>
                         <td>${u[0]}</td>
@@ -589,7 +664,7 @@
         btn.textContent = "در حال انجام...";
 
         api({action: "changePassword", oldPass: o, newPass: n}).then(res => {
-            alert(res.message);
+            showModal("پیام سیستم", res.message);
             btn.disabled = false;
             btn.textContent = "تغییر رمز";
             if(res.success) {
