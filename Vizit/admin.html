@@ -34,12 +34,15 @@
         /* Inputs & Buttons */
         input, button { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem; transition: var(--transition); }
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; }
+        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
         button:hover { background: var(--primary-dark); transform: translateY(-1px); }
         button:active { transform: translateY(1px); }
         button.danger { background: var(--danger); }
         button.danger:hover { background: #dc2626; }
         
+        .icon-btn { background: #f1f5f9; color: var(--text-muted); width: 45px; height: 45px; padding: 0; border-radius: 50%; font-size: 1.2rem; }
+        .icon-btn:hover { background: #e2e8f0; color: var(--primary); }
+
         /* --- Login Page --- */
         #loginPage { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
         .login-card { width: 100%; max-width: 400px; padding: 40px; }
@@ -48,6 +51,7 @@
 
         /* --- Main Panel --- */
         .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
         .header-bar h3 { margin: 0; }
 
         /* --- Tabs --- */
@@ -140,13 +144,19 @@
     <div class="box">
         <div class="header-bar">
             <h3>پنل مدیریت نوبت‌دهی</h3>
-            <button class="danger" onclick="logout()" style="width:auto; padding:8px 16px; font-size:0.9rem;">خروج</button>
+            <div class="header-left">
+                <!-- دکمه تغییر رمز (آیکون کلید) -->
+                <button class="icon-btn" onclick="showTab('pass')" title="تغییر رمز عبور">
+                    &#128273; <!-- Unicode Key Icon -->
+                </button>
+                <button class="danger" onclick="logout()" style="width:auto; padding:8px 16px; font-size:0.9rem;">خروج</button>
+            </div>
         </div>
 
         <div class="tabs">
             <div class="tab active" onclick="showTab('settings')">تنظیمات ۳۰ روزه</div>
             <div class="tab" onclick="showTab('list')">لیست نوبت‌ها</div>
-            <div class="tab" onclick="showTab('pass')">تغییر رمز</div>
+            <div class="tab" onclick="showTab('users')">لیست مراجعین</div> <!-- تب جدید جایگزین رمز عبور -->
         </div>
 
         <!-- تب تنظیمات -->
@@ -180,9 +190,15 @@
 
         <!-- تب لیست نوبت ها -->
         <div id="list" class="content hidden">
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <input type="text" id="search" placeholder="جستجوی نام بیمار...">
-                <button onclick="loadList(1)" style="width:auto; min-width:100px;">جستجو</button>
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                <div style="display:flex; gap:10px; flex:1;">
+                    <input type="text" id="search" placeholder="جستجوی نام بیمار...">
+                    <button onclick="loadList(1)" style="width:auto; min-width:100px;">جستجو</button>
+                </div>
+                <!-- دکمه حذف سوابق قدیمی -->
+                <button class="danger" onclick="deletePastApps()" style="width:auto;">
+                    &#128465; حذف نوبت‌های گذشته
+                </button>
             </div>
 
             <div id="list-loader" class="hidden skeleton-wrapper">
@@ -199,7 +215,40 @@
             </div>
         </div>
 
-        <!-- تب تغییر رمز -->
+        <!-- تب جدید لیست مراجعین (Users) -->
+        <div id="users" class="content hidden">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" id="searchUser" placeholder="جستجوی نام یا موبایل...">
+                <button onclick="loadUsers(1)" style="width:auto; min-width:100px;">جستجو</button>
+            </div>
+
+            <div id="users-loader" class="hidden skeleton-wrapper">
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>نام و نام خانوادگی</th>
+                            <th>شماره تماس</th>
+                            <th>تاریخ آخرین مراجعه</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblUsers"></tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button onclick="prevUserPage()">قبلی</button>
+                <span id="userPageNum" class="page-info">صفحه 1</span>
+                <button onclick="nextUserPage()">بعدی</button>
+            </div>
+        </div>
+
+        <!-- تب تغییر رمز (مخفی، نمایش با دکمه هدر) -->
         <div id="pass" class="content hidden">
             <div style="max-width:400px; margin:0 auto; padding:20px 0;">
                 <h4 style="text-align:center; margin-bottom:20px;">تغییر رمز عبور مدیر</h4>
@@ -214,6 +263,7 @@
 <script>
     let token = localStorage.getItem("admToken");
     let page = 1;
+    let userPage = 1;
     const DAY_NAMES = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
 
     // --- توابع کمکی تاریخ ---
@@ -232,15 +282,19 @@
     }
 
     function getDayName(dateStr) {
-        // dateStr format: YYYY-MM-DD
         const d = new Date(dateStr);
-        // getDay(): 0=Sun, 1=Mon, ... 5=Fri, 6=Sat
         return { index: d.getDay(), name: DAY_NAMES[d.getDay()] };
     }
 
     function toJalaliStr(dateStr) {
         if(!dateStr) return "";
-        let parts = dateStr.split('-');
+        // تشخیص اینکه آیا رشته ورودی حاوی T (ISO datetime) هست یا فقط تاریخ
+        let dStr = String(dateStr);
+        if(dStr.includes('T')) dStr = dStr.split('T')[0];
+        else if(dStr.includes(' ')) dStr = dStr.split(' ')[0];
+        
+        let parts = dStr.split('-');
+        if(parts.length < 3) return dStr;
         return gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
     }
     // -------------------------
@@ -302,12 +356,23 @@
         document.querySelectorAll(".content").forEach(d => d.classList.add("hidden"));
         document.getElementById(id).classList.remove("hidden");
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-        event.target.classList.add("active");
+        
+        // اگر تب "pass" نبود، کلاس اکتیو را به دکمه تب بده
+        if(id !== 'pass') {
+             // پیدا کردن دکمه تب مربوطه و فعال کردن آن
+             let tabBtns = document.querySelectorAll(".tab");
+             if(id === 'settings') tabBtns[0].classList.add("active");
+             if(id === 'list') tabBtns[1].classList.add("active");
+             if(id === 'users') tabBtns[2].classList.add("active");
+        } else {
+             // اگر تب تغییر رمز بود، هیچ تبی فعال نباشد
+        }
+
         if(id === 'list') loadList(1);
+        if(id === 'users') loadUsers(1);
     }
 
     function loadSettings() {
-        // نمایش اسکلت لودینگ فقط در بخش تنظیمات
         document.getElementById("settings-loader").classList.remove("hidden");
         document.getElementById("settings-content").classList.add("hidden");
 
@@ -315,8 +380,8 @@
             let h = "";
             res.data.forEach(d => {
                 let jalaliDate = toJalaliStr(d.date);
-                let dayInfo = getDayName(d.date); // محاسبه نام روز
-                let rowClass = (dayInfo.index === 5) ? "is-friday" : ""; // جمعه قرمز
+                let dayInfo = getDayName(d.date); 
+                let rowClass = (dayInfo.index === 5) ? "is-friday" : ""; 
 
                 h += `<tr class="${rowClass}">
                     <td data-gdate="${d.date}">
@@ -343,7 +408,7 @@
 
         let rows = document.querySelectorAll("#tblSettings tr");
         let data = [];
-        let hasError = false; // Flag برای بررسی خطا
+        let hasError = false;
 
         rows.forEach(row => {
             let gDate = row.cells[0].getAttribute("data-gdate");
@@ -351,14 +416,12 @@
             let start = row.querySelector(".start").value;
             let end = row.querySelector(".end").value;
 
-            // --- ویرایش درخواستی: بررسی اینکه ساعت پایان کمتر از شروع نباشد ---
             if(cap && cap > 0 && start && end) {
                 if(end < start) {
-                    alert("خطا: در تاریخ " + toJalaliStr(gDate) + " ساعت پایان (" + end + ") نمی‌تواند کمتر از ساعت شروع (" + start + ") باشد.");
+                    alert("خطا: در تاریخ " + toJalaliStr(gDate) + " ساعت پایان نمی‌تواند کمتر از ساعت شروع باشد.");
                     hasError = true;
                 }
             }
-            // ----------------------------------------------------------------
 
             data.push({
                 date: gDate,
@@ -371,7 +434,7 @@
         if(hasError) {
             btn.textContent = "ذخیره تمام تغییرات";
             btn.disabled = false;
-            return; // توقف ذخیره سازی
+            return;
         }
 
         api({action: "saveSettings", data: data}).then(res => {
@@ -381,6 +444,7 @@
         });
     }
 
+    // --- لیست نوبت ها ---
     function loadList(p) {
         page = p;
         let s = document.getElementById("search").value;
@@ -410,7 +474,6 @@
                 let dayInfo = getDayName(date);
                 let count = items.length;
 
-                // ساخت هدر آکاردئون
                 let header = document.createElement("div");
                 header.className = "accordion-header";
                 header.innerHTML = `
@@ -418,7 +481,6 @@
                     <div class="acc-badge">${count} رزرو</div>
                 `;
 
-                // ساخت پنل محتوا
                 let content = document.createElement("div");
                 content.className = "accordion-content";
                 
@@ -448,7 +510,6 @@
                 gridHtml += `</div>`;
                 content.innerHTML = gridHtml;
 
-                // رویداد کلیک
                 header.addEventListener("click", function() {
                     this.classList.toggle("active");
                     let pnl = this.nextElementSibling;
@@ -470,9 +531,55 @@
         });
     }
     
+    function deletePastApps() {
+        if(!confirm("آیا مطمئن هستید؟ تمام نوبت‌های مربوط به تاریخ‌های قبل از امروز برای همیشه حذف خواهند شد.")) return;
+        
+        // نمایش لودر
+        document.getElementById("list-loader").classList.remove("hidden");
+        document.getElementById("accordionContainer").innerHTML = "";
+
+        api({action: "deletePast"}).then(res => {
+            alert(res.message);
+            loadList(1); // رفرش لیست
+        });
+    }
+
     function nextPage() { loadList(page + 1); }
     function prevPage() { if(page > 1) loadList(page - 1); }
 
+    // --- لیست مراجعین (Users) ---
+    function loadUsers(p) {
+        userPage = p;
+        let s = document.getElementById("searchUser").value;
+        
+        document.getElementById("users-loader").classList.remove("hidden");
+        document.getElementById("tblUsers").innerHTML = "";
+
+        api({action: "getUsers", page: p, search: s}).then(res => {
+            document.getElementById("users-loader").classList.add("hidden");
+            let h = "";
+            if(res.list.length === 0) {
+                 h = "<tr><td colspan='3'>موردی یافت نشد</td></tr>";
+            } else {
+                res.list.forEach(u => {
+                    // Col A=Name, B=Phone, C=Date
+                    let jalaliReg = toJalaliStr(u[2]);
+                    h += `<tr>
+                        <td>${u[0]}</td>
+                        <td><a href="tel:${u[1]}" class="tel-link">${u[1]}</a></td>
+                        <td>${jalaliReg}</td>
+                    </tr>`;
+                });
+            }
+            document.getElementById("tblUsers").innerHTML = h;
+            document.getElementById("userPageNum").innerText = "صفحه " + p;
+        });
+    }
+    function nextUserPage() { loadUsers(userPage + 1); }
+    function prevUserPage() { if(userPage > 1) loadUsers(userPage - 1); }
+
+
+    // --- تغییر رمز ---
     function changePass() {
         let o = document.getElementById("oldP").value;
         let n = document.getElementById("newP").value;
