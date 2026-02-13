@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -18,64 +18,40 @@
         .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; background: #eee; }
         .tab.active { background: #007bff; color: white; }
         
-        /* استایل روز جمعه */
-        .is-friday { color: red; font-weight: bold; }
-        .date-cell { font-size: 0.9em; }
-        .day-name { font-size: 0.8em; display: block; color: #666; }
-        .is-friday .day-name { color: red; }
-        
-        /* استایل لینک تماس */
-        .phone-link { color: #007bff; text-decoration: none; font-weight: bold; direction: ltr; display: inline-block; }
-        .phone-link:hover { text-decoration: underline; }
+        /* استایل‌های جدید برای آکاردئون نوبت‌ها */
+        .accordion { background-color: #eee; color: #444; cursor: pointer; padding: 15px; width: 100%; border: none; text-align: right; outline: none; font-size: 15px; transition: 0.4s; margin-top: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .accordion.active, .accordion:hover { background-color: #ccc; }
+        .accordion:after { content: '\002B'; color: #777; font-weight: bold; float: left; margin-left: 5px; }
+        .accordion.active:after { content: "\2212"; }
+        .panel { padding: 0 18px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out; border-bottom: 1px solid #eee; }
+        .panel table { margin-bottom: 15px; }
+        .count-badge { background: #007bff; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.9em; }
+
+        /* استایل لودینگ اسکلتی (Bone Style) */
+        #loader { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index: 9999; }
+        .skeleton-box { width: 300px; height: 20px; background: #ddd; margin: 10px auto; border-radius: 4px; position: relative; overflow: hidden; }
+        .skeleton-box::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0)); animation: shimmer 2s infinite; content: ''; }
+        .skeleton-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+        .loader-text { margin-top: 15px; color: #555; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <script>
     // *** لینک اسکریپت خود را اینجا بگذارید ***
-    const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; 
-    
-    // --- توابع تبدیل تاریخ و شمسی ---
-    function gregorianToJalali(gy, gm, gd) {
-        var g_d_m, jy, jm, jd, gy2, days;
-        g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-        gy2 = (gm > 2) ? (gy + 1) : gy;
-        days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
-        jy = -1595 + (33 * ~~(days / 12053));
-        days %= 12053;
-        jy += 4 * ~~(days / 1461);
-        days %= 1461;
-        if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
-        if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); } 
-        else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
-        return { y: jy, m: jm, d: jd };
-    }
-
-    function getPersianDetails(dateStr) {
-        if (!dateStr) return { text: "", isFriday: false };
-        let parts = dateStr.split('-');
-        let gy = parseInt(parts[0]);
-        let gm = parseInt(parts[1]);
-        let gd = parseInt(parts[2]);
-        
-        let jDate = gregorianToJalali(gy, gm, gd);
-        
-        let dateObj = new Date(dateStr);
-        let dayOfWeek = dateObj.getDay(); // 0 = Sunday, 5 = Friday, 6 = Saturday (Note: JS getDay depends on locale but usually 5 is Friday)
-        // تطبیق دقیق روز هفته:
-        // یکشنبه=0, دوشنبه=1, ..., جمعه=5, شنبه=6
-        
-        const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-        let dayName = days[dayOfWeek];
-        let isFriday = (dayOfWeek === 5);
-        
-        const monthNames = ["", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
-        
-        let text = `${dayName} ${jDate.d} ${monthNames[jDate.m]}`;
-        
-        return { text: text, isFriday: isFriday, fullJalali: `${jDate.y}/${jDate.m}/${jDate.d}` };
-    }
+    const API_URL = "https://script.google.com/macros/s/AKfycbwDwkurakHk2G6qFDFof0LJIXysyDSOVU5XvD46RNpO0RjS-x7_nO5hs7vUr2_3B0AH/exec"; 
 </script>
+
+<!-- لودینگ با استایل جدید -->
+<div id="loader">
+    <div class="skeleton-container">
+        <div class="skeleton-box" style="width: 200px; height: 30px;"></div>
+        <div class="skeleton-box" style="width: 250px;"></div>
+        <div class="skeleton-box" style="width: 180px;"></div>
+        <div class="loader-text">در حال پردازش اطلاعات...</div>
+    </div>
+</div>
 
 <!-- صفحه لاگین -->
 <div id="loginPage" class="box" style="max-width: 350px; margin-top: 50px;">
@@ -103,19 +79,20 @@
     <div id="settings" class="content">
         <button onclick="saveSettings()">ذخیره همه تغییرات</button>
         <table>
-            <thead><tr><th>تاریخ</th><th>ظرفیت</th><th>رزرو شده</th><th>شروع</th><th>پایان</th></tr></thead>
+            <!-- ویرایش: اضافه شدن ستون رزرو شده -->
+            <thead><tr><th>تاریخ</th><th>رزرو شده</th><th>ظرفیت</th><th>شروع</th><th>پایان</th></tr></thead>
             <tbody id="tblSettings"></tbody>
         </table>
     </div>
 
-    <!-- لیست نوبت ها -->
+    <!-- لیست نوبت ها (ویرایش: تغییر ساختار برای آکاردئون) -->
     <div id="list" class="content hidden">
         <input type="text" id="search" placeholder="جستجوی نام..." style="width: 70%; display:inline-block;">
         <button onclick="loadList(1)" style="width: 28%; display:inline-block;">جستجو</button>
-        <table>
-            <thead><tr><th>تاریخ</th><th>نام</th><th>موبایل</th><th>نوبت</th><th>ساعت</th></tr></thead>
-            <tbody id="tblList"></tbody>
-        </table>
+        
+        <!-- محل قرارگیری لیست آکاردئونی -->
+        <div id="accordionContainer" style="margin-top: 15px;"></div>
+        
         <div style="text-align:center; margin-top:10px;">
             <button onclick="prevPage()" style="width:auto;">قبلی</button>
             <span id="pageNum">1</span>
@@ -135,6 +112,39 @@
     let token = localStorage.getItem("admToken");
     let page = 1;
 
+    // --- تابع تبدیل تاریخ میلادی به شمسی (جهت نمایش) ---
+    function gregorianToJalali(gy, gm, gd) {
+        var g_d_m, jy, jm, jd, gy2, days;
+        g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        gy2 = (gm > 2) ? (gy + 1) : gy;
+        days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+        jy = -1595 + (33 * ~~(days / 12053));
+        days %= 12053;
+        jy += 4 * ~~(days / 1461);
+        days %= 1461;
+        if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
+        if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); } else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
+        return jy + '/' + jm + '/' + jd;
+    }
+
+    function toJalaliStr(dateStr) {
+        if(!dateStr) return "";
+        let parts = dateStr.split('-');
+        if(parts.length !== 3) return dateStr;
+        return gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+    }
+    
+    // تابع کمکی برای گرفتن نام روز هفته
+    function getPersianDayName(dateStr) {
+        let parts = dateStr.split('-');
+        // ایجاد تاریخ دقیق بدون مشکل منطقه زمانی
+        let d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        let dayIndex = d.getDay(); // 0=Sunday, ..., 5=Friday, 6=Saturday
+        const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+        return { name: days[dayIndex], isFriday: dayIndex === 5 };
+    }
+    // ---------------------------------------------------
+
     if(token) {
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("mainPage").classList.remove("hidden");
@@ -144,6 +154,7 @@
     // تابع اصلی ارسال درخواست که مشکل اتصال را حل می‌کند
     async function api(payload) {
         payload.token = token;
+        document.getElementById("loader").style.display = "block"; // نمایش لودینگ
         try {
             let req = await fetch(API_URL, {
                 method: "POST",
@@ -151,8 +162,11 @@
                 headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify(payload)
             });
-            return await req.json();
+            let res = await req.json();
+            document.getElementById("loader").style.display = "none"; // مخفی کردن لودینگ
+            return res;
         } catch(e) {
+            document.getElementById("loader").style.display = "none";
             alert("خطا در اتصال به سرور. اینترنت را چک کنید یا لینک اسکریپت اشتباه است.");
             console.log(e);
             return {success: false};
@@ -162,7 +176,7 @@
     function login() {
         let u = document.getElementById("u").value;
         let p = document.getElementById("p").value;
-        document.getElementById("msg").innerText = "در حال اتصال...";
+        // document.getElementById("msg").innerText = "در حال اتصال..."; // لودینگ اصلی هندل میکند
         
         api({action: "login", username: u, password: p}).then(res => {
             if(res.success) {
@@ -192,16 +206,12 @@
         api({action: "getSettings"}).then(res => {
             let h = "";
             res.data.forEach(d => {
-                let pInfo = getPersianDetails(d.date);
-                let dateClass = pInfo.isFriday ? "date-cell is-friday" : "date-cell";
-                
+                // نمایش تاریخ شمسی اما ذخیره تاریخ میلادی در attribute برای بازگرداندن صحیح به سرور
+                let jalaliDate = toJalaliStr(d.date);
                 h += `<tr>
-                    <td class="${dateClass}" data-date="${d.date}">
-                        ${pInfo.text}
-                        <span class="day-name">${d.date}</span>
-                    </td>
+                    <td data-gdate="${d.date}">${jalaliDate}</td>
+                    <td>${d.booked}</td>
                     <td><input value="${d.capacity}" class="cap"></td>
-                    <td>${d.reserved}</td>
                     <td><input type="time" value="${d.start}" class="start"></td>
                     <td><input type="time" value="${d.end}" class="end"></td>
                 </tr>`;
@@ -213,16 +223,14 @@
     function saveSettings() {
         let rows = document.querySelectorAll("#tblSettings tr");
         let data = [];
-        rows.forEach(r => {
-            // خواندن تاریخ میلادی از خاصیت data-date برای ارسال به سرور
-            let dateCell = r.querySelector("td[data-date]");
-            let realDate = dateCell ? dateCell.getAttribute("data-date") : "";
-            
+        rows.forEach(row => {
+            // خواندن تاریخ میلادی از attribute برای جلوگیری از بهم ریختن منطق سرور
+            let gDate = row.cells[0].getAttribute("data-gdate");
             data.push({
-                date: realDate,
-                capacity: r.querySelector(".cap").value,
-                start: r.querySelector(".start").value,
-                end: r.querySelector(".end").value
+                date: gDate,
+                capacity: row.querySelector(".cap").value,
+                start: row.querySelector(".start").value,
+                end: row.querySelector(".end").value
             });
         });
         api({action: "saveSettings", data: data}).then(res => alert(res.message));
@@ -232,21 +240,66 @@
         page = p;
         let s = document.getElementById("search").value;
         api({action: "getAppointments", page: p, search: s}).then(res => {
-            let h = "";
-            if(res.list.length === 0) h = "<tr><td colspan='5'>خالی</td></tr>";
-            res.list.forEach(r => {
-                let pInfo = getPersianDetails(r[0]); // r[0] تاریخ است
-                let dateClass = pInfo.isFriday ? "is-friday" : "";
-                
-                h += `<tr>
-                    <td class="${dateClass}">${pInfo.text}<br><small>${r[0]}</small></td>
-                    <td>${r[1]}</td>
-                    <td><a href="tel:${r[2]}" class="phone-link">${r[2]}</a></td>
-                    <td>${r[3]}</td>
-                    <td>${r[4]}</td>
-                </tr>`;
+            let container = document.getElementById("accordionContainer");
+            container.innerHTML = "";
+            
+            if(res.list.length === 0) {
+                container.innerHTML = "<p style='text-align:center'>موردی یافت نشد</p>";
+                return;
+            }
+
+            // گروه‌بندی نوبت‌ها بر اساس تاریخ
+            let grouped = {};
+            res.list.forEach(item => {
+                let dateKey = item[0]; // تاریخ
+                if(!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(item);
             });
-            document.getElementById("tblList").innerHTML = h;
+
+            // ساخت آکاردئون
+            for (let date in grouped) {
+                let items = grouped[date];
+                let jalaliDate = toJalaliStr(date);
+                let dayInfo = getPersianDayName(date); // دریافت نام روز و وضعیت جمعه
+                let count = items.length;
+
+                // استایل قرمز برای جمعه
+                let dateStyle = dayInfo.isFriday ? "color: red; font-weight: bold;" : "";
+                let displayTitle = `${dayInfo.name} ${jalaliDate}`;
+
+                // دکمه آکاردئون
+                let btn = document.createElement("button");
+                btn.className = "accordion";
+                btn.innerHTML = `<span style="${dateStyle}">${displayTitle}</span> <span class="count-badge">${count} نفر</span>`;
+                
+                // پنل محتوا
+                let panel = document.createElement("div");
+                panel.className = "panel";
+                
+                // جدول داخل پنل
+                // دقت کنید: ستون موبایل دقیقا نمایش داده می‌شود
+                let tableHtml = `<table><thead><tr><th>نام</th><th>موبایل</th><th>نوبت</th><th>ساعت</th></tr></thead><tbody>`;
+                items.forEach(r => {
+                    tableHtml += `<tr><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`;
+                });
+                tableHtml += `</tbody></table>`;
+                panel.innerHTML = tableHtml;
+
+                // رویداد کلیک
+                btn.addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    let pnl = this.nextElementSibling;
+                    if (pnl.style.maxHeight) {
+                        pnl.style.maxHeight = null;
+                    } else {
+                        pnl.style.maxHeight = pnl.scrollHeight + "px";
+                    } 
+                });
+
+                container.appendChild(btn);
+                container.appendChild(panel);
+            }
+
             document.getElementById("pageNum").innerText = p;
         });
     }
