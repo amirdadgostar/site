@@ -92,16 +92,15 @@
         .field-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .badge { background: #e0e7ff; color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
         
-        /* --- اصلاح شده: بخش گزینه‌ها --- */
+        /* Options (اصلاح شده دقیق طبق دستور) */
         .opt-container { 
-            background: #fff; 
-            border: 1px dashed var(--border); 
-            padding: 10px; 
-            border-radius: 6px; 
-            margin-top: 10px; 
-            /* این دو خط باعث می‌شوند گزینه‌ها زیر هم قرار بگیرند */
-            display: flex;
-            flex-direction: column;
+            background: #fff; border: 1px dashed var(--border); padding: 10px; 
+            border-radius: 6px; margin-top: 10px; 
+            
+            /* تغییرات کلیدی برای چیدمان عمودی و منظم */
+            display: flex; 
+            flex-direction: column; 
+            align-items: stretch;
             gap: 10px;
         }
         
@@ -109,7 +108,8 @@
             display: flex; 
             gap: 8px; 
             align-items: center; 
-            width: 100%;
+            width: 100%; 
+            flex: 0 0 auto;
         }
         
         .opt-input { 
@@ -118,17 +118,10 @@
         }
         
         .btn-del-opt { 
-            background: #fee2e2; 
-            color: var(--danger); 
-            border: none; 
-            padding: 0 12px; 
-            height: 42px; /* هم‌ارتفاع با اینپوت */
-            border-radius: 4px; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            background: #fee2e2; color: var(--danger); 
+            border: none; padding: 0 12px; height: 42px; 
+            border-radius: 4px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center;
         }
 
         /* Checkbox */
@@ -138,6 +131,7 @@
         /* Modals & Alerts (مدرن) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         
+        /* استایل کلی مودال کانتنت */
         .modal-content { 
             background: white; padding: 25px; border-radius: var(--radius); 
             width: 90%; max-width: 500px; 
@@ -301,7 +295,6 @@
 </div>
 
 <script>
-    // 👇👇 لینک اسکریپت گوگل 👇👇
     const API_URL = "https://script.google.com/macros/s/AKfycbwwr2DQUQ_aNt_DG4gg0NPiVDB_5ac1VH1i86jnlE1n1owvpProuFqYDuM6bhHUOeU/exec"; 
     const BASE_FORM_URL = "https://amirdadgostar.github.io/site/form/N1.html";
 
