@@ -253,7 +253,6 @@
 
     async function api(payload) {
         payload.token = token;
-        // لودینگ سراسری حذف شد، لودینگ داخلی استفاده می‌شود
         try {
             let req = await fetch(API_URL, {
                 method: "POST",
@@ -344,15 +343,37 @@
 
         let rows = document.querySelectorAll("#tblSettings tr");
         let data = [];
+        let hasError = false; // Flag برای بررسی خطا
+
         rows.forEach(row => {
             let gDate = row.cells[0].getAttribute("data-gdate");
+            let cap = row.querySelector(".cap").value;
+            let start = row.querySelector(".start").value;
+            let end = row.querySelector(".end").value;
+
+            // --- ویرایش درخواستی: بررسی اینکه ساعت پایان کمتر از شروع نباشد ---
+            if(cap && cap > 0 && start && end) {
+                if(end < start) {
+                    alert("خطا: در تاریخ " + toJalaliStr(gDate) + " ساعت پایان (" + end + ") نمی‌تواند کمتر از ساعت شروع (" + start + ") باشد.");
+                    hasError = true;
+                }
+            }
+            // ----------------------------------------------------------------
+
             data.push({
                 date: gDate,
-                capacity: row.querySelector(".cap").value,
-                start: row.querySelector(".start").value,
-                end: row.querySelector(".end").value
+                capacity: cap,
+                start: start,
+                end: end
             });
         });
+
+        if(hasError) {
+            btn.textContent = "ذخیره تمام تغییرات";
+            btn.disabled = false;
+            return; // توقف ذخیره سازی
+        }
+
         api({action: "saveSettings", data: data}).then(res => {
             alert(res.message);
             btn.textContent = "ذخیره تمام تغییرات";
