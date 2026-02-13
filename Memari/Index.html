@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="استودیو معماری و طراحی داخلی آرکیتک - طراحی و اجرای پروژه‌های لوکس ساختمانی">
+    <title>استودیو معماری آرکیتک | ARCHITEC 2026</title>
+    
+    <!-- فونت وزیرمتن (خوانایی بالا و مدرن) -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+    <!-- آیکون‌های استاندارد FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- اتصال به فایل CSS خارجی -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. Architectural Construction Loader -->
+    <div id="loader">
+        <svg class="loader-svg" viewBox="0 0 100 100">
+            <!-- Outline of a house/building being drawn -->
+            <path class="house-path" d="M20,80 L20,40 L50,10 L80,40 L80,80 Z M35,80 L35,50 L65,50 L65,80" />
+        </svg>
+        <div class="loader-text">ARCHITEC</div>
+    </div>
+
+    <!-- 2. Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">ARCHITEC.</a>
+            <div class="nav-menu">
+                <a href="#hero">خانه</a>
+                <a href="#about">درباره ما</a>
+                <a href="#projects">پروژه‌ها</a>
+                <a href="#services">خدمات</a>
+                <a href="#contact">تماس</a>
+            </div>
+            <div class="hamburger"><i class="fa-solid fa-bars"></i></div>
+        </div>
+    </nav>
+
+    <!-- 3. Hero Section (New Image & Realistic Feel) -->
+    <header id="hero" class="hero">
+        <div class="hero-content">
+            <h1>استودیو معماری آرکیتک</h1>
+            <p>ما با تلفیق هنر و مهندسی، فضاهایی خلق می‌کنیم که کیفیت زندگی شما را ارتقا می‌دهند. تخصص ما ساخت ویلاهای لوکس و بازسازی مدرن است.</p>
+            <a href="#contact" class="btn-cta">
+                <i class="fa-solid fa-phone"></i>
+                تماس با دفتر
+            </a>
+        </div>
+    </header>
+
+    <!-- 4. About Section -->
+    <section id="about" class="about-section">
+        <div class="container about-grid">
+            <div class="about-text">
+                <h4 style="color: var(--accent); margin-bottom: 10px;">استودیو آرکیتک</h4>
+                <h2>معماری با استانداردهای جهانی</h2>
+                <p>تیم مهندسی آرکیتک با بیش از ۱۵ سال تجربه، متخصص در طراحی پلان‌های عملکردی و اجرای دقیق است. ما باور داریم جزئیات همه چیز است.</p>
+                <ul style="margin-top: 20px;">
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-check" style="color:var(--accent); margin-left:10px;"></i> طراحی سه‌بعدی پیشرفته</li>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-check" style="color:var(--accent); margin-left:10px;"></i> نظارت مقیم مهندسی</li>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-check" style="color:var(--accent); margin-left:10px;"></i> تحویل در زمان مقرر</li>
+                </ul>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000" alt="About Architecture">
+                <div class="experience-badge">
+                    <span>15</span>
+                    <p>سال تجربه</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Projects Gallery (Realistic Titles & Images) -->
+    <section id="projects" class="projects-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>پروژه‌های اجرایی</h2>
+                <p>گزیده‌ای از آخرین آثار طراحی و اجرا شده توسط استودیو</p>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">همه</button>
+                <button class="filter-btn" data-filter="villa">ویلا</button>
+                <button class="filter-btn" data-filter="interior">بازسازی</button>
+                <button class="filter-btn" data-filter="facade">نما</button>
+            </div>
+
+            <div class="project-grid">
+                <!-- Project 1: Villa -->
+                <article class="project-card villa">
+                    <img class="project-img" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?auto=format&fit=crop&q=80&w=800" alt="Villa Design">
+                    <div class="project-overlay">
+                        <h3>طراحی و ساخت ویلا</h3>
+                        <p>اجرای کامل از پی تا کلید</p>
+                    </div>
+                </article>
+                
+                <!-- Project 2: Renovation -->
+                <article class="project-card interior">
+                    <img class="project-img" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" alt="Interior Design">
+                    <div class="project-overlay">
+                        <h3>بازسازی واحد مسکونی</h3>
+                        <p>تغییر نقشه و دکوراسیون داخلی</p>
+                    </div>
+                </article>
+
+                <!-- Project 3: Office -->
+                <article class="project-card interior">
+                    <img class="project-img" src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=800" alt="Office Design">
+                    <div class="project-overlay">
+                        <h3>طراحی فضای اداری</h3>
+                        <p>پارتیشن‌بندی و چیدمان مدرن</p>
+                    </div>
+                </article>
+
+                <!-- Project 4: Facade -->
+                <article class="project-card facade">
+                    <img class="project-img" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800" alt="Residential Facade">
+                    <div class="project-overlay">
+                        <h3>اجرای نمای ساختمان</h3>
+                        <p>ترکیب سنگ و آجر نسوز</p>
+                    </div>
+                </article>
+
+                <!-- Project 5: Renovation (Wood) Fixed -->
+                <article class="project-card interior">
+                    <img class="project-img" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?auto=format&fit=crop&q=80&w=800" alt="Wood Detail">
+                    <div class="project-overlay">
+                        <h3>بازسازی و دکوراسیون داخلی</h3>
+                        <p>اجرای کابینت و کمد دیواری</p>
+                    </div>
+                </article>
+
+                <!-- Project 6: Commercial -->
+                <article class="project-card interior">
+                    <img class="project-img" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800" alt="Commercial">
+                    <div class="project-overlay">
+                        <h3>مشاعات ساختمان تجاری</h3>
+                        <p>سنگ‌کاری کف و دیوار لابی</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Services -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>خدمات ما</h2>
+                <p>ارائه پکیج کامل خدمات مهندسی ساختمان</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fa-solid fa-pen-ruler service-icon"></i>
+                    <h3>طراحی معماری</h3>
+                    <p>ارائه نقشه‌های فاز یک و دو با رعایت دقیق ضوابط شهرداری و اصول زیبایی‌شناسی.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-couch service-icon"></i>
+                    <h3>طراحی داخلی</h3>
+                    <p>چیدمان، انتخاب رنگ و متریال، و طراحی مبلمان اختصاصی برای فضای شما.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-helmet-safety service-icon"></i>
+                    <h3>نظارت و اجرا</h3>
+                    <p>مدیریت پیمان و اجرای صفر تا صد پروژه با تیم‌های اجرایی مجرب.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Contact Info & Routing Buttons -->
+    <section id="contact" class="contact-section">
+        <div class="container contact-wrapper">
+            <div class="contact-info">
+                <h3>تماس با دفتر</h3>
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>تهران، خیابان ولیعصر، بالاتر از پارک ساعی، برج نگین، طبقه ۱۰</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>021-22334455</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>info@architec-studio.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>شنبه تا چهارشنبه: ۹ صبح تا ۶ عصر</span>
+                </div>
+
+                <!-- Modern Routing Buttons -->
+                <div class="routing-buttons">
+                    <a href="https://nshn.ir" target="_blank" class="route-btn" title="مسیریابی با نشان">
+                        <i class="fa-solid fa-location-arrow"></i>
+                        مسیریابی با نشان
+                    </a>
+                    <a href="https://balad.ir" target="_blank" class="route-btn" title="مسیریابی با بلد">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        مسیریابی با بلد
+                    </a>
+                </div>
+            </div>
+            <!-- Grayscale Map -->
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d207371.97794957593!2d51.20973347318729!3d35.69701178496468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e00491ff3dcd9%3A0xf0b3697c567024bc!2sTehran%2C%20Tehran%20Province!5e0!3m2!1sen!2s!4v1645000000000!5m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 کلیه حقوق برای استودیو معماری آرکیتک محفوظ است.</p>
+        </div>
+    </footer>
+
+    <!-- 8. FIXED FLOATING ACTION BUTTONS -->
+    <div class="fab-container">
+        <!-- WhatsApp -->
+        <a href="#" class="fab whatsapp" title="واتساپ">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        <!-- Phone Call -->
+        <a href="tel:02122334455" class="fab phone" title="تماس">
+            <i class="fa-solid fa-phone"></i>
+        </a>
+    </div>
+
+    <!-- اتصال به فایل JS خارجی -->
+    <script src="script.js"></script>
+</body>
+</html>
