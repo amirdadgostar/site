@@ -394,25 +394,20 @@ a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4
 
 /* --- نقشه و دکمه‌ها --- */
 .map-box { display: flex; flex-direction: column; gap: 20px; }
-.map-placeholder {
-    width: 100%; height: 240px; 
-    background: #E2E8F0;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    color: var(--text-muted); 
-    border-radius: var(--radius-lg); 
-    border: 2px solid white;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-    position: relative;
-    overflow: hidden;
-}
 
-.map-placeholder::after {
-    content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-    background-size: 20px 20px; opacity: 0.5; z-index: 0;
+/* استایل جدید نقشه واقعی (Google Map Iframe) */
+.google-map-frame {
+    width: 100%;
+    height: 240px;
+    border: none;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    filter: grayscale(100%) contrast(1.1); /* افکت سیاه‌سفید لوکس */
+    transition: filter 0.4s ease;
 }
-.map-placeholder i, .map-placeholder span { position: relative; z-index: 1; }
-.map-placeholder i { font-size: 3rem; margin-bottom: 10px; color: var(--secondary-blue); }
+.google-map-frame:hover {
+    filter: grayscale(0%) contrast(1); /* رنگی شدن هنگام هاور */
+}
 
 .routing-label { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; }
 
@@ -450,6 +445,19 @@ a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4
     left: 30px;
     z-index: 2000;
     font-family: 'Vazirmatn', sans-serif;
+    
+    /* وضعیت اولیه مخفی (برای انیمیشن ورود) */
+    transform: translateY(100px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); /* افکت فنری نرم */
+}
+
+/* کلاسی که با جاوااسکریپت اضافه می‌شود تا ویجت ظاهر شود */
+.smart-widget-container.intro-visible {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
 }
 
 /* دکمه اصلی ویجت */
