@@ -67,28 +67,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. تایمر 4 ثانیه برای نمایش اعلان (صدا + بج + لرزش)
+    // 2. تایمر ویرایش شده طبق دستور: 1 ثانیه صبر، سپس 1 ثانیه بعد لرزش و نمایش اعداد
     setTimeout(() => {
-        if (!isMenuOpen && !notificationTriggered) {
-            // نمایش بج قرمز
-            notifBadge.classList.add('show');
-            
-            // تلاش برای پخش صدا
-            try {
-                const playPromise = notifSound.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log('Autoplay prevented by browser (normal behavior).');
-                    });
-                }
-            } catch (e) { console.log(e); }
+        // شروع تاخیر ثانویه (یک ثانیه بعد) برای اجرای افکت‌ها
+        setTimeout(() => {
+            if (!isMenuOpen && !notificationTriggered) {
+                // نمایش بج قرمز (اون عددها بیاد روی صفحه)
+                notifBadge.classList.add('show');
+                
+                // تلاش برای پخش صدا
+                try {
+                    const playPromise = notifSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('Autoplay prevented by browser (normal behavior).');
+                        });
+                    }
+                } catch (e) { console.log(e); }
 
-            // شروع اولین لرزش
-            shakeWidget();
-            
-            notificationTriggered = true;
-        }
-    }, 4000);
+                // شروع اولین لرزش (تکان بخورد)
+                shakeWidget();
+                
+                notificationTriggered = true;
+            }
+        }, 1000); // پایان ثانیه دوم
+    }, 1000); // پایان ثانیه اول از ورود
 
     // 3. تابع لرزش ویجت
     function shakeWidget() {
