@@ -165,7 +165,7 @@ body.loaded .reveal-element {
 /* --- هدر اصلی (Hero) --- */
 .hero {
     height: 85vh;
-    background: url('https://amirdadgostar.github.io/site/zibai/Asli.jpeg') center/cover;
+    background: url('https://amirdadgostar.github.io/site/zibai/photo-1487412947147-5cebf100ffc2.jpeg') center/cover;
     position: relative; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--white);
 }
 .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
