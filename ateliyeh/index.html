@@ -426,9 +426,34 @@
         .studio-txt h2 { font-size: 2.2rem; margin-bottom: 20px; }
         .studio-txt p { color: var(--text-muted); margin-bottom: 30px; }
         
-        .stat-row { display: flex; gap: 40px; }
-        .stat div h3 { color: var(--color-primary); font-size: 2rem; }
-        .stat div span { font-size: 0.9rem; color: #888; }
+        /* 
+         * FIX 1: Stats Alignment
+         * Changed layout to ensure items are centered and organized.
+         */
+        .stat-row { 
+            display: flex; 
+            gap: 40px; 
+            justify-content: flex-start; /* Aligns with text block direction */
+            align-items: center;
+        }
+        
+        .stat {
+            text-align: center; /* Centers the text inside each stat block */
+        }
+        
+        /* Corrected Selector: Removed 'div' from path to match HTML structure */
+        .stat h3 { 
+            color: var(--color-primary); 
+            font-size: 2rem; 
+            margin-bottom: 5px;
+        }
+        
+        /* Corrected Selector: Removed 'div' from path to match HTML structure */
+        .stat span { 
+            font-size: 0.9rem; 
+            color: #888; 
+            display: block;
+        }
 
         .studio-img-collage {
             display: grid;
@@ -440,7 +465,17 @@
 
         @media (max-width: 900px) {
             .studio-wrap { grid-template-columns: 1fr; }
-            .studio-img-collage img:first-child { height: 300px; }
+            
+            /* 
+             * FIX 2: Mobile Alignment for Collage
+             * Added align-self: center to the first image to vertically center it
+             * relative to the other two images (triangular balance).
+             */
+            .studio-img-collage img:first-child { 
+                height: 300px; 
+                align-self: center; /* Vertically centers the large image relative to the grid row */
+            }
+            
             .studio-img-collage img { height: 200px; }
         }
 
