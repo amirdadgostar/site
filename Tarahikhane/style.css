@@ -1,372 +1,479 @@
-/* --- تنظیمات کلی و رنگ‌ها --- */
+/* 
+========================================
+1. CORE DESIGN SYSTEM (2026 ARCHITECTURE)
+========================================
+*/
 :root {
-    --primary: #0f172a;      /* سرمه‌ای تیره */
-    --primary-light: #1e293b;
-    --accent: #d4af37;       /* طلایی */
-    --accent-hover: #b5932a;
-    --text-white: #ffffff;
-    --text-dark: #334155;
-    --text-gray: #64748b;
-    --bg-light: #f8fafc;
-    --border-color: #e2e8f0;
+    /* Palette: Bright, Clean, Architectural */
+    --bg-body: #ffffff;
+    --bg-alt: #f4f4f4;       /* خاکستری بسیار روشن */
+    --text-main: #1a1a1a;    /* مشکی ذغالی */
+    --text-light: #666666;   /* خاکستری */
+    
+    --accent: #c5a059;       /* طلایی مات */
+    --accent-hover: #b08d4b;
+    
+    /* Spacing & Layout */
+    --container-width: 1400px;
+    --section-padding: 100px;
+    
+    /* UI Elements */
+    --radius-std: 4px;       /* گوشه‌های مهندسی */
+    --shadow-card: 0 10px 40px rgba(0,0,0,0.06);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Vazirmatn', sans-serif;
-}
+/* Reset & Base */
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
 
-html {
+html, body {
+    overflow-x: hidden;
     scroll-behavior: smooth;
-    scroll-padding-top: 100px; 
 }
 
 body {
-    background-color: var(--bg-light);
-    color: var(--text-dark);
-    overflow-x: hidden;
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.8;
 }
 
-a { text-decoration: none; color: inherit; transition: 0.3s; }
+h1, h2, h3, h4 { font-weight: 800; line-height: 1.3; margin-bottom: 1rem; color: var(--text-main); }
+p { margin-bottom: 1.5rem; color: var(--text-light); }
+a { text-decoration: none; color: inherit; transition: var(--transition); }
+img { display: block; width: 100%; height: auto; object-fit: cover; }
 ul { list-style: none; }
-button { cursor: pointer; border: none; outline: none; }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+/* Utility */
+.container {
+    width: 90%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    position: relative;
+}
 
-/* --- ۱. لودینگ پرده‌ای --- */
-#loader-overlay {
-    position: fixed; inset: 0; z-index: 99999;
-    display: flex; justify-content: center; align-items: center;
-    pointer-events: all;
+.section-header {
+    text-align: center;
+    margin-bottom: 70px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+}
+
+/* 
+========================================
+2. ARCHITECTURAL LOADER
+========================================
+*/
+#loader {
+    position: fixed; inset: 0;
+    background: #1a1a1a;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loader-svg {
+    width: 100px;
+    height: 100px;
+}
+
+.house-path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: drawHouse 1.2s ease-in-out forwards;
+}
+
+.loader-text {
+    margin-top: 20px;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+    opacity: 0;
+    animation: fadeInText 0.5s ease-out 0.8s forwards;
+}
+
+@keyframes drawHouse {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeInText {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 
+========================================
+3. NAVIGATION
+========================================
+*/
+.navbar {
+    position: fixed; top: 0; left: 0; width: 100%;
+    padding: 20px 0;
+    z-index: 1000;
+    transition: var(--transition);
     background: transparent;
 }
 
-.curtain {
-    position: absolute; top: 0; width: 50%; height: 100%;
-    background: var(--primary);
-    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 15px 0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.nav-content { display: flex; justify-content: space-between; align-items: center; }
+
+.logo { font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.navbar.scrolled .logo { color: var(--text-main); text-shadow: none; }
+
+.nav-menu { display: flex; gap: 35px; }
+.nav-menu a {
+    color: #fff; font-weight: 500; font-size: 1rem; position: relative;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.navbar.scrolled .nav-menu a { color: var(--text-main); text-shadow: none; }
+
+.nav-menu a::after {
+    content: ''; position: absolute; bottom: -5px; right: 0; width: 0; height: 2px;
+    background: var(--accent); transition: 0.3s;
+}
+.nav-menu a:hover::after { width: 100%; }
+
+.hamburger { display: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+.navbar.scrolled .hamburger { color: var(--text-main); }
+
+/* 
+========================================
+4. HERO SECTION (NEW IMAGE)
+========================================
+*/
+.hero {
+    height: 100vh;
+    min-height: 600px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* تصویر جدید: ساختمان مدرن و سازه که موضوع سایت را منتقل میکند */
+    background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat;
+}
+
+.hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
     z-index: 1;
 }
-.curtain.left { left: 0; transform-origin: left; }
-.curtain.right { right: 0; transform-origin: right; }
 
-.loaded .curtain.left { transform: translateX(-100%); }
-.loaded .curtain.right { transform: translateX(100%); }
+.hero-content { position: relative; z-index: 2; padding: 0 20px; color: #fff; }
 
-.loader-content {
-    z-index: 2; color: var(--accent); text-align: center;
-    transition: opacity 0.5s;
+.hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.8);
 }
-.loaded .loader-content { opacity: 0; }
 
-.loader-logo {
-    font-size: 2.5rem; font-weight: 900; letter-spacing: 5px; margin-bottom: 10px;
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+.hero p {
+    font-size: 1.3rem; 
+    color: #f0f0f0; 
+    margin-bottom: 40px; 
+    max-width: 700px; 
+    margin-left: auto; 
+    margin-right: auto;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    font-weight: 400;
 }
-.loader-bar {
-    width: 0; height: 3px; background: var(--accent); margin: 0 auto;
-    animation: loadLine 1.5s ease-in-out forwards;
-}
-@keyframes loadLine { 100% { width: 100%; } }
 
-/* --- ۲. نوار ناوبری --- */
-.navbar {
-    position: fixed; top: 0; width: 100%; padding: 20px 0; z-index: 1000;
-    transition: all 0.4s ease;
+.btn-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 45px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: var(--radius-std);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    transition: var(--transition);
+    border: 1px solid rgba(255,255,255,0.2);
 }
-.navbar.scrolled {
-    background: rgba(15, 23, 42, 0.95);
-    padding: 15px 0;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-.nav-container {
-    display: flex; justify-content: space-between; align-items: center;
-}
-.brand {
-    font-size: 1.5rem; font-weight: 800; color: var(--text-white);
-    display: flex; align-items: center; gap: 10px;
-}
-.brand-icon { color: var(--accent); }
 
-.nav-location {
-    background: rgba(255,255,255,0.15); color: var(--text-white);
-    padding: 6px 15px; border-radius: 50px; font-size: 0.85rem;
-    backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);
-    display: flex; align-items: center; gap: 8px;
+.btn-cta:hover {
+    transform: translateY(-5px);
+    background: var(--accent-hover);
+    box-shadow: 0 15px 30px rgba(197, 160, 89, 0.6);
+}
+
+/* 
+========================================
+5. ABOUT SECTION
+========================================
+*/
+.about-section { padding: var(--section-padding) 0; background: var(--bg-body); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+
+.about-image {
+    position: relative;
+    height: 500px;
+    border-radius: var(--radius-std);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.experience-badge {
+    position: absolute; bottom: -20px; left: -20px;
+    background: #fff; padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-left: 4px solid var(--accent);
+}
+.experience-badge span { display: block; font-size: 3rem; font-weight: 900; color: var(--accent); line-height: 1; }
+.experience-badge p { margin: 0; font-size: 0.9rem; color: var(--text-main); font-weight: 700; }
+
+/* 
+========================================
+6. PROJECTS (UPDATED CONTENT)
+========================================
+*/
+.projects-section { padding: var(--section-padding) 0; background: var(--bg-alt); }
+
+.filter-buttons {
+    display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 25px;
+    border: 1px solid #ddd;
+    background: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: var(--text-light);
+    font-family: inherit; font-size: 1rem;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: var(--text-main); color: #fff; border-color: var(--text-main);
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+.project-card {
+    background: #fff;
+    border-radius: var(--radius-std);
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: var(--transition);
+    position: relative;
+    height: 400px;
     cursor: pointer;
 }
-.nav-location:hover {
-    background: rgba(255,255,255,0.25);
+
+.project-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+.project-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+.project-card:hover .project-img { transform: scale(1.1); }
+
+.project-overlay {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.7) 50%, transparent 100%);
+    padding: 30px; 
+    color: #fff;
+    transform: translateY(0);
+    transition: 0.4s;
+    z-index: 2;
+}
+
+.project-overlay h3 { 
+    color: #fff; 
+    margin-bottom: 5px; 
+    text-shadow: 0 2px 5px rgba(0,0,0,1);
+}
+
+.project-overlay p { 
+    color: #ddd; 
+    margin: 0; 
+    font-size: 0.9rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,1);
+}
+
+/* 
+========================================
+7. SERVICES
+========================================
+*/
+.services-section { padding: var(--section-padding) 0; }
+
+.services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;
+}
+
+.service-card {
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: var(--radius-std);
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-card);
+}
+
+.service-icon {
+    font-size: 2.5rem; color: var(--accent); margin-bottom: 25px;
+}
+
+/* 
+========================================
+8. CONTACT & ROUTING BUTTONS
+========================================
+*/
+.contact-section { background: var(--text-main); color: #fff; padding: 80px 0; }
+
+.contact-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+
+.contact-info h3 { color: #fff; font-size: 2rem; margin-bottom: 30px; }
+.contact-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
+.contact-item i { color: var(--accent); font-size: 1.2rem; }
+.contact-item span { color: #ccc; }
+
+/* Routing Buttons Style */
+.routing-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.route-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: var(--radius-std);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    transition: 0.3s;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.route-btn:hover {
+    background: #fff;
+    color: var(--text-main);
     transform: translateY(-2px);
 }
 
-/* --- ۳. هیرو سکشن (بهینه شده برای موبایل) --- */
-.hero-section {
-    position: relative; height: 95vh; min-height: 600px;
+.route-btn i { font-size: 1.1rem; }
+
+.map-container {
+    height: 350px;
+    background: #333;
+    border-radius: var(--radius-std);
+    overflow: hidden;
+}
+.map-container iframe { width: 100%; height: 100%; border: 0; filter: grayscale(100%) invert(92%) contrast(83%); }
+
+footer {
+    background: #111; color: #555; padding: 30px 0; text-align: center; font-size: 0.9rem;
+}
+
+/* 
+========================================
+9. FLOATING ACTION BUTTONS
+========================================
+*/
+.fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.fab {
+    width: 60px; height: 60px;
+    border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    text-align: center; color: var(--text-white);
-    z-index: 1;
-    padding-bottom: 50px; /* فضای پایین برای دوری از تداخل */
-}
-.hero-bg {
-    position: absolute; inset: 0;
-    background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
-    z-index: -2;
-}
-.hero-overlay {
-    position: absolute; inset: 0;
-    /* تیره‌تر کردن پس‌زمینه طبق دستور (85%) */
-    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.75));
-    z-index: -1;
-}
-.hero-content {
-    max-width: 800px;
-    opacity: 0; transform: translateY(30px);
-    animation: fadeUp 1s 1.5s forwards;
-    padding: 20px;
-}
-@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-
-.hero-badge {
-    display: inline-block; color: var(--accent); border: 1px solid var(--accent);
-    padding: 8px 20px; border-radius: 50px; margin-bottom: 25px; font-size: 0.95rem;
-    background: rgba(212, 175, 55, 0.15); /* کمی پررنگ تر برای دیده شدن بهتر */
-    backdrop-filter: blur(4px);
-    font-weight: 500;
-}
-.hero-title {
-    font-size: 3.5rem; line-height: 1.3; font-weight: 900; margin-bottom: 25px;
-}
-.highlight { color: var(--accent); }
-.hero-desc {
-    font-size: 1.15rem; opacity: 1; margin-bottom: 45px; font-weight: 300; max-width: 650px; margin-left: auto; margin-right: auto;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6); line-height: 1.8;
-}
-.hero-actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-.btn-primary {
-    background: var(--accent); color: var(--primary);
-    padding: 15px 35px; border-radius: 12px; font-size: 1rem; font-weight: 700;
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); transition: 0.3s;
-}
-.btn-primary:hover { transform: translateY(-3px); background: #e0bb45; }
-.btn-secondary {
-    background: transparent; color: var(--text-white); border: 2px solid rgba(255,255,255,0.6);
-    padding: 13px 30px; border-radius: 12px; font-weight: 600;
-}
-.btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: var(--text-white); }
-
-/* --- ۴. باکس‌های خدمات (تنظیم دقیق فاصله) --- */
-.features-section { 
-    padding: 60px 0; 
-    /* تنظیم فاصله منفی متعادل برای دسکتاپ */
-    margin-top: -50px; 
-    position: relative; 
-    z-index: 50; 
-}
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-.feature-card {
-    background: var(--text-white); padding: 35px 25px; border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15); transition: 0.3s;
-    text-align: center; border-bottom: 4px solid transparent;
-}
-.feature-card:hover { transform: translateY(-10px); border-bottom-color: var(--accent); }
-.f-icon-box {
-    width: 70px; height: 70px; background: #fffbeb; color: var(--accent);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 1.8rem; margin: 0 auto 20px; border: 1px solid #fce7f3;
-}
-.feature-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.15rem; font-weight: 800; }
-.feature-card p { font-size: 0.95rem; color: var(--text-gray); line-height: 1.7; }
-
-/* --- ۵. استایل مراحل --- */
-.steps-section { padding: 80px 0; background: white; }
-.section-title { text-align: center; margin-bottom: 50px; }
-.section-title h2 { color: var(--primary); font-size: 1.8rem; margin-bottom: 10px; }
-.title-line { width: 60px; height: 4px; background: var(--accent); margin: 0 auto; border-radius: 2px; }
-
-.steps-container { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-.step-item {
-    flex: 1; min-width: 250px; text-align: center; padding: 20px;
-    background: var(--bg-light); border-radius: 15px; position: relative;
-}
-.step-number {
-    width: 50px; height: 50px; background: var(--primary); color: var(--accent);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; font-weight: bold; margin: 0 auto 15px;
-    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.3);
-}
-.step-item h4 { font-size: 1.1rem; color: var(--primary); margin-bottom: 10px; }
-.step-item p { font-size: 0.9rem; color: var(--text-gray); }
-
-/* --- ۶. بخش دیوار --- */
-.divar-promo-section { padding: 80px 0; scroll-margin-top: 100px; }
-.divar-card-modern {
-    background: linear-gradient(135deg, #a62626 0%, #7f1d1d 100%);
-    border-radius: 25px; padding: 40px; display: flex; align-items: center;
-    justify-content: space-around; color: white; position: relative;
-    overflow: hidden; box-shadow: 0 20px 40px rgba(166, 38, 38, 0.2);
-}
-.divar-visual-side {
-    position: relative; font-size: 8rem; color: rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-}
-.mobile-icon { transform: rotate(-10deg); }
-.floating-bubble {
-    position: absolute; top: 20%; right: -20px; background: white; color: #a62626;
-    font-size: 0.9rem; padding: 5px 15px; border-radius: 20px; font-weight: bold;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: float 3s ease-in-out infinite;
-}
-.floating-bubble.two { top: 60%; left: -20px; right: auto; animation-delay: 1.5s; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-.divar-text-side { max-width: 500px; position: relative; z-index: 2; }
-.badge-mini {
-    background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 8px;
-    font-size: 0.8rem; display: inline-block; margin-bottom: 15px;
-}
-.divar-text-side h3 { font-size: 1.8rem; margin-bottom: 15px; }
-.divar-text-side p { opacity: 0.9; margin-bottom: 25px; line-height: 1.7; }
-.divar-cta-btn {
-    background: white; color: #a62626; padding: 12px 30px; border-radius: 50px;
-    font-weight: bold; display: inline-flex; align-items: center; gap: 10px;
+    color: #fff;
+    font-size: 1.6rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     transition: 0.3s;
-}
-.divar-cta-btn:hover { background: #f0f0f0; transform: scale(1.05); }
-
-/* --- ۷. بخش تماس --- */
-.contact-section { padding: 60px 0; background: var(--bg-light); }
-.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-.info-card {
-    background: white; padding: 25px; border-radius: 16px;
-    display: flex; align-items: center; gap: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color);
-    transition: 0.3s;
-}
-.info-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-.ic-icon {
-    width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; color: white; flex-shrink: 0;
-}
-.phone .ic-icon { background: linear-gradient(135deg, #10b981, #059669); }
-.whatsapp .ic-icon { background: linear-gradient(135deg, #25D366, #128C7E); }
-.instagram .ic-icon { background: linear-gradient(135deg, #f09433, #bc1888); }
-.neshan-card .ic-icon { background: linear-gradient(135deg, #0050FF, #0030a0); }
-
-.ic-text span { display: block; font-size: 0.8rem; color: var(--text-gray); }
-.ic-text strong { color: var(--primary); font-size: 1.1rem; }
-
-/* --- ۸. فوتر حرفه‌ای --- */
-.main-footer {
-    background: var(--primary); color: #cbd5e1; padding: 60px 0 20px; font-size: 0.95rem;
-}
-.footer-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;
-    margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px;
-}
-.footer-logo {
-    font-size: 1.4rem; color: var(--text-white); margin-bottom: 15px; font-weight: bold;
-}
-.footer-logo i { color: var(--accent); }
-.footer-desc { line-height: 1.8; margin-bottom: 20px; font-size: 0.9rem; }
-.footer-socials { display: flex; gap: 15px; }
-.footer-socials a {
-    width: 40px; height: 40px; background: rgba(255,255,255,0.1);
-    display: flex; align-items: center; justify-content: center; border-radius: 50%;
-    color: var(--text-white); transition: 0.3s;
-}
-.footer-socials a:hover { background: var(--accent); color: var(--primary); }
-
-.links-col h4, .address-col h4 {
-    color: var(--text-white); margin-bottom: 20px; position: relative; padding-bottom: 10px;
-}
-.links-col h4::after, .address-col h4::after {
-    content: ''; position: absolute; bottom: 0; right: 0; width: 40px; height: 2px; background: var(--accent);
-}
-.links-col ul li { margin-bottom: 10px; }
-.links-col ul li a:hover { color: var(--accent); padding-right: 5px; }
-
-.address-text { margin-bottom: 20px; display: flex; gap: 10px; line-height: 1.6; }
-.address-text i { color: var(--accent); margin-top: 5px; }
-
-.footer-map-btns { display: flex; gap: 10px; }
-.f-map-btn {
-    background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px;
-    display: flex; align-items: center; gap: 8px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);
-}
-.f-map-btn:hover { background: rgba(255,255,255,0.2); }
-.neshan-btn i { color: #00A6FF; }
-.balad-btn i { color: #26C6DA; }
-
-.footer-bottom { text-align: center; font-size: 0.85rem; opacity: 0.6; }
-
-/* --- ۹. ویجت شناور --- */
-.float-widget-container {
-    position: fixed; bottom: 30px; left: 30px; z-index: 2000;
-    display: flex; flex-direction: column; align-items: flex-start;
-}
-.float-btn-main {
-    background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
-    color: var(--accent); padding: 0 20px; height: 55px;
-    border-radius: 30px; box-shadow: 0 8px 25px rgba(15, 23, 42, 0.4);
-    display: flex; align-items: center; justify-content: center;
-    position: relative; transition: 0.3s; min-width: 160px;
-}
-.float-btn-main:active { transform: scale(0.95); }
-.float-content { display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: bold; }
-.pulse-icon { animation: quietPulse 2s infinite; }
-@keyframes quietPulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-
-.notif-badge {
-    position: absolute; top: -5px; right: -5px; background: #ef4444; color: white;
-    width: 24px; height: 24px; border-radius: 50%; font-size: 0.8rem;
-    display: none; align-items: center; justify-content: center;
-    border: 2px solid white; animation: bounceIn 0.5s;
-}
-@keyframes bounceIn { 0%{transform: scale(0);} 50%{transform: scale(1.2);} 100%{transform: scale(1);} }
-
-.ringing { animation: ring-ring 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
-@keyframes ring-ring {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
+    cursor: pointer;
+    backdrop-filter: blur(5px);
 }
 
-.float-menu {
-    display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;
-    opacity: 0; visibility: hidden; transform: translateY(20px);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-.float-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-.float-item {
-    display: flex; align-items: center; gap: 10px; background: white;
-    padding: 8px 15px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: var(--text-dark); transition: 0.2s; justify-content: flex-end; flex-direction: row-reverse;
-}
-.float-item:hover { transform: translateX(5px); }
-.f-icon {
-    width: 35px; height: 35px; border-radius: 50%; color: white;
-    display: flex; align-items: center; justify-content: center; font-size: 1rem;
-}
-.ph { background: #10b981; }
-.wa { background: #25D366; }
-.dv { background: #a62626; }
-.f-label { font-size: 0.9rem; font-weight: 500; }
+.fab:hover { transform: scale(1.1); }
 
-/* --- ریسپانسیو (بهینه‌سازی دقیق موبایل) --- */
-@media (max-width: 768px) {
-    /* اصلاح فونت هدر برای موبایل */
-    .hero-title { font-size: 2rem; line-height: 1.4; }
-    .hero-desc { font-size: 1rem; padding: 0 10px; }
-    
-    /* حذف حالت تداخل (Negative Margin) در موبایل برای جلوگیری از بهم ریختگی */
-    .features-section { margin-top: 0; padding-top: 40px; }
-    
-    .divar-card-modern { flex-direction: column; text-align: center; }
-    .divar-visual-side { display: none; }
-    .features-grid { grid-template-columns: 1fr; }
-    .contact-grid { grid-template-columns: 1fr; }
-    .steps-container { flex-direction: column; }
-    .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+.fab.whatsapp { background: #25D366; }
+.fab.phone { 
+    background: var(--accent); 
+    animation: pulse 2s infinite; 
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}
+
+/* 
+========================================
+RESPONSIVE DESIGN
+========================================
+*/
+@media (max-width: 992px) {
+    .about-grid, .contact-wrapper { grid-template-columns: 1fr; gap: 40px; }
+    .about-image { height: 350px; order: -1; }
+    .nav-menu {
+        position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+        background: #fff; flex-direction: column; padding: 80px 40px;
+        box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s;
+    }
+    .nav-menu.active { right: 0; }
+    .nav-menu a { color: var(--text-main); font-size: 1.2rem; text-shadow: none; }
+    .hamburger { display: block; z-index: 1001; }
+    .hamburger.active { color: var(--text-main); }
+    .hero h1 { font-size: 2.2rem; }
+    .section-header h2 { font-size: 2rem; }
 }
