@@ -1,404 +1,701 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سامانه نوبت دهی آنلاین</title>
-<style>
-:root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --secondary-bg: #f3f4f6;
-    --text-color: #1f2937;
-    --text-muted: #6b7280;
-    --border-color: #e5e7eb;
-    --success-color: #10b981;
-    --bg-gradient: linear-gradient(135deg, #f6f8fd 0%, #e1e7f5 100%);
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --radius: 16px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پنل مدیریت مدرن</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --border-radius: 16px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg-gradient);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    color: var(--text-color);
-    padding: 20px;
-}
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Tahoma', sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.6; }
 
-.container {
-    background: white;
-    padding: 2.5rem;
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    width: 100%;
-    max-width: 500px;
-    text-align: right;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
+        /* --- Layout & Typography --- */
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        h3 { font-weight: 700; margin-bottom: 20px; color: var(--text-main); font-size: 1.25rem; }
 
-h2 {
-    text-align: center;
-    color: #111827;
-    margin-bottom: 2rem;
-    font-size: 1.6rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
+        /* --- Components --- */
+        .box { background: var(--bg-card); border-radius: var(--border-radius); box-shadow: var(--shadow); padding: 25px; transition: var(--transition); overflow: hidden; }
+        .hidden { display: none !important; }
 
-.form-group { margin-bottom: 1.5rem; }
-label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.95rem; color: var(--text-color); }
-input { width: 100%; padding: 14px; border: 2px solid var(--border-color); border-radius: 12px; background: #f9fafb; font-family: inherit; font-size: 1rem; transition: all 0.3s ease; box-sizing: border-box; }
-input:focus { border-color: var(--primary-color); background: white; outline: none; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        /* Inputs & Buttons */
+        input, button { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem; transition: var(--transition); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
+        button:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        button:active { transform: translateY(1px); }
+        button.danger { background: var(--danger); }
+        button.danger:hover { background: #dc2626; }
+        
+        .icon-btn { background: #f1f5f9; color: var(--text-muted); width: 45px; height: 45px; padding: 0; border-radius: 50%; font-size: 1.2rem; }
+        .icon-btn:hover { background: #e2e8f0; color: var(--primary); }
 
-.section-title { font-weight: 700; margin: 1.5rem 0 0.8rem 0; font-size: 1rem; color: var(--text-color); display: flex; align-items: center; gap: 8px; }
-.section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary-color); border-radius: 4px; display: inline-block; }
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-bottom: 1rem; }
+        /* --- Login Page --- */
+        #loginPage { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .login-card { width: 100%; max-width: 400px; padding: 40px; }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header h3 { font-size: 1.5rem; margin: 0; color: var(--primary); }
 
-.date-card { border: 2px solid var(--border-color); border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: white; user-select: none; }
-.date-card:hover { border-color: var(--primary-color); transform: translateY(-2px); }
-.date-card.selected { background-color: var(--primary-color); border-color: var(--primary-color); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
-.date-card .day-name { font-size: 0.85rem; opacity: 0.8; margin-bottom: 4px; display: block; }
-.date-card .date-number { font-weight: 800; font-size: 1.1rem; display: block; }
+        /* --- Main Panel --- */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-bar h3 { margin: 0; }
 
-.time-card { border: 2px solid var(--border-color); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; background: white; font-weight: 600; transition: all 0.2s; }
-.time-card:hover { border-color: var(--primary-color); background: #eff6ff; }
-.time-card.selected { background: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+        /* --- Tabs --- */
+        .tabs { display: flex; background: #f1f5f9; padding: 5px; border-radius: 14px; margin-bottom: 25px; overflow-x: auto; }
+        .tab { flex: 1; text-align: center; padding: 12px; cursor: pointer; border-radius: 10px; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; white-space: nowrap; transition: var(--transition); }
+        .tab.active { background: var(--bg-card); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-button#submitBtn { width: 100%; padding: 16px; background-color: var(--primary-color); color: white; border: none; border-radius: 12px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; font-weight: 700; margin-top: 1.5rem; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2); }
-button#submitBtn:hover { background-color: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3); }
-button:disabled { background-color: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+        /* --- Settings Table (Responsive) --- */
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 15px; text-align: center; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+        th { background: #f8fafc; color: var(--secondary); font-weight: 600; }
+        tr:last-child td { border-bottom: none; }
+        
+        .is-friday { color: var(--danger); font-weight: bold; background-color: rgba(239, 68, 68, 0.05); }
+        .day-name { display: block; font-size: 0.8em; opacity: 0.8; margin-top: 4px; }
+        .table-input { border: 1px solid #cbd5e1; padding: 8px; border-radius: 8px; text-align: center; width: 100%; max-width: 100px; }
 
-.loader-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(2px); display: none; justify-content: center; align-items: center; flex-direction: column; z-index: 10; border-radius: var(--radius); }
-.spinner { width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+        /* --- Accordion (Appointments) --- */
+        .accordion-item { border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: #fff; transition: var(--transition); }
+        .accordion-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; user-select: none; }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-header.active { background: #eff6ff; border-bottom: 1px solid #e2e8f0; }
+        .acc-date { font-weight: 700; color: var(--text-main); }
+        .acc-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: white; }
+        
+        .appt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; }
+        .appt-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; position: relative; transition: var(--transition); }
+        .appt-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08); }
+        .appt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+        .appt-label { color: var(--text-muted); font-size: 0.85rem; }
+        .appt-value { font-weight: 600; color: var(--text-main); }
+        .tel-link { color: var(--primary); text-decoration: none; font-weight: 700; direction: ltr; display: inline-block; }
+        .tel-link:hover { text-decoration: underline; }
 
-#resultCard { display: none; text-align: center; }
-.success-icon { width: 70px; height: 70px; background: #d1fae5; color: var(--success-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem; }
-.ticket-info { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 20px; margin-top: 20px; }
-.ticket-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 1rem; }
-.ticket-row:last-child { margin-bottom: 0; }
-.ticket-label { color: var(--text-muted); }
-.ticket-value { font-weight: 700; color: #111827; }
-.big-number { font-size: 1.8rem; color: var(--primary-color); display: block; margin-top: 5px;}
+        /* --- Search Bar Styling --- */
+        .search-container { display: flex; gap: 8px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 4px; flex-grow: 1; }
+        .search-input { border: none !important; background: transparent; padding: 10px; flex-grow: 1; outline: none; }
+        .search-input:focus { box-shadow: none !important; }
+        .search-btn-icon { width: 40px; height: 40px; border-radius: 10px; padding: 0; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .search-btn-icon:hover { background: var(--primary-dark); }
+        .delete-btn-icon { width: 45px; height: 45px; border-radius: 12px; background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: var(--transition); font-size: 1.2rem; }
+        .delete-btn-icon:hover { background: var(--danger); color: white; }
 
-.action-btn { margin-top: 15px; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; }
-.reload-btn { background-color: #f3f4f6; color: var(--text-color); }
-.reload-btn:hover { background-color: #e5e7eb; }
-.download-btn { background-color: #10b981; color: white; margin-top: 20px; }
-.download-btn:hover { background-color: #059669; }
+        /* --- Skeleton Loader --- */
+        .skeleton-wrapper { padding: 20px; }
+        .skeleton { background: #e2e8f0; height: 20px; border-radius: 6px; margin-bottom: 12px; position: relative; overflow: hidden; }
+        .skeleton::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0)); animation: shimmer 2s infinite; }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
 
-.fade-in { animation: fadeIn 0.4s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.hidden { display: none !important; }
-.empty-state { grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.9rem; background: #f9fafb; border-radius: 8px; }
+        /* --- Pagination --- */
+        .pagination { display: flex; justify-content: center; gap: 15px; align-items: center; margin-top: 25px; }
+        .pagination button { width: auto; padding: 8px 16px; font-size: 0.9rem; }
+        .page-info { font-weight: 600; color: var(--secondary); }
 
-/* تنظیمات پرینت برای دانلود بلیط */
-@media print {
-    body * { visibility: hidden; }
-    #resultCard, #resultCard * { visibility: visible; }
-    #resultCard { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
-    .action-btn { display: none; } /* مخفی کردن دکمه‌ها در چاپ */
-    .success-icon { border: 1px solid #10b981; }
-}
-</style>
+        /* --- Modern Modal --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.9); transition: transform 0.3s ease; text-align: center; }
+        .modal-overlay.show { opacity: 1; }
+        .modal-overlay.show .modal-box { transform: scale(1); }
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .modal-text { color: var(--text-muted); margin-bottom: 25px; font-size: 1rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 10px; }
+        .modal-btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; flex: 1; }
+        .modal-btn.primary { background: var(--primary); color: white; }
+        .modal-btn.secondary { background: #e2e8f0; color: var(--text-main); }
+        .modal-btn.danger { background: var(--danger); color: white; }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 10px; margin-top: 10px; }
+            .box { padding: 15px; border-radius: 12px; }
+            .tabs { margin-bottom: 15px; }
+            .tab { padding: 10px 5px; font-size: 0.85rem; }
+            .appt-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container fade-in" id="bookingForm">
-    <div class="loader-overlay" id="mainLoader">
-        <div class="spinner"></div>
-        <div class="loading-text">لطفا صبر کنید...</div>
-    </div>
+<script>
+    // *** لینک اسکریپت خود را اینجا بگذارید ***
+    const API_URL = "https://script.google.com/macros/s/AKfycbyTvD222XKt9Oh9CuQH7C8metSOd5vF3odi1iBCdKDSfmUKMd-d1JQK1NLMzpNST3T0Dg/exec"; 
+</script>
 
-    <h2>دریافت نوبت</h2>
-    
-    <!-- DEFENSE LAYER 1: The Logic Trap (Honeypot) -->
-    <!-- This field is invisible to humans but visible to bots -->
-    <div style="position:absolute; left:-9999px; opacity:0; z-index:-100;">
-        <label for="form_reference_id">Reference ID</label>
-        <input type="text" id="form_reference_id" name="form_reference_id" tabindex="-1" autocomplete="off">
+<!-- Custom Modal Structure -->
+<div id="customModal" class="modal-overlay">
+    <div class="modal-box">
+        <div id="modalTitle" class="modal-title">عنوان</div>
+        <div id="modalText" class="modal-text">متن پیام</div>
+        <div id="modalActions" class="modal-actions"></div>
     </div>
-    
-    <div class="form-group">
-        <label for="name">نام و نام خانوادگی</label>
-        <input type="text" id="name" placeholder="مثال: علی محمدی">
-    </div>
-    
-    <div class="form-group">
-        <label for="phone">شماره موبایل</label>
-        <input type="tel" id="phone" placeholder="مثال: 0912..." pattern="[0-9]*">
-    </div>
-    
-    <div class="section-title">انتخاب تاریخ مراجعه</div>
-    <div id="dateGrid" class="grid-container">
-        <div class="empty-state">در حال بارگذاری تاریخ‌ها...</div>
-    </div>
-
-    <div id="timeSection" class="hidden">
-        <div class="section-title">انتخاب ساعت</div>
-        <div id="timeGrid" class="grid-container">
-        </div>
-    </div>
-    
-    <button onclick="submitBooking()" id="submitBtn">ثبت نهایی نوبت</button>
 </div>
 
-<div class="container fade-in" id="resultCard">
-    <div id="ticketArea">
-        <div class="success-icon">✓</div>
-        <h3 style="margin:0 0 10px 0; color:#065f46;">رزرو موفقیت‌آمیز بود</h3>
-        <p style="color:#6b7280; margin:0;">اطلاعات نوبت شما به شرح زیر است:</p>
+<!-- صفحه لاگین -->
+<div id="loginPage">
+    <div class="box login-card">
+        <div class="login-header">
+            <h3>ورود مدیر سیستم</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem;">لطفا اطلاعات ورود را وارد کنید</p>
+        </div>
         
-        <div class="ticket-info">
-            <div class="ticket-row">
-                <span class="ticket-label">تاریخ:</span>
-                <span class="ticket-value" id="resDate">-</span>
+        <!-- Defense Layer 1: Honeypot (Logic Trap) -->
+        <input type="text" id="frm_ref_id" autocomplete="off" style="position:absolute; left:-9999px; opacity:0; z-index:-1;" tabindex="-1">
+        
+        <div style="margin-bottom:15px;">
+            <input type="text" id="u" placeholder="نام کاربری">
+        </div>
+        <div style="margin-bottom:20px;">
+            <input type="password" id="p" placeholder="رمز عبور">
+        </div>
+        <button onclick="login()">ورود به پنل</button>
+        <p id="msg" style="color:var(--danger); text-align:center; margin-top:15px; font-size:0.9rem; min-height:20px;"></p>
+    </div>
+</div>
+
+<!-- پنل اصلی -->
+<div id="mainPage" class="container hidden">
+    <div class="box">
+        <div class="header-bar">
+            <h3>پنل مدیریت نوبت‌دهی</h3>
+            <div class="header-left">
+                <button class="icon-btn" onclick="showTab('pass')" title="تغییر رمز عبور">
+                    &#128273; 
+                </button>
+                <button class="danger" onclick="confirmLogout()" style="width:auto; padding:8px 16px; font-size:0.9rem;">خروج</button>
             </div>
-            <div class="ticket-row" style="align-items: center;">
-                <span class="ticket-label">شماره نوبت:</span>
-                <span class="ticket-value big-number" id="resQueue">-</span>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('settings')">تنظیمات ۳۰ روزه</div>
+            <div class="tab" onclick="showTab('list')">لیست نوبت‌ها</div>
+            <div class="tab" onclick="showTab('users')">لیست مراجعین</div>
+        </div>
+
+        <!-- تب تنظیمات -->
+        <div id="settings" class="content">
+            <div id="settings-loader" class="hidden skeleton-wrapper">
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
             </div>
-            <div class="ticket-row">
-                <span class="ticket-label">ساعت تقریبی:</span>
-                <span class="ticket-value" id="resTime" style="color:var(--primary-color)">-</span>
+            
+            <div id="settings-content">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>تاریخ</th>
+                                <th>رزرو شده</th>
+                                <th>ظرفیت</th>
+                                <th>شروع</th>
+                                <th>پایان</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblSettings"></tbody>
+                    </table>
+                </div>
+                <div style="margin-top:20px;">
+                    <button onclick="saveSettings()">ذخیره تمام تغییرات</button>
+                </div>
             </div>
-            <div class="ticket-row">
-                <span class="ticket-label">نام:</span>
-                <span class="ticket-value" id="resName">-</span>
+        </div>
+
+        <!-- تب لیست نوبت ها -->
+        <div id="list" class="content hidden">
+            <div style="display:flex; justify-content:space-between; align-items: center; gap:10px; margin-bottom:20px;">
+                <!-- جستجوی مدرن با آیکون -->
+                <div class="search-container">
+                    <input type="text" id="search" class="search-input" placeholder="جستجوی نام بیمار...">
+                    <button onclick="loadList(1)" class="search-btn-icon">&#128269;</button>
+                </div>
+                
+                <!-- دکمه حذف سوابق قدیمی (آیکون سطل زباله) -->
+                <button class="delete-btn-icon" onclick="deletePastApps()" title="حذف نوبت‌های گذشته">
+                    &#128465;
+                </button>
+            </div>
+
+            <div id="list-loader" class="hidden skeleton-wrapper">
+                <div class="skeleton" style="height:60px; border-radius:12px;"></div>
+                <div class="skeleton" style="height:60px; border-radius:12px;"></div>
+            </div>
+
+            <div id="accordionContainer"></div>
+            
+            <div class="pagination">
+                <button onclick="prevPage()">قبلی</button>
+                <span id="pageNum" class="page-info">صفحه 1</span>
+                <button onclick="nextPage()">بعدی</button>
+            </div>
+        </div>
+
+        <!-- تب لیست مراجعین -->
+        <div id="users" class="content hidden">
+            <div class="search-container" style="margin-bottom:20px;">
+                <input type="text" id="searchUser" class="search-input" placeholder="جستجوی نام یا موبایل...">
+                <button onclick="loadUsers(1)" class="search-btn-icon">&#128269;</button>
+            </div>
+
+            <div id="users-loader" class="hidden skeleton-wrapper">
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>نام و نام خانوادگی</th>
+                            <th>شماره تماس</th>
+                            <th>تاریخ آخرین مراجعه</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblUsers"></tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button onclick="prevUserPage()">قبلی</button>
+                <span id="userPageNum" class="page-info">صفحه 1</span>
+                <button onclick="nextUserPage()">بعدی</button>
+            </div>
+        </div>
+
+        <!-- تب تغییر رمز -->
+        <div id="pass" class="content hidden">
+            <div style="max-width:400px; margin:0 auto; padding:20px 0;">
+                <h4 style="text-align:center; margin-bottom:20px;">تغییر رمز عبور مدیر</h4>
+                <input type="password" id="oldP" placeholder="رمز فعلی" style="margin-bottom:15px;">
+                <input type="password" id="newP" placeholder="رمز جدید" style="margin-bottom:20px;">
+                <button onclick="changePass()">تغییر رمز</button>
             </div>
         </div>
     </div>
-
-    <button class="action-btn download-btn" onclick="window.print()">دانلود/چاپ بلیط</button>
-    <button class="action-btn reload-btn" onclick="location.reload()">دریافت نوبت جدید</button>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyTvD222XKt9Oh9CuQH7C8metSOd5vF3odi1iBCdKDSfmUKMd-d1JQK1NLMzpNST3T0Dg/exec"; 
+    let token = localStorage.getItem("admToken");
+    let page = 1;
+    let userPage = 1;
+    const DAY_NAMES = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
+    const INTERNAL_CLIENT_SALT = "D3f3ns3_S4lt_v1";
 
-let selectedDate = null;
-let selectedTime = null;
-// Security variables renamed for stealth
-let meta_config = { token: null, sync_seed: null }; 
-
-function gregorianToJalali(gy, gm, gd) {
-    var g_d_m, jy, jm, jd, gy2, days;
-    g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-    gy2 = (gm > 2) ? (gy + 1) : gy;
-    days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
-    jy = -1595 + (33 * ~~(days / 12053));
-    days %= 12053;
-    jy += 4 * ~~(days / 1461);
-    days %= 1461;
-    if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
-    if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); } 
-    else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
-    return [jy, jm, jd];
-}
-
-function getPersianDayName(dateStr) {
-    const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-    const d = new Date(dateStr);
-    return days[d.getDay()];
-}
-
-function formatPersianDate(dateStr) {
-    const parts = dateStr.split('-');
-    const jDate = gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
-    const dayName = getPersianDayName(dateStr);
-    const monthNames = ["", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+    // --- Modal Functions ---
+    const modal = document.getElementById('customModal');
     
-    return {
-        dayName: dayName,
-        fullDate: `${jDate[2]} ${monthNames[jDate[1]]} ${jDate[0]}`,
-        dayNumber: jDate[2],
-        monthName: monthNames[jDate[1]]
-    };
-}
-
-// DEFENSE LAYER 2: Proof-of-Work Logic (Client-Side)
-async function calculate_network_latency(seed) {
-    const encoder = new TextEncoder();
-    let nonce = 0;
-    while (true) {
-        // Simple hash challenge: Find nonce where SHA256(seed + nonce) starts with 000
-        const data = seed + nonce;
-        const buffer = encoder.encode(data);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
+    function showModal(title, text) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalText').innerText = text;
+        const actions = document.getElementById('modalActions');
+        actions.innerHTML = `<button class="modal-btn primary" onclick="closeModal()">تائید</button>`;
         
-        // Check if first 12 bits are zero (0x00 and < 0x10)
-        if (hashArray[0] === 0 && hashArray[1] < 16) {
-            return nonce;
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function showConfirm(title, text, callback) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalText').innerText = text;
+        const actions = document.getElementById('modalActions');
+        
+        const confirmBtn = document.createElement('button');
+        confirmBtn.className = 'modal-btn danger';
+        confirmBtn.innerText = 'بله، انجام شود';
+        confirmBtn.onclick = function() {
+            closeModal();
+            callback();
+        };
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'modal-btn secondary';
+        cancelBtn.innerText = 'لغو';
+        cancelBtn.onclick = closeModal;
+
+        actions.innerHTML = '';
+        actions.appendChild(cancelBtn);
+        actions.appendChild(confirmBtn);
+
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+    // -----------------------
+
+    // --- توابع کمکی تاریخ ---
+    function gregorianToJalali(gy, gm, gd) {
+        var g_d_m, jy, jm, jd, gy2, days;
+        g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        gy2 = (gm > 2) ? (gy + 1) : gy;
+        days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+        jy = -1595 + (33 * ~~(days / 12053));
+        days %= 12053;
+        jy += 4 * ~~(days / 1461);
+        days %= 1461;
+        if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
+        if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); } else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
+        return jy + '/' + jm + '/' + jd;
+    }
+
+    function getDayName(dateStr) {
+        const d = new Date(dateStr);
+        return { index: d.getDay(), name: DAY_NAMES[d.getDay()] };
+    }
+
+    function toJalaliStr(dateStr) {
+        if(!dateStr) return "";
+        let dStr = String(dateStr);
+        if(dStr.includes('T')) dStr = dStr.split('T')[0];
+        else if(dStr.includes(' ')) dStr = dStr.split(' ')[0];
+        
+        let parts = dStr.split('-');
+        if(parts.length < 3) return dStr;
+        return gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+    }
+    // -------------------------
+
+    if(token) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("mainPage").classList.remove("hidden");
+        loadSettings();
+    }
+
+    // --- SECURITY LAYER: Secure API Call ---
+    async function api(payload) {
+        payload.token = token;
+        
+        // 1. Honeypot Injection
+        var trap = document.getElementById('frm_ref_id');
+        payload.frm_ref_id = trap ? trap.value : "";
+
+        // 2. PoW Calculation (Client-Side)
+        var ts = new Date().getTime();
+        payload.meta_ts = ts;
+        payload.meta_hash = latency_calc(ts);
+
+        try {
+            let req = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(payload)
+            });
+            return await req.json();
+        } catch(e) {
+            showModal("خطا", "خطا در اتصال به سرور.");
+            return {success: false};
         }
-        nonce++;
-        if(nonce > 500000) return 0; // Fail-safe
     }
-}
 
-window.addEventListener('DOMContentLoaded', () => {
-    init_buffer_sync();
-});
+    // Simple Hash Function for PoW (No External Libs)
+    function latency_calc(ts) {
+        var str = ts + INTERNAL_CLIENT_SALT;
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            var char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
+    }
 
-function showLoader(show) {
-    document.getElementById("mainLoader").style.display = show ? "flex" : "none";
-}
+    function login() {
+        let u = document.getElementById("u").value;
+        let p = document.getElementById("p").value;
+        let btn = document.querySelector("#loginPage button");
+        let msg = document.getElementById("msg");
+        
+        btn.textContent = "در حال بررسی...";
+        btn.disabled = true;
+        msg.textContent = "";
 
-function init_buffer_sync() {
-    showLoader(true);
-    // Request initial session token and available dates
-    fetch(API_URL + "?action=ui_sync_init")
-        .then(r => r.json())
-        .then(json => {
-            if(json.status === "success") {
-                // Store security tokens stealthily
-                meta_config.token = json.meta_t;
-                meta_config.sync_seed = json.meta_s;
-                renderDates(json.data);
-            } else {
-                document.getElementById("dateGrid").innerHTML = '<div class="empty-state">سیستم در دسترس نیست</div>';
-            }
-            showLoader(false);
-        })
-        .catch(err => {
-            showLoader(false);
-            document.getElementById("dateGrid").innerHTML = '<div class="empty-state" style="color:red">خطا در دریافت اطلاعات</div>';
-        });
-}
-
-function renderDates(data) {
-    const grid = document.getElementById("dateGrid");
-    grid.innerHTML = "";
-    
-    if (data && data.length > 0) {
-        data.forEach(date => {
-            const pDate = formatPersianDate(date);
+        api({action: "login", username: u, password: p}).then(res => {
+            btn.textContent = "ورود به پنل";
+            btn.disabled = false;
             
-            const card = document.createElement("div");
-            card.className = "date-card";
-            card.innerHTML = `
-                <span class="day-name">${pDate.dayName}</span>
-                <span class="date-number">${pDate.dayNumber} ${pDate.monthName}</span>
-            `;
-            card.onclick = () => selectDate(card, date, pDate.fullDate);
-            grid.appendChild(card);
+            if(res.success) {
+                token = res.token;
+                localStorage.setItem("admToken", token);
+                document.getElementById("loginPage").classList.add("hidden");
+                document.getElementById("mainPage").classList.remove("hidden");
+                loadSettings();
+            } else {
+                msg.textContent = res.message;
+            }
         });
-    } else {
-        grid.innerHTML = '<div class="empty-state">هیچ نوبتی برای رزرو موجود نیست.</div>';
-        document.getElementById("submitBtn").disabled = true;
     }
-}
 
-function selectDate(element, dateValue, displayDate) {
-    document.querySelectorAll('.date-card').forEach(el => el.classList.remove('selected'));
-    
-    element.classList.add('selected');
-    selectedDate = dateValue;
-    selectedTime = null;
+    function confirmLogout() {
+        showConfirm("خروج", "آیا مطمئن هستید که می‌خواهید خارج شوید؟", function() {
+            localStorage.removeItem("admToken");
+            location.reload();
+        });
+    }
 
-    const timeSection = document.getElementById("timeSection");
-    timeSection.classList.remove("hidden");
-    const timeGrid = document.getElementById("timeGrid");
-    timeGrid.innerHTML = '<div class="empty-state">در حال دریافت ساعت‌ها...</div>';
+    function showTab(id) {
+        document.querySelectorAll(".content").forEach(d => d.classList.add("hidden"));
+        document.getElementById(id).classList.remove("hidden");
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        
+        if(id !== 'pass') {
+             let tabBtns = document.querySelectorAll(".tab");
+             if(id === 'settings') tabBtns[0].classList.add("active");
+             if(id === 'list') tabBtns[1].classList.add("active");
+             if(id === 'users') tabBtns[2].classList.add("active");
+        }
 
-    timeSection.scrollIntoView({ behavior: 'smooth' });
+        if(id === 'list') loadList(1);
+        if(id === 'users') loadUsers(1);
+    }
 
-    // Use standard GET but validation will happen on POST
-    fetch(API_URL + "?action=getTimes&date=" + dateValue)
-        .then(r => r.json())
-        .then(res => {
-            timeGrid.innerHTML = "";
-            if (res.data && res.data.length > 0) {
-                res.data.forEach(t => {
-                    const tCard = document.createElement("div");
-                    tCard.className = "time-card";
-                    tCard.innerText = t;
-                    tCard.onclick = () => selectTime(tCard, t);
-                    timeGrid.appendChild(tCard);
+    function loadSettings() {
+        document.getElementById("settings-loader").classList.remove("hidden");
+        document.getElementById("settings-content").classList.add("hidden");
+
+        api({action: "getSettings"}).then(res => {
+            let h = "";
+            res.data.forEach(d => {
+                let jalaliDate = toJalaliStr(d.date);
+                let dayInfo = getDayName(d.date); 
+                let rowClass = (dayInfo.index === 5) ? "is-friday" : ""; 
+
+                h += `<tr class="${rowClass}">
+                    <td data-gdate="${d.date}">
+                        ${jalaliDate}
+                        <span class="day-name">${dayInfo.name}</span>
+                    </td>
+                    <td style="font-weight:bold; color:var(--primary);">${d.booked}</td>
+                    <td><input value="${d.capacity}" class="table-input cap"></td>
+                    <td><input type="time" value="${d.start}" class="table-input start"></td>
+                    <td><input type="time" value="${d.end}" class="table-input end"></td>
+                </tr>`;
+            });
+            document.getElementById("tblSettings").innerHTML = h;
+            
+            document.getElementById("settings-loader").classList.add("hidden");
+            document.getElementById("settings-content").classList.remove("hidden");
+        });
+    }
+
+    function saveSettings() {
+        let btn = document.querySelector("#settings button");
+        btn.textContent = "در حال ذخیره...";
+        btn.disabled = true;
+
+        let rows = document.querySelectorAll("#tblSettings tr");
+        let data = [];
+        let hasError = false;
+
+        rows.forEach(row => {
+            let gDate = row.cells[0].getAttribute("data-gdate");
+            let cap = row.querySelector(".cap").value;
+            let start = row.querySelector(".start").value;
+            let end = row.querySelector(".end").value;
+
+            if(cap && cap > 0 && start && end) {
+                if(end < start) {
+                    showModal("خطا", "در تاریخ " + toJalaliStr(gDate) + " ساعت پایان نمی‌تواند کمتر از ساعت شروع باشد.");
+                    hasError = true;
+                }
+            }
+
+            data.push({
+                date: gDate,
+                capacity: cap,
+                start: start,
+                end: end
+            });
+        });
+
+        if(hasError) {
+            btn.textContent = "ذخیره تمام تغییرات";
+            btn.disabled = false;
+            return;
+        }
+
+        api({action: "saveSettings", data: data}).then(res => {
+            showModal("موفق", res.message);
+            btn.textContent = "ذخیره تمام تغییرات";
+            btn.disabled = false;
+        });
+    }
+
+    // --- لیست نوبت ها ---
+    function loadList(p) {
+        page = p;
+        let s = document.getElementById("search").value;
+        
+        document.getElementById("list-loader").classList.remove("hidden");
+        document.getElementById("accordionContainer").innerHTML = "";
+
+        api({action: "getAppointments", page: p, search: s}).then(res => {
+            document.getElementById("list-loader").classList.add("hidden");
+            let container = document.getElementById("accordionContainer");
+            
+            if(res.list.length === 0) {
+                container.innerHTML = "<div style='text-align:center; padding:30px; color:var(--text-muted);'>موردی یافت نشد</div>";
+                return;
+            }
+
+            let grouped = {};
+            res.list.forEach(item => {
+                let dateKey = item[0];
+                if(!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(item);
+            });
+
+            for (let date in grouped) {
+                let items = grouped[date];
+                
+                items.sort(function(a, b) {
+                    return parseInt(a[3]) - parseInt(b[3]);
                 });
+
+                let jalaliDate = toJalaliStr(date);
+                let dayInfo = getDayName(date);
+                let count = items.length;
+
+                let header = document.createElement("div");
+                header.className = "accordion-header";
+                header.innerHTML = `
+                    <div class="acc-date">${jalaliDate} <span style="font-size:0.8em; font-weight:400; color:var(--text-muted);">(${dayInfo.name})</span></div>
+                    <div class="acc-badge">${count} رزرو</div>
+                `;
+
+                let content = document.createElement("div");
+                content.className = "accordion-content";
+                
+                let gridHtml = `<div class="appt-grid">`;
+                items.forEach(r => {
+                    gridHtml += `
+                        <div class="appt-card">
+                            <div class="appt-row">
+                                <span class="appt-label">نام بیمار</span>
+                                <span class="appt-value">${r[1]}</span>
+                            </div>
+                            <div class="appt-row">
+                                <span class="appt-label">شماره تماس</span>
+                                <span class="appt-value"><a href="tel:${r[2]}" class="tel-link">${r[2]}</a></span>
+                            </div>
+                             <div class="appt-row">
+                                <span class="appt-label">شماره نوبت</span>
+                                <span class="appt-value" style="color:var(--primary); font-size:1.1em;">${r[3]}</span>
+                            </div>
+                             <div class="appt-row" style="margin-bottom:0; border-top:1px dashed #e2e8f0; padding-top:8px; margin-top:8px;">
+                                <span class="appt-label">ساعت حضور</span>
+                                <span class="appt-value">${r[4]}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                gridHtml += `</div>`;
+                content.innerHTML = gridHtml;
+
+                header.addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    let pnl = this.nextElementSibling;
+                    if (pnl.style.maxHeight) {
+                        pnl.style.maxHeight = null;
+                    } else {
+                        pnl.style.maxHeight = pnl.scrollHeight + "px";
+                    } 
+                });
+
+                let wrapper = document.createElement("div");
+                wrapper.className = "accordion-item";
+                wrapper.appendChild(header);
+                wrapper.appendChild(content);
+                container.appendChild(wrapper);
+            }
+
+            document.getElementById("pageNum").innerText = "صفحه " + p;
+        });
+    }
+    
+    function deletePastApps() {
+        showConfirm("حذف سوابق", "آیا مطمئن هستید؟ تمام نوبت‌های مربوط به تاریخ‌های قبل از امروز حذف خواهند شد.", function() {
+            document.getElementById("list-loader").classList.remove("hidden");
+            document.getElementById("accordionContainer").innerHTML = "";
+
+            api({action: "deletePast"}).then(res => {
+                showModal("انجام شد", res.message);
+                loadList(1);
+            });
+        });
+    }
+
+    function nextPage() { loadList(page + 1); }
+    function prevPage() { if(page > 1) loadList(page - 1); }
+
+    // --- لیست مراجعین (Users) ---
+    function loadUsers(p) {
+        userPage = p;
+        let s = document.getElementById("searchUser").value;
+        
+        document.getElementById("users-loader").classList.remove("hidden");
+        document.getElementById("tblUsers").innerHTML = "";
+
+        api({action: "getUsers", page: p, search: s}).then(res => {
+            document.getElementById("users-loader").classList.add("hidden");
+            let h = "";
+            if(res.list.length === 0) {
+                 h = "<tr><td colspan='3'>موردی یافت نشد</td></tr>";
             } else {
-                timeGrid.innerHTML = '<div class="empty-state">ظرفیت این روز تکمیل شده است.</div>';
+                res.list.forEach(u => {
+                    let jalaliReg = toJalaliStr(u[2]);
+                    h += `<tr>
+                        <td>${u[0]}</td>
+                        <td><a href="tel:${u[1]}" class="tel-link">${u[1]}</a></td>
+                        <td>${jalaliReg}</td>
+                    </tr>`;
+                });
+            }
+            document.getElementById("tblUsers").innerHTML = h;
+            document.getElementById("userPageNum").innerText = "صفحه " + p;
+        });
+    }
+    function nextUserPage() { loadUsers(userPage + 1); }
+    function prevUserPage() { if(userPage > 1) loadUsers(userPage - 1); }
+
+
+    // --- تغییر رمز ---
+    function changePass() {
+        let o = document.getElementById("oldP").value;
+        let n = document.getElementById("newP").value;
+        let btn = document.querySelector("#pass button");
+        
+        btn.disabled = true;
+        btn.textContent = "در حال انجام...";
+
+        api({action: "changePassword", oldPass: o, newPass: n}).then(res => {
+            showModal("پیام سیستم", res.message);
+            btn.disabled = false;
+            btn.textContent = "تغییر رمز";
+            if(res.success) {
+                document.getElementById("oldP").value = "";
+                document.getElementById("newP").value = "";
             }
         });
-}
-
-function selectTime(element, timeValue) {
-    document.querySelectorAll('.time-card').forEach(el => el.classList.remove('selected'));
-    element.classList.add('selected');
-    selectedTime = timeValue;
-}
-
-async function submitBooking() {
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const trap = document.getElementById("form_reference_id").value; // Honeypot value
-    
-    if (!name || !phone) {
-        alert("لطفا نام و شماره موبایل را وارد کنید.");
-        return;
     }
-    if (!selectedDate) {
-        alert("لطفا یک تاریخ را انتخاب کنید.");
-        return;
-    }
-    if (!selectedTime) {
-        alert("لطفا یک ساعت را انتخاب کنید.");
-        return;
-    }
-
-    showLoader(true);
-    
-    // Calculate Proof of Work
-    let proof = 0;
-    try {
-        proof = await calculate_network_latency(meta_config.sync_seed);
-    } catch (e) { /* silent fail */ }
-
-    const payload = { 
-        name, 
-        phone, 
-        date: selectedDate, 
-        time: selectedTime,
-        form_reference_id: trap, // Send honeypot to server
-        ui_sync: meta_config.token, // Send session token
-        latency_val: proof // Send PoW result
-    };
-
-    fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload)
-    })
-    .then(r => r.json())
-    .then(res => {
-        showLoader(false);
-        if (res.success) {
-            document.getElementById("bookingForm").style.display = "none";
-            document.getElementById("resultCard").style.display = "block";
-            
-            const pResDate = formatPersianDate(res.date);
-            document.getElementById("resDate").innerText = `${pResDate.dayName} ${pResDate.fullDate}`;
-            document.getElementById("resQueue").innerText = res.queue;
-            document.getElementById("resTime").innerText = res.time;
-            document.getElementById("resName").innerText = name;
-        } else {
-            // Generic error message for security
-            alert(res.message || "خطا در پردازش درخواست");
-        }
-    })
-    .catch(err => {
-        showLoader(false);
-        alert("خطا در ارتباط با سرور");
-    });
-}
 </script>
 
 </body>
