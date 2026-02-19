@@ -30,7 +30,7 @@
         body { font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 60px; line-height: 1.6; }
 
         /* Login Styling - Official Look */
-        #login-panel { display: flex; align-items: center; justify-content: center; height: 100vh; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
+        #login-panel { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); padding: 20px; }
         .login-card { 
             background: var(--card-bg); padding: 40px; width: 100%; max-width: 380px; 
             border-radius: var(--radius); box-shadow: var(--shadow-lg); 
@@ -60,6 +60,8 @@
         
         .container { max-width: 1440px; margin: 30px auto; padding: 0 25px; }
         .dashboard-grid { display: grid; grid-template-columns: 380px 1fr; gap: 30px; align-items: start; }
+        
+        /* اصلاحات برای تبلت */
         @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .card { 
@@ -130,7 +132,8 @@
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Form List Grid */
-        .forms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        /* اصلاح گرید برای موبایل‌های کوچک */
+        .forms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .form-card { 
             background: #fff; border: 1px solid var(--border); border-radius: var(--radius); 
             padding: 20px; transition: all 0.2s; display: flex; flex-direction: column; gap: 15px;
@@ -173,7 +176,7 @@
         }
         
         /* ---------------------------------------------------- */
-        /* FIX: Vertical Options Stacking (Official Request 2) */
+        /* FIX: Vertical Options Stacking (Mobile & Desktop) */
         /* ---------------------------------------------------- */
         .opt-container { 
             background: #f8fafc; 
@@ -181,7 +184,7 @@
             padding: 12px; 
             border-radius: 6px; 
             margin-top: 12px; 
-            /* Flex Column is Key Here */
+            /* FORCE VERTICAL STACKING */
             display: flex !important; 
             flex-direction: column !important; 
             gap: 10px !important;
@@ -190,15 +193,17 @@
         
         .opt-row { 
             display: flex !important; 
-            gap: 10px !important; 
+            gap: 8px !important; 
             align-items: center !important; 
             width: 100% !important;
+            margin-bottom: 0 !important;
         }
         
         .opt-input { 
             margin-bottom: 0 !important; 
             flex-grow: 1 !important; 
             width: auto !important;
+            min-width: 0; /* جلوگیری از سرریز در فلکس */
         }
         
         .btn-del-opt { 
@@ -247,6 +252,47 @@
 
         /* Tooltip style override */
         [title] { position: relative; }
+
+        /* ========================================= */
+        /* MOBILE & RESPONSIVE FIXES (اضافه شده)      */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            .container { padding: 0 15px; margin: 20px auto; }
+            .card { padding: 15px; margin-bottom: 20px; }
+            
+            /* هدر ریسپانسیو */
+            header { 
+                height: auto; 
+                flex-direction: column; 
+                gap: 10px; 
+                padding: 15px; 
+            }
+            .brand { width: 100%; justify-content: center; margin-bottom: 5px; }
+            header > div { width: 100%; justify-content: center; }
+            
+            /* کارت لاگین */
+            .login-card { padding: 25px; width: 100%; max-width: 100%; }
+
+            /* گرید فرم‌ها */
+            .forms-grid { grid-template-columns: 1fr; }
+            
+            /* فیلدها */
+            .field-box { padding: 12px; }
+            
+            /* گزینه‌های انتخاب در موبایل */
+            .opt-row { gap: 5px !important; }
+            .btn-del-opt { width: 38px; height: 38px; }
+            input[type="text"], input[type="password"], select, textarea { 
+                font-size: 16px; /* جلوگیری از زوم خودکار در iOS */
+            }
+
+            /* مودال‌ها */
+            .modal-content { width: 95%; padding: 20px; }
+            
+            /* دکمه‌های اکشن بار */
+            .action-bar { flex-wrap: wrap; justify-content: space-between; }
+            .action-bar .btn-icon { flex-grow: 1; }
+        }
     </style>
 </head>
 <body>
