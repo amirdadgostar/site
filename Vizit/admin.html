@@ -120,6 +120,9 @@
         .modal-btn.primary { background: var(--primary); color: white; }
         .modal-btn.secondary { background: #e2e8f0; color: var(--text-main); }
         .modal-btn.danger { background: var(--danger); color: white; }
+        
+        /* Security Layer 1: Stealth Honeypot */
+        .form-ref-check { position: absolute; left: -9999px; opacity: 0; z-index: -1; }
 
         @media (max-width: 600px) {
             .container { padding: 0 10px; margin-top: 10px; }
@@ -153,9 +156,8 @@
             <h3>ورود مدیر سیستم</h3>
             <p style="color:var(--text-muted); font-size:0.9rem;">لطفا اطلاعات ورود را وارد کنید</p>
         </div>
-        
-        <!-- Defense Layer 1: Honeypot (Logic Trap) -->
-        <input type="text" id="frm_ref_id" autocomplete="off" style="position:absolute; left:-9999px; opacity:0; z-index:-1;" tabindex="-1">
+        <!-- Defense Layer 1: Honeypot -->
+        <input type="text" id="form_ref_id" name="form_ref_id" class="form-ref-check" tabindex="-1" autocomplete="off">
         
         <div style="margin-bottom:15px;">
             <input type="text" id="u" placeholder="نام کاربری">
@@ -295,7 +297,6 @@
     let page = 1;
     let userPage = 1;
     const DAY_NAMES = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
-    const INTERNAL_CLIENT_SALT = "D3f3ns3_S4lt_v1";
 
     // --- Modal Functions ---
     const modal = document.getElementById('customModal');
@@ -307,6 +308,7 @@
         actions.innerHTML = `<button class="modal-btn primary" onclick="closeModal()">تائید</button>`;
         
         modal.style.display = 'flex';
+        // Small delay for animation
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
@@ -374,24 +376,43 @@
     }
     // -------------------------
 
+    // --- SECURITY PROTOCOLS CLIENT-SIDE ---
+    
+    // Defense Layer 2: Proof of Work (PoW) Generator
+    function _sys_gen_meta_data() {
+        var ts = Math.floor(Date.now() / 1000).toString();
+        var salt = "X9_SECURE_SALT_LAYER_V1";
+        var str = ts + salt;
+        
+        // Native JS Hash implementation (Must match Server)
+        var h = 5381;
+        for (var i = 0; i < str.length; i++) {
+            h = (Math.imul(33, h) + str.charCodeAt(i)) | 0;
+        }
+        var hash = (h >>> 0).toString(16);
+        
+        return { t: ts, h: hash };
+    }
+
     if(token) {
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("mainPage").classList.remove("hidden");
         loadSettings();
     }
 
-    // --- SECURITY LAYER: Secure API Call ---
     async function api(payload) {
+        // SECURITY INJECTION
+        // 1. Inject Session Token
         payload.token = token;
         
-        // 1. Honeypot Injection
-        var trap = document.getElementById('frm_ref_id');
-        payload.frm_ref_id = trap ? trap.value : "";
-
-        // 2. PoW Calculation (Client-Side)
-        var ts = new Date().getTime();
-        payload.meta_ts = ts;
-        payload.meta_hash = latency_calc(ts);
+        // 2. Inject Honeypot Value (Must be empty)
+        var hp = document.getElementById("form_ref_id");
+        payload.form_ref_id = hp ? hp.value : "";
+        
+        // 3. Inject PoW
+        var meta = _sys_gen_meta_data();
+        payload.sys_meta_t = meta.t;
+        payload.sys_meta_h = meta.h;
 
         try {
             let req = await fetch(API_URL, {
@@ -402,20 +423,9 @@
             return await req.json();
         } catch(e) {
             showModal("خطا", "خطا در اتصال به سرور.");
+            console.log(e);
             return {success: false};
         }
-    }
-
-    // Simple Hash Function for PoW (No External Libs)
-    function latency_calc(ts) {
-        var str = ts + INTERNAL_CLIENT_SALT;
-        var hash = 0;
-        for (var i = 0; i < str.length; i++) {
-            var char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return hash;
     }
 
     function login() {
@@ -566,9 +576,11 @@
             for (let date in grouped) {
                 let items = grouped[date];
                 
+                // --- ویرایش: مرتب سازی بر اساس شماره نوبت (ستون 3 در آرایه، چون از 0 شروع میشه) ---
                 items.sort(function(a, b) {
                     return parseInt(a[3]) - parseInt(b[3]);
                 });
+                // ---------------------------------------------------------------
 
                 let jalaliDate = toJalaliStr(date);
                 let dayInfo = getDayName(date);
@@ -661,6 +673,7 @@
                  h = "<tr><td colspan='3'>موردی یافت نشد</td></tr>";
             } else {
                 res.list.forEach(u => {
+                    // --- ویرایش: نمایش تاریخ شمسی مراجعه کننده ---
                     let jalaliReg = toJalaliStr(u[2]);
                     h += `<tr>
                         <td>${u[0]}</td>
