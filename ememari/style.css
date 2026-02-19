@@ -193,7 +193,7 @@ ul { list-style: none; }
     justify-content: center;
     text-align: center;
     /* تصویر جدید: ساختمان مدرن و سازه که موضوع سایت را منتقل میکند */
-    background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat;
+    background: url('https://amirdadgostar.github.io/site/ememari/Asli.jpg') center/cover no-repeat;
 }
 
 .hero::before {
