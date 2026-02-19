@@ -1,4 +1,4 @@
-// 1. Loader (1.5 Seconds Max - Fixed Logic)
+ // 1. Loader (1.5 Seconds Max - Fixed Logic)
 const loader = document.getElementById('loader');
 
 // تابع محو کردن لودر
