@@ -4,323 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>پنل مدیریت مدرن</title>
-    
-    <!-- اضافه کردن فونت مدرن و رسمی وزیرمتن -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    
-    <!-- اضافه کردن آیکون های حرفه ای Ionicons (الکترونی) -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
     <style>
         :root {
-            /* رنگ بندی بسیار رسمی، مدرن و سازمانی */
-            --primary: #1e3a8a; /* آبی نفتی تیره و رسمی */
-            --primary-dark: #172554;
-            --primary-light: #eff6ff;
-            --secondary: #475569;
-            --bg-body: #f8fafc;
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --bg-body: #f1f5f9;
             --bg-card: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --danger: #e11d48;
-            --danger-light: #ffe4e6;
-            --success: #059669;
-            --border-color: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
             --border-radius: 16px;
-            --border-radius-sm: 10px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
-            --shadow-hover: 0 10px 25px rgba(30, 58, 138, 0.08);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: 'Vazirmatn', 'Tahoma', sans-serif; /* تغییر به فونت بسیار حرفه ای */
-            background-color: var(--bg-body); 
-            margin: 0; 
-            padding: 0; 
-            color: var(--text-main); 
-            line-height: 1.7; 
-            font-size: 15px;
-        }
+        body { font-family: 'Tahoma', sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.6; }
 
         /* --- Layout & Typography --- */
-        .container { max-width: 1050px; margin: 30px auto; padding: 0 20px; }
-        h3 { font-weight: 800; margin-bottom: 20px; color: var(--text-main); font-size: 1.35rem; letter-spacing: -0.5px; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        h3 { font-weight: 700; margin-bottom: 20px; color: var(--text-main); font-size: 1.25rem; }
 
         /* --- Components --- */
-        .box { 
-            background: var(--bg-card); 
-            border-radius: var(--border-radius); 
-            box-shadow: var(--shadow); 
-            padding: 30px; 
-            transition: var(--transition); 
-            overflow: hidden; 
-            border: 1px solid rgba(0,0,0,0.02);
-        }
+        .box { background: var(--bg-card); border-radius: var(--border-radius); box-shadow: var(--shadow); padding: 25px; transition: var(--transition); overflow: hidden; }
         .hidden { display: none !important; }
 
         /* Inputs & Buttons */
-        input, button { 
-            width: 100%; 
-            padding: 15px 18px; 
-            border-radius: var(--border-radius-sm); 
-            border: 1.5px solid var(--border-color); 
-            font-family: inherit; 
-            font-size: 1rem; 
-            transition: var(--transition); 
-            background: #f8fafc;
-            color: var(--text-main);
-        }
-        input:focus { 
-            border-color: var(--primary); 
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1); 
-        }
+        input, button { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem; transition: var(--transition); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
+        button:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        button:active { transform: translateY(1px); }
+        button.danger { background: var(--danger); }
+        button.danger:hover { background: #dc2626; }
         
-        button { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            font-weight: 700; 
-            cursor: pointer; 
-            display: inline-flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 10px; 
-            font-size: 1.05rem;
-            letter-spacing: 0.2px;
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
-        }
-        button:hover { 
-            background: var(--primary-dark); 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 15px rgba(30, 58, 138, 0.3);
-        }
-        button:active { transform: translateY(0); }
-        
-        button.danger { background: var(--danger); box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2); }
-        button.danger:hover { background: #be123c; box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3); }
-        
-        /* Icon Buttons */
-        .icon-btn { 
-            background: var(--bg-body); 
-            color: var(--secondary); 
-            width: 48px; 
-            height: 48px; 
-            padding: 0; 
-            border-radius: 50%; 
-            font-size: 1.4rem; 
-            border: 1px solid var(--border-color);
-            box-shadow: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .icon-btn:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); transform: translateY(-2px); }
-        .icon-btn ion-icon { font-size: 22px; }
+        .icon-btn { background: #f1f5f9; color: var(--text-muted); width: 45px; height: 45px; padding: 0; border-radius: 50%; font-size: 1.2rem; }
+        .icon-btn:hover { background: #e2e8f0; color: var(--primary); }
 
         /* --- Login Page --- */
-        #loginPage { 
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); 
-            padding: 20px;
-        }
-        .login-card { width: 100%; max-width: 420px; padding: 45px 35px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
-        .login-header { text-align: center; margin-bottom: 35px; }
-        .login-header h3 { font-size: 1.6rem; margin: 0; color: var(--text-main); }
-        .login-header p { margin-top: 8px; }
+        #loginPage { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .login-card { width: 100%; max-width: 400px; padding: 40px; }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header h3 { font-size: 1.5rem; margin: 0; color: var(--primary); }
 
         /* --- Main Panel --- */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
-        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
         .header-bar h3 { margin: 0; }
 
         /* --- Tabs --- */
-        .tabs { 
-            display: flex; 
-            background: #f8fafc; 
-            padding: 6px; 
-            border-radius: var(--border-radius); 
-            margin-bottom: 30px; 
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-        .tab { 
-            flex: 1; 
-            text-align: center; 
-            padding: 14px 20px; 
-            cursor: pointer; 
-            border-radius: var(--border-radius-sm); 
-            color: var(--secondary); 
-            font-weight: 700; 
-            font-size: 0.95rem; 
-            white-space: nowrap; 
-            transition: var(--transition); 
-        }
-        .tab.active { 
-            background: var(--bg-card); 
-            color: var(--primary); 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
-        }
+        .tabs { display: flex; background: #f1f5f9; padding: 5px; border-radius: 14px; margin-bottom: 25px; overflow-x: auto; }
+        .tab { flex: 1; text-align: center; padding: 12px; cursor: pointer; border-radius: 10px; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; white-space: nowrap; transition: var(--transition); }
+        .tab.active { background: var(--bg-card); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         /* --- Settings Table (Responsive) --- */
-        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--border-radius); border: 1px solid var(--border-color); background: #fff; }
-        table { width: 100%; border-collapse: collapse; min-width: 650px; }
-        th, td { padding: 18px; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
-        th { background: #f8fafc; color: var(--text-main); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; }
-        tr:hover td { background-color: #fcfcfc; }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 15px; text-align: center; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+        th { background: #f8fafc; color: var(--secondary); font-weight: 600; }
         tr:last-child td { border-bottom: none; }
         
-        .is-friday { color: var(--danger); font-weight: bold; background-color: var(--danger-light); }
-        .is-friday:hover td { background-color: #fde8e8; }
-        .day-name { display: block; font-size: 0.85em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
-        
-        .table-input { 
-            border: 1px solid #cbd5e1; 
-            padding: 10px; 
-            border-radius: 8px; 
-            text-align: center; 
-            width: 100%; 
-            max-width: 110px; 
-            background: #fff;
-            margin: 0 auto;
-            display: block;
-        }
+        .is-friday { color: var(--danger); font-weight: bold; background-color: rgba(239, 68, 68, 0.05); }
+        .day-name { display: block; font-size: 0.8em; opacity: 0.8; margin-top: 4px; }
+        .table-input { border: 1px solid #cbd5e1; padding: 8px; border-radius: 8px; text-align: center; width: 100%; max-width: 100px; }
 
         /* --- Accordion (Appointments) --- */
-        .accordion-item { border: 1px solid var(--border-color); border-radius: var(--border-radius); margin-bottom: 12px; overflow: hidden; background: #fff; transition: var(--transition); }
-        .accordion-header { padding: 18px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; user-select: none; transition: var(--transition); }
-        .accordion-header:hover { background: var(--primary-light); }
-        .accordion-header.active { background: var(--primary); border-bottom: 1px solid var(--primary); }
-        .accordion-header.active .acc-date, .accordion-header.active .acc-date span { color: #fff !important; }
+        .accordion-item { border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: #fff; transition: var(--transition); }
+        .accordion-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; user-select: none; }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-header.active { background: #eff6ff; border-bottom: 1px solid #e2e8f0; }
+        .acc-date { font-weight: 700; color: var(--text-main); }
+        .acc-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: white; }
         
-        .acc-date { font-weight: 800; font-size: 1.05rem; color: var(--text-main); transition: var(--transition); }
-        .acc-badge { 
-            background: var(--bg-card); 
-            color: var(--primary); 
-            padding: 6px 14px; 
-            border-radius: 20px; 
-            font-size: 0.85rem; 
-            font-weight: 800; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: white; }
-        
-        .appt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 24px; }
-        .appt-card { 
-            border: 1px solid var(--border-color); 
-            border-radius: var(--border-radius-sm); 
-            padding: 18px; 
-            position: relative; 
-            transition: var(--transition); 
-            background: #fff;
-        }
-        .appt-card:hover { border-color: var(--primary); box-shadow: var(--shadow-hover); transform: translateY(-3px); }
-        .appt-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem; }
-        .appt-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
-        .appt-value { font-weight: 700; color: var(--text-main); }
-        .tel-link { color: var(--primary); text-decoration: none; font-weight: 800; direction: ltr; display: inline-block; padding: 4px 8px; background: var(--primary-light); border-radius: 6px; transition: var(--transition); }
-        .tel-link:hover { background: var(--primary); color: #fff; }
+        .appt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; }
+        .appt-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; position: relative; transition: var(--transition); }
+        .appt-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08); }
+        .appt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+        .appt-label { color: var(--text-muted); font-size: 0.85rem; }
+        .appt-value { font-weight: 600; color: var(--text-main); }
+        .tel-link { color: var(--primary); text-decoration: none; font-weight: 700; direction: ltr; display: inline-block; }
+        .tel-link:hover { text-decoration: underline; }
 
         /* --- Search Bar Styling --- */
-        .search-container { display: flex; gap: 10px; align-items: center; background: #fff; border: 1.5px solid var(--border-color); border-radius: var(--border-radius-sm); padding: 6px; flex-grow: 1; transition: var(--transition); }
-        .search-container:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1); }
-        .search-input { border: none !important; background: transparent; padding: 10px 15px; flex-grow: 1; outline: none; box-shadow: none !important; margin: 0; }
-        
-        .search-btn-icon { 
-            width: 44px; 
-            height: 44px; 
-            border-radius: 8px; 
-            padding: 0; 
-            background: var(--primary); 
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            cursor: pointer;
-            box-shadow: none;
-        }
-        .search-btn-icon ion-icon { font-size: 20px; }
-        .search-btn-icon:hover { background: var(--primary-dark); transform: none; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3); }
-        
-        .delete-btn-icon { 
-            width: 58px; 
-            height: 58px; 
-            border-radius: var(--border-radius-sm); 
-            background: var(--danger-light); 
-            color: var(--danger); 
-            border: 1px solid #fecaca; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            cursor: pointer; 
-            transition: var(--transition); 
-            box-shadow: none;
-        }
-        .delete-btn-icon ion-icon { font-size: 24px; }
-        .delete-btn-icon:hover { background: var(--danger); color: white; border-color: var(--danger); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(225, 29, 72, 0.2); }
+        .search-container { display: flex; gap: 8px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 4px; flex-grow: 1; }
+        .search-input { border: none !important; background: transparent; padding: 10px; flex-grow: 1; outline: none; }
+        .search-input:focus { box-shadow: none !important; }
+        .search-btn-icon { width: 40px; height: 40px; border-radius: 10px; padding: 0; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .search-btn-icon:hover { background: var(--primary-dark); }
+        .delete-btn-icon { width: 45px; height: 45px; border-radius: 12px; background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: var(--transition); font-size: 1.2rem; }
+        .delete-btn-icon:hover { background: var(--danger); color: white; }
 
-        /* --- Skeleton Loader (کاملا مدرن و حرفه ای) --- */
-        .skeleton-wrapper { padding: 30px; background: #fff; border-radius: var(--border-radius); border: 1px solid var(--border-color); }
-        .skeleton { 
-            background: #e2e8f0; 
-            height: 24px; 
-            border-radius: 8px; 
-            margin-bottom: 15px; 
-            position: relative; 
-            overflow: hidden; 
-        }
-        .skeleton::after { 
-            content: ''; 
-            position: absolute; 
-            top: 0; right: 0; bottom: 0; left: 0; 
-            transform: translateX(-100%); 
-            background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.5) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0)); 
-            animation: shimmer 1.5s infinite; 
-        }
+        /* --- Skeleton Loader --- */
+        .skeleton-wrapper { padding: 20px; }
+        .skeleton { background: #e2e8f0; height: 20px; border-radius: 6px; margin-bottom: 12px; position: relative; overflow: hidden; }
+        .skeleton::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0)); animation: shimmer 2s infinite; }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
 
         /* --- Pagination --- */
-        .pagination { display: flex; justify-content: center; gap: 20px; align-items: center; margin-top: 30px; }
-        .pagination button { width: auto; padding: 10px 24px; font-size: 0.95rem; border-radius: 30px; }
-        .page-info { font-weight: 800; color: var(--primary); font-size: 1.05rem; background: var(--primary-light); padding: 8px 16px; border-radius: 20px; }
+        .pagination { display: flex; justify-content: center; gap: 15px; align-items: center; margin-top: 25px; }
+        .pagination button { width: auto; padding: 8px 16px; font-size: 0.9rem; }
+        .page-info { font-weight: 600; color: var(--secondary); }
 
         /* --- Modern Modal --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-        .modal-box { background: white; width: 90%; max-width: 420px; padding: 35px 30px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: scale(0.95) translateY(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.9); transition: transform 0.3s ease; text-align: center; }
         .modal-overlay.show { opacity: 1; }
-        .modal-overlay.show .modal-box { transform: scale(1) translateY(0); }
-        .modal-title { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 15px; }
-        .modal-text { color: var(--secondary); margin-bottom: 30px; font-size: 1.05rem; line-height: 1.6; }
-        .modal-actions { display: flex; justify-content: center; gap: 12px; }
-        .modal-btn { padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; flex: 1; font-size: 1rem; box-shadow: none; transition: var(--transition); }
+        .modal-overlay.show .modal-box { transform: scale(1); }
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .modal-text { color: var(--text-muted); margin-bottom: 25px; font-size: 1rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 10px; }
+        .modal-btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; flex: 1; }
         .modal-btn.primary { background: var(--primary); color: white; }
-        .modal-btn.primary:hover { background: var(--primary-dark); }
-        .modal-btn.secondary { background: #f1f5f9; color: var(--text-main); }
-        .modal-btn.secondary:hover { background: #e2e8f0; }
+        .modal-btn.secondary { background: #e2e8f0; color: var(--text-main); }
         .modal-btn.danger { background: var(--danger); color: white; }
-        .modal-btn.danger:hover { background: #be123c; }
-        
-        /* Security Layer 1: Stealth Honeypot */
-        .form-ref-check { position: absolute; left: -9999px; opacity: 0; z-index: -1; }
 
         @media (max-width: 600px) {
-            .container { padding: 0 12px; margin-top: 15px; }
-            .box { padding: 20px; border-radius: 20px; }
-            .tabs { margin-bottom: 20px; padding: 4px; }
-            .tab { padding: 12px 8px; font-size: 0.85rem; }
-            .header-bar { flex-direction: column; gap: 15px; align-items: flex-start; }
-            .header-left { width: 100%; justify-content: space-between; }
-            .appt-grid { grid-template-columns: 1fr; padding: 15px; }
-            .delete-btn-icon { width: 50px; height: 50px; }
-            .search-container { padding: 4px; }
-            .login-card { padding: 30px 20px; }
+            .container { padding: 0 10px; margin-top: 10px; }
+            .box { padding: 15px; border-radius: 12px; }
+            .tabs { margin-bottom: 15px; }
+            .tab { padding: 10px 5px; font-size: 0.85rem; }
+            .appt-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -328,7 +134,7 @@
 
 <script>
     // *** لینک اسکریپت خود را اینجا بگذارید ***
-    const API_URL = "https://script.google.com/macros/s/AKfycbyTvD222XKt9Oh9CuQH7C8metSOd5vF3odi1iBCdKDSfmUKMd-d1JQK1NLMzpNST3T0Dg/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbxNrtrVVojGnEZo6dYCoKi2WXDGm9rWz2IBMYgw0mGHNj4snzOj59-z0dDC2y46Aw3d_A/exec"; 
 </script>
 
 <!-- Custom Modal Structure -->
@@ -345,19 +151,20 @@
     <div class="box login-card">
         <div class="login-header">
             <h3>ورود مدیر سیستم</h3>
-            <p style="color:var(--text-muted); font-size:0.95rem;">لطفا اطلاعات ورود را وارد کنید</p>
+            <p style="color:var(--text-muted); font-size:0.9rem;">لطفا اطلاعات ورود را وارد کنید</p>
         </div>
-        <!-- Defense Layer 1: Honeypot -->
-        <input type="text" id="form_ref_id" name="form_ref_id" class="form-ref-check" tabindex="-1" autocomplete="off">
         
-        <div style="margin-bottom:18px;">
+        <!-- Defense Layer 1: Honeypot (Logic Trap) -->
+        <input type="text" id="frm_ref_id" autocomplete="off" style="position:absolute; left:-9999px; opacity:0; z-index:-1;" tabindex="-1">
+        
+        <div style="margin-bottom:15px;">
             <input type="text" id="u" placeholder="نام کاربری">
         </div>
-        <div style="margin-bottom:25px;">
+        <div style="margin-bottom:20px;">
             <input type="password" id="p" placeholder="رمز عبور">
         </div>
         <button onclick="login()">ورود به پنل</button>
-        <p id="msg" style="color:var(--danger); text-align:center; margin-top:20px; font-size:0.95rem; font-weight:600; min-height:20px;"></p>
+        <p id="msg" style="color:var(--danger); text-align:center; margin-top:15px; font-size:0.9rem; min-height:20px;"></p>
     </div>
 </div>
 
@@ -367,13 +174,10 @@
         <div class="header-bar">
             <h3>پنل مدیریت نوبت‌دهی</h3>
             <div class="header-left">
-                <!-- استفاده از آیکون مدرن الکترونی (Ionicons) -->
                 <button class="icon-btn" onclick="showTab('pass')" title="تغییر رمز عبور">
-                    <ion-icon name="key-outline"></ion-icon>
+                    &#128273; 
                 </button>
-                <button class="danger" onclick="confirmLogout()" style="width:auto; padding:10px 20px; font-size:0.95rem; border-radius:10px;">
-                    <ion-icon name="log-out-outline" style="font-size:18px;"></ion-icon> خروج
-                </button>
+                <button class="danger" onclick="confirmLogout()" style="width:auto; padding:8px 16px; font-size:0.9rem;">خروج</button>
             </div>
         </div>
 
@@ -386,10 +190,9 @@
         <!-- تب تنظیمات -->
         <div id="settings" class="content">
             <div id="settings-loader" class="hidden skeleton-wrapper">
-                <div class="skeleton" style="height:50px; width:100%;"></div>
-                <div class="skeleton" style="height:50px; width:100%;"></div>
-                <div class="skeleton" style="height:50px; width:100%;"></div>
-                <div class="skeleton" style="height:50px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
             </div>
             
             <div id="settings-content">
@@ -407,7 +210,7 @@
                         <tbody id="tblSettings"></tbody>
                     </table>
                 </div>
-                <div style="margin-top:25px;">
+                <div style="margin-top:20px;">
                     <button onclick="saveSettings()">ذخیره تمام تغییرات</button>
                 </div>
             </div>
@@ -415,25 +218,22 @@
 
         <!-- تب لیست نوبت ها -->
         <div id="list" class="content hidden">
-            <div style="display:flex; justify-content:space-between; align-items: center; gap:15px; margin-bottom:25px;">
-                <!-- جستجوی مدرن با آیکون الکترونی -->
+            <div style="display:flex; justify-content:space-between; align-items: center; gap:10px; margin-bottom:20px;">
+                <!-- جستجوی مدرن با آیکون -->
                 <div class="search-container">
                     <input type="text" id="search" class="search-input" placeholder="جستجوی نام بیمار...">
-                    <button onclick="loadList(1)" class="search-btn-icon">
-                        <ion-icon name="search-outline"></ion-icon>
-                    </button>
+                    <button onclick="loadList(1)" class="search-btn-icon">&#128269;</button>
                 </div>
                 
-                <!-- دکمه حذف سوابق قدیمی (آیکون سطل زباله الکترونی) -->
+                <!-- دکمه حذف سوابق قدیمی (آیکون سطل زباله) -->
                 <button class="delete-btn-icon" onclick="deletePastApps()" title="حذف نوبت‌های گذشته">
-                    <ion-icon name="trash-outline"></ion-icon>
+                    &#128465;
                 </button>
             </div>
 
             <div id="list-loader" class="hidden skeleton-wrapper">
-                <div class="skeleton" style="height:70px; border-radius:16px;"></div>
-                <div class="skeleton" style="height:70px; border-radius:16px;"></div>
-                <div class="skeleton" style="height:70px; border-radius:16px;"></div>
+                <div class="skeleton" style="height:60px; border-radius:12px;"></div>
+                <div class="skeleton" style="height:60px; border-radius:12px;"></div>
             </div>
 
             <div id="accordionContainer"></div>
@@ -447,17 +247,15 @@
 
         <!-- تب لیست مراجعین -->
         <div id="users" class="content hidden">
-            <div class="search-container" style="margin-bottom:25px;">
+            <div class="search-container" style="margin-bottom:20px;">
                 <input type="text" id="searchUser" class="search-input" placeholder="جستجوی نام یا موبایل...">
-                <button onclick="loadUsers(1)" class="search-btn-icon">
-                    <ion-icon name="search-outline"></ion-icon>
-                </button>
+                <button onclick="loadUsers(1)" class="search-btn-icon">&#128269;</button>
             </div>
 
             <div id="users-loader" class="hidden skeleton-wrapper">
-                <div class="skeleton" style="height:50px; width:100%;"></div>
-                <div class="skeleton" style="height:50px; width:100%;"></div>
-                <div class="skeleton" style="height:50px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
+                <div class="skeleton" style="height:40px; width:100%;"></div>
             </div>
 
             <div class="table-wrapper">
@@ -482,10 +280,10 @@
 
         <!-- تب تغییر رمز -->
         <div id="pass" class="content hidden">
-            <div style="max-width:420px; margin:0 auto; padding:30px 0;">
-                <h4 style="text-align:center; margin-bottom:25px; font-size:1.2rem; font-weight:800;">تغییر رمز عبور مدیر</h4>
-                <input type="password" id="oldP" placeholder="رمز فعلی" style="margin-bottom:18px;">
-                <input type="password" id="newP" placeholder="رمز جدید" style="margin-bottom:25px;">
+            <div style="max-width:400px; margin:0 auto; padding:20px 0;">
+                <h4 style="text-align:center; margin-bottom:20px;">تغییر رمز عبور مدیر</h4>
+                <input type="password" id="oldP" placeholder="رمز فعلی" style="margin-bottom:15px;">
+                <input type="password" id="newP" placeholder="رمز جدید" style="margin-bottom:20px;">
                 <button onclick="changePass()">تغییر رمز</button>
             </div>
         </div>
@@ -496,7 +294,8 @@
     let token = localStorage.getItem("admToken");
     let page = 1;
     let userPage = 1;
-    const DAY_NAMES =;
+    const DAY_NAMES = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
+    const INTERNAL_CLIENT_SALT = "D3f3ns3_S4lt_v1";
 
     // --- Modal Functions ---
     const modal = document.getElementById('customModal');
@@ -508,7 +307,6 @@
         actions.innerHTML = `<button class="modal-btn primary" onclick="closeModal()">تائید</button>`;
         
         modal.style.display = 'flex';
-        // Small delay for animation
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
@@ -547,9 +345,9 @@
     // --- توابع کمکی تاریخ ---
     function gregorianToJalali(gy, gm, gd) {
         var g_d_m, jy, jm, jd, gy2, days;
-        g_d_m =;
+        g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
         gy2 = (gm > 2) ? (gy + 1) : gy;
-        days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m;
+        days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
         jy = -1595 + (33 * ~~(days / 12053));
         days %= 12053;
         jy += 4 * ~~(days / 1461);
@@ -561,38 +359,20 @@
 
     function getDayName(dateStr) {
         const d = new Date(dateStr);
-        return { index: d.getDay(), name: DAY_NAMES };
+        return { index: d.getDay(), name: DAY_NAMES[d.getDay()] };
     }
 
     function toJalaliStr(dateStr) {
         if(!dateStr) return "";
         let dStr = String(dateStr);
-        if(dStr.includes('T')) dStr = dStr.split('T');
-        else if(dStr.includes(' ')) dStr = dStr.split(' ');
+        if(dStr.includes('T')) dStr = dStr.split('T')[0];
+        else if(dStr.includes(' ')) dStr = dStr.split(' ')[0];
         
         let parts = dStr.split('-');
         if(parts.length < 3) return dStr;
-        return gregorianToJalali(parseInt(parts), parseInt(parts), parseInt(parts));
+        return gregorianToJalali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
     }
     // -------------------------
-
-    // --- SECURITY PROTOCOLS CLIENT-SIDE ---
-    
-    // Defense Layer 2: Proof of Work (PoW) Generator
-    function _sys_gen_meta_data() {
-        var ts = Math.floor(Date.now() / 1000).toString();
-        var salt = "X9_SECURE_SALT_LAYER_V1";
-        var str = ts + salt;
-        
-        // Native JS Hash implementation (Must match Server)
-        var h = 5381;
-        for (var i = 0; i < str.length; i++) {
-            h = (Math.imul(33, h) + str.charCodeAt(i)) | 0;
-        }
-        var hash = (h >>> 0).toString(16);
-        
-        return { t: ts, h: hash };
-    }
 
     if(token) {
         document.getElementById("loginPage").classList.add("hidden");
@@ -600,19 +380,18 @@
         loadSettings();
     }
 
+    // --- SECURITY LAYER: Secure API Call ---
     async function api(payload) {
-        // SECURITY INJECTION
-        // 1. Inject Session Token
         payload.token = token;
         
-        // 2. Inject Honeypot Value (Must be empty)
-        var hp = document.getElementById("form_ref_id");
-        payload.form_ref_id = hp ? hp.value : "";
-        
-        // 3. Inject PoW
-        var meta = _sys_gen_meta_data();
-        payload.sys_meta_t = meta.t;
-        payload.sys_meta_h = meta.h;
+        // 1. Honeypot Injection
+        var trap = document.getElementById('frm_ref_id');
+        payload.frm_ref_id = trap ? trap.value : "";
+
+        // 2. PoW Calculation (Client-Side)
+        var ts = new Date().getTime();
+        payload.meta_ts = ts;
+        payload.meta_hash = latency_calc(ts);
 
         try {
             let req = await fetch(API_URL, {
@@ -623,9 +402,20 @@
             return await req.json();
         } catch(e) {
             showModal("خطا", "خطا در اتصال به سرور.");
-            console.log(e);
             return {success: false};
         }
+    }
+
+    // Simple Hash Function for PoW (No External Libs)
+    function latency_calc(ts) {
+        var str = ts + INTERNAL_CLIENT_SALT;
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            var char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
     }
 
     function login() {
@@ -634,7 +424,7 @@
         let btn = document.querySelector("#loginPage button");
         let msg = document.getElementById("msg");
         
-        btn.innerHTML = "<ion-icon name='sync-outline' style='animation: spin 1s linear infinite;'></ion-icon> در حال بررسی...";
+        btn.textContent = "در حال بررسی...";
         btn.disabled = true;
         msg.textContent = "";
 
@@ -668,9 +458,9 @@
         
         if(id !== 'pass') {
              let tabBtns = document.querySelectorAll(".tab");
-             if(id === 'settings') tabBtns.classList.add("active");
-             if(id === 'list') tabBtns.classList.add("active");
-             if(id === 'users') tabBtns.classList.add("active");
+             if(id === 'settings') tabBtns[0].classList.add("active");
+             if(id === 'list') tabBtns[1].classList.add("active");
+             if(id === 'users') tabBtns[2].classList.add("active");
         }
 
         if(id === 'list') loadList(1);
@@ -693,7 +483,7 @@
                         ${jalaliDate}
                         <span class="day-name">${dayInfo.name}</span>
                     </td>
-                    <td style="font-weight:800; color:var(--primary); font-size:1.1rem;">${d.booked}</td>
+                    <td style="font-weight:bold; color:var(--primary);">${d.booked}</td>
                     <td><input value="${d.capacity}" class="table-input cap"></td>
                     <td><input type="time" value="${d.start}" class="table-input start"></td>
                     <td><input type="time" value="${d.end}" class="table-input end"></td>
@@ -708,15 +498,15 @@
 
     function saveSettings() {
         let btn = document.querySelector("#settings button");
-        btn.innerHTML = "<ion-icon name='sync-outline' style='animation: spin 1s linear infinite;'></ion-icon> در حال ذخیره...";
+        btn.textContent = "در حال ذخیره...";
         btn.disabled = true;
 
         let rows = document.querySelectorAll("#tblSettings tr");
-        let data =[];
+        let data = [];
         let hasError = false;
 
         rows.forEach(row => {
-            let gDate = row.cells.getAttribute("data-gdate");
+            let gDate = row.cells[0].getAttribute("data-gdate");
             let cap = row.querySelector(".cap").value;
             let start = row.querySelector(".start").value;
             let end = row.querySelector(".end").value;
@@ -762,25 +552,23 @@
             let container = document.getElementById("accordionContainer");
             
             if(res.list.length === 0) {
-                container.innerHTML = "<div style='text-align:center; padding:40px; color:var(--text-muted); font-weight:600; font-size:1.1rem;'>موردی یافت نشد</div>";
+                container.innerHTML = "<div style='text-align:center; padding:30px; color:var(--text-muted);'>موردی یافت نشد</div>";
                 return;
             }
 
             let grouped = {};
             res.list.forEach(item => {
-                let dateKey = item;
-                if(!grouped) grouped = [];
-                grouped.push(item);
+                let dateKey = item[0];
+                if(!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(item);
             });
 
             for (let date in grouped) {
-                let items = grouped;
+                let items = grouped[date];
                 
-                // --- ویرایش: مرتب سازی بر اساس شماره نوبت (ستون 3 در آرایه، چون از 0 شروع میشه) ---
                 items.sort(function(a, b) {
-                    return parseInt(a) - parseInt(b);
+                    return parseInt(a[3]) - parseInt(b[3]);
                 });
-                // ---------------------------------------------------------------
 
                 let jalaliDate = toJalaliStr(date);
                 let dayInfo = getDayName(date);
@@ -789,8 +577,8 @@
                 let header = document.createElement("div");
                 header.className = "accordion-header";
                 header.innerHTML = `
-                    <div class="acc-date">${jalaliDate} <span style="font-size:0.85em; font-weight:500; opacity:0.8;">(${dayInfo.name})</span></div>
-                    <div class="acc-badge">${count} رزرو ثبت شده</div>
+                    <div class="acc-date">${jalaliDate} <span style="font-size:0.8em; font-weight:400; color:var(--text-muted);">(${dayInfo.name})</span></div>
+                    <div class="acc-badge">${count} رزرو</div>
                 `;
 
                 let content = document.createElement("div");
@@ -802,19 +590,19 @@
                         <div class="appt-card">
                             <div class="appt-row">
                                 <span class="appt-label">نام بیمار</span>
-                                <span class="appt-value">${r}</span>
+                                <span class="appt-value">${r[1]}</span>
                             </div>
                             <div class="appt-row">
                                 <span class="appt-label">شماره تماس</span>
-                                <span class="appt-value"><a href="tel:${r}" class="tel-link" dir="ltr">${r}</a></span>
+                                <span class="appt-value"><a href="tel:${r[2]}" class="tel-link">${r[2]}</a></span>
                             </div>
                              <div class="appt-row">
                                 <span class="appt-label">شماره نوبت</span>
-                                <span class="appt-value" style="color:var(--primary); font-size:1.2em; font-weight:900;">${r}</span>
+                                <span class="appt-value" style="color:var(--primary); font-size:1.1em;">${r[3]}</span>
                             </div>
-                             <div class="appt-row" style="margin-bottom:0; border-top:1px dashed var(--border-color); padding-top:12px; margin-top:12px;">
+                             <div class="appt-row" style="margin-bottom:0; border-top:1px dashed #e2e8f0; padding-top:8px; margin-top:8px;">
                                 <span class="appt-label">ساعت حضور</span>
-                                <span class="appt-value" style="font-size:1.05rem;">${r}</span>
+                                <span class="appt-value">${r[4]}</span>
                             </div>
                         </div>
                     `;
@@ -870,14 +658,13 @@
             document.getElementById("users-loader").classList.add("hidden");
             let h = "";
             if(res.list.length === 0) {
-                 h = "<tr><td colspan='3' style='padding:30px; color:var(--text-muted); font-weight:600;'>موردی یافت نشد</td></tr>";
+                 h = "<tr><td colspan='3'>موردی یافت نشد</td></tr>";
             } else {
                 res.list.forEach(u => {
-                    // --- ویرایش: نمایش تاریخ شمسی مراجعه کننده ---
-                    let jalaliReg = toJalaliStr(u);
+                    let jalaliReg = toJalaliStr(u[2]);
                     h += `<tr>
-                        <td style="font-weight:700;">${u}</td>
-                        <td><a href="tel:${u}" class="tel-link" dir="ltr">${u}</a></td>
+                        <td>${u[0]}</td>
+                        <td><a href="tel:${u[1]}" class="tel-link">${u[1]}</a></td>
                         <td>${jalaliReg}</td>
                     </tr>`;
                 });
@@ -889,6 +676,7 @@
     function nextUserPage() { loadUsers(userPage + 1); }
     function prevUserPage() { if(userPage > 1) loadUsers(userPage - 1); }
 
+
     // --- تغییر رمز ---
     function changePass() {
         let o = document.getElementById("oldP").value;
@@ -896,7 +684,7 @@
         let btn = document.querySelector("#pass button");
         
         btn.disabled = true;
-        btn.innerHTML = "<ion-icon name='sync-outline' style='animation: spin 1s linear infinite;'></ion-icon> در حال انجام...";
+        btn.textContent = "در حال انجام...";
 
         api({action: "changePassword", oldPass: o, newPass: n}).then(res => {
             showModal("پیام سیستم", res.message);
@@ -909,11 +697,6 @@
         });
     }
 </script>
-
-<style>
-/* اضافه کردن انیمیشن چرخش برای دکمه ها در زمان لودینگ */
-@keyframes spin { 100% { transform: rotate(360deg); } }
-</style>
 
 </body>
 </html>
