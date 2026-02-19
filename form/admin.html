@@ -597,7 +597,26 @@
                 </div>`;
     }
     
-    function addOpt(id) { document.querySelector(`#opt-wrap-${id} button`).insertAdjacentHTML('beforebegin', createOpt('')); }
+    // ====================================================
+    // ویرایش کلیدی در اینجا اعمال شد
+    // ====================================================
+    function addOpt(id) { 
+        // 1. به جای هر دکمه‌ای، دقیقاً دکمه "افزودن گزینه" با کلاس btn-add-opt را پیدا می‌کنیم.
+        const addButton = document.querySelector(`#opt-wrap-${id} .btn-add-opt`);
+        
+        // 2. اگر دکمه با موفقیت پیدا شد، گزینه جدید را "قبل از آن" اضافه می‌کنیم.
+        if (addButton) {
+            addButton.insertAdjacentHTML('beforebegin', createOpt(''));
+        } else {
+            // این بخش برای جلوگیری از خطا در موارد نادر است
+            console.error("Could not find the 'Add Option' button for container: " + id);
+            // به عنوان یک راه حل جایگزین، به انتهای کانتینر اضافه می‌کنیم
+            const container = document.getElementById(`opt-wrap-${id}`);
+            if (container) {
+                container.insertAdjacentHTML('beforeend', createOpt(''));
+            }
+        }
+    }
     
     function removeField(id) { 
         showConfirm("آیا این فیلد از فرم حذف شود؟", function(){
