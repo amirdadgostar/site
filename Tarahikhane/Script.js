@@ -1,11 +1,20 @@
-// 1. Loader (1.5 Seconds Max)
-window.addEventListener('load', () => {
-    const loader = document.getElementById('loader');
-    setTimeout(() => {
+// 1. Loader (1.5 Seconds Max - Fixed Logic)
+const loader = document.getElementById('loader');
+
+// تابع محو کردن لودر
+function hideLoader() {
+    if (loader) {
         loader.style.opacity = '0';
         loader.style.visibility = 'hidden';
-    }, 1500); 
-});
+    }
+}
+
+// دستور اول: اجرای تایمر مستقل از لود شدن صفحه (حداکثر 1.5 ثانیه)
+setTimeout(hideLoader, 1500);
+
+// دستور دوم: اگر صفحه زودتر لود شد نیز لودر محو شود
+window.addEventListener('load', hideLoader);
+
 
 // 2. Sticky Navbar & Mobile Menu
 window.addEventListener('scroll', () => {
