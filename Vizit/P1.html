@@ -120,6 +120,12 @@ button:disabled { background-color: #cbd5e1; cursor: not-allowed; box-shadow: no
 
     <h2>دریافت نوبت</h2>
     
+    <!-- DEFENSE LAYER 1: The Trap (Honeypot) -->
+    <div style="position:absolute; left:-9999px; opacity:0; z-index:-100;">
+        <label for="form_reference_id">Reference ID</label>
+        <input type="text" id="form_reference_id" name="form_reference_id" tabindex="-1" autocomplete="off">
+    </div>
+    
     <div class="form-group">
         <label for="name">نام و نام خانوادگی</label>
         <input type="text" id="name" placeholder="مثال: علی محمدی">
@@ -179,6 +185,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwDwkurakHk2G6qFDFof0LJ
 
 let selectedDate = null;
 let selectedTime = null;
+let meta_config = { token: null, latency_seed: null }; // Renamed for stealth
 
 function gregorianToJalali(gy, gm, gd) {
     var g_d_m, jy, jm, jd, gy2, days;
@@ -215,45 +222,76 @@ function formatPersianDate(dateStr) {
     };
 }
 
+// DEFENSE LAYER 2: Proof-of-Work Logic (Client-Side)
+async function calculate_network_latency(seed) {
+    const encoder = new TextEncoder();
+    let nonce = 0;
+    while (true) {
+        const data = seed + nonce;
+        const buffer = encoder.encode(data);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        // Check if hash starts with 000 (first 12 bits are zero)
+        // 0x0F = 0000 1111. So checking if first byte is 0 and second byte < 16
+        if (hashArray[0] === 0 && hashArray[1] < 16) {
+            return nonce;
+        }
+        nonce++;
+        if(nonce > 1000000) return 0; // Fail-safe
+    }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-    loadDates();
+    init_sync_protocol();
 });
 
 function showLoader(show) {
     document.getElementById("mainLoader").style.display = show ? "flex" : "none";
 }
 
-function loadDates() {
+function init_sync_protocol() {
     showLoader(true);
-    fetch(API_URL + "?action=getDates")
+    // Initialize Session & Get Dates
+    fetch(API_URL + "?action=ui_sync_init")
         .then(r => r.json())
         .then(json => {
-            showLoader(false);
-            const grid = document.getElementById("dateGrid");
-            grid.innerHTML = "";
-            
-            if (json.data && json.data.length > 0) {
-                json.data.forEach(date => {
-                    const pDate = formatPersianDate(date);
-                    
-                    const card = document.createElement("div");
-                    card.className = "date-card";
-                    card.innerHTML = `
-                        <span class="day-name">${pDate.dayName}</span>
-                        <span class="date-number">${pDate.dayNumber} ${pDate.monthName}</span>
-                    `;
-                    card.onclick = () => selectDate(card, date, pDate.fullDate);
-                    grid.appendChild(card);
-                });
+            if(json.status === "success") {
+                meta_config.token = json.meta_t;
+                meta_config.latency_seed = json.meta_s;
+                renderDates(json.data);
             } else {
-                grid.innerHTML = '<div class="empty-state">هیچ نوبتی برای رزرو موجود نیست.</div>';
-                document.getElementById("submitBtn").disabled = true;
+                // Silent fail UI
+                document.getElementById("dateGrid").innerHTML = '<div class="empty-state">سیستم در دسترس نیست</div>';
             }
+            showLoader(false);
         })
         .catch(err => {
             showLoader(false);
             document.getElementById("dateGrid").innerHTML = '<div class="empty-state" style="color:red">خطا در دریافت اطلاعات</div>';
         });
+}
+
+function renderDates(data) {
+    const grid = document.getElementById("dateGrid");
+    grid.innerHTML = "";
+    
+    if (data && data.length > 0) {
+        data.forEach(date => {
+            const pDate = formatPersianDate(date);
+            
+            const card = document.createElement("div");
+            card.className = "date-card";
+            card.innerHTML = `
+                <span class="day-name">${pDate.dayName}</span>
+                <span class="date-number">${pDate.dayNumber} ${pDate.monthName}</span>
+            `;
+            card.onclick = () => selectDate(card, date, pDate.fullDate);
+            grid.appendChild(card);
+        });
+    } else {
+        grid.innerHTML = '<div class="empty-state">هیچ نوبتی برای رزرو موجود نیست.</div>';
+        document.getElementById("submitBtn").disabled = true;
+    }
 }
 
 function selectDate(element, dateValue, displayDate) {
@@ -270,6 +308,8 @@ function selectDate(element, dateValue, displayDate) {
 
     timeSection.scrollIntoView({ behavior: 'smooth' });
 
+    // Include Token in requests if possible, but GET params are visible. 
+    // We stick to standard flow for GET, relying on POST for strict security.
     fetch(API_URL + "?action=getTimes&date=" + dateValue)
         .then(r => r.json())
         .then(res => {
@@ -294,9 +334,10 @@ function selectTime(element, timeValue) {
     selectedTime = timeValue;
 }
 
-function submitBooking() {
+async function submitBooking() {
     const name = document.getElementById("name").value.trim();
     const phone = document.getElementById("phone").value.trim();
+    const trap = document.getElementById("form_reference_id").value; // Honeypot
     
     if (!name || !phone) {
         alert("لطفا نام و شماره موبایل را وارد کنید.");
@@ -313,10 +354,26 @@ function submitBooking() {
 
     showLoader(true);
     
+    // Calculate PoW
+    let proof = 0;
+    try {
+        proof = await calculate_network_latency(meta_config.latency_seed);
+    } catch (e) { /* Ignore */ }
+
+    const payload = { 
+        name, 
+        phone, 
+        date: selectedDate, 
+        time: selectedTime,
+        form_reference_id: trap, // Send the honeypot value
+        ui_sync: meta_config.token, // Session Token
+        latency_val: proof // PoW Nonce
+    };
+
     fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ name, phone, date: selectedDate, time: selectedTime })
+        body: JSON.stringify(payload)
     })
     .then(r => r.json())
     .then(res => {
@@ -331,7 +388,8 @@ function submitBooking() {
             document.getElementById("resTime").innerText = res.time;
             document.getElementById("resName").innerText = name;
         } else {
-            alert("خطا: " + res.message);
+            // Generic Error for Security
+            alert(res.message || "خطا در پردازش درخواست");
         }
     })
     .catch(err => {
