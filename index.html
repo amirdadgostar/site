@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,150 +21,154 @@
 
     <style>
         body {
-            background-color: #f8fafc; /* Slate-50 - کاملا روشن */
-            color: #1e293b; /* Slate-800 - رسمی */
+            background-color: #f8fafc;
+            color: #0f172a;
             font-family: 'Outfit', sans-serif;
-            overflow: hidden; /* جلوگیری از اسکرول اضافه */
+            overflow: hidden;
+            margin: 0;
         }
 
-        /* الگوی نقطه‌ای پس‌زمینه دقیقا مثل سایت اصلی */
-        .dot-pattern {
-            background-image: radial-gradient(rgba(148, 163, 184, 0.15) 1.5px, transparent 1.5px);
-            background-size: 28px 28px;
+        /* الگوی پس‌زمینه بسیار محو و روشن */
+        .bg-pattern {
             position: absolute;
             inset: 0;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 32px 32px;
+            opacity: 0.4;
             z-index: -1;
         }
 
-        /* افکت گرادینت بسیار محو و روشن در پس‌زمینه */
-        .bg-glow {
+        /* افکت نورانی وسط صفحه */
+        .glow-effect {
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0) 0%, rgba(248,250,252,1) 70%);
             z-index: -1;
         }
 
-        /* استایل کارت‌های انتخاب زبان */
-        .lang-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #e2e8f0; /* Slate-200 */
+        /* استایل دکمه‌های انتخاب زبان */
+        .lang-btn {
+            position: relative;
+            background: white;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
-        .lang-card:hover {
-            transform: translateY(-5px);
-            border-color: #3b82f6; /* Blue-500 */
-            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.15);
+        .lang-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
         }
 
-        /* لودر خطی بالای صفحه */
-        .loader-line {
+        /* لودر بالای صفحه */
+        #loader-bar {
+            position: fixed;
+            top: 0; left: 0;
             height: 3px;
             width: 0%;
-            background-color: #2563eb;
-            position: fixed;
-            top: 0;
-            left: 0;
-            transition: width 0.4s ease-out;
-            z-index: 50;
+            background: linear-gradient(90deg, #2563eb, #10b981);
+            z-index: 100;
+            transition: width 0.5s ease;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-center items-center px-4 relative">
+<body class="flex flex-col min-h-screen items-center justify-center p-6">
 
     <!-- Background Elements -->
-    <div class="dot-pattern"></div>
-    <div class="bg-glow"></div>
-    <div id="loader" class="loader-line"></div>
+    <div class="bg-pattern"></div>
+    <div class="glow-effect"></div>
+    <div id="loader-bar"></div>
 
-    <!-- Main Content Area -->
-    <div class="w-full max-w-4xl mx-auto text-center opacity-0 translate-y-4 transition-all duration-700 ease-out" id="content-wrapper">
+    <!-- Main Content Container -->
+    <div class="w-full max-w-2xl relative z-10 text-center opacity-0 translate-y-5 transition-all duration-700 ease-out" id="main-container">
         
-        <!-- Logo Section -->
-        <div class="mb-12 flex justify-center flex-col items-center">
-            <img src="https://amirdadgostar.github.io/site/en/%20Logo.png" alt="IrToWeb Logo" class="w-20 h-20 object-contain mb-4 drop-shadow-sm">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">IrTo<span class="text-blue-600">Web</span></h1>
-            <p class="text-slate-500 mt-2 text-sm font-medium uppercase tracking-widest">Global Web Solutions</p>
+        <!-- Logo & Welcome -->
+        <div class="mb-12 flex flex-col items-center">
+            <div class="w-24 h-24 bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 flex items-center justify-center mb-6 p-4 border border-slate-50">
+                <img src="https://amirdadgostar.github.io/site/en/%20Logo.png" alt="IrToWeb" class="w-full h-full object-contain">
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
+                Welcome <span class="text-slate-300 font-light px-2">|</span> <span style="font-family: 'Vazirmatn';">خوش‌آمدید</span>
+            </h1>
+            <p class="text-slate-500 font-medium text-sm md:text-base tracking-wide uppercase">
+                Select Your Language / انتخاب زبان
+            </p>
         </div>
 
-        <!-- Language Selection Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full max-w-2xl mx-auto">
+        <!-- Language Selectors -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
             
-            <!-- English Card -->
-            <a href="./en/index.html" class="lang-card bg-white p-8 rounded-3xl flex flex-col items-center text-center group cursor-pointer relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                <div class="relative z-10">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold mb-6 group-hover:scale-110 transition-transform duration-300">
+            <!-- English Button -->
+            <a href="./en/index.html" class="lang-btn group rounded-2xl p-6 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                         EN
                     </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">English</h2>
-                    <p class="text-slate-500 text-sm font-medium">International Version</p>
-                    
-                    <div class="mt-6 flex items-center justify-center gap-2 text-blue-600 text-sm font-bold opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                        Enter Site <i class="fa-solid fa-arrow-right"></i>
+                    <div class="text-left">
+                        <div class="font-bold text-xl text-slate-800">English</div>
+                        <div class="text-xs text-slate-400 font-medium tracking-wider mt-0.5 group-hover:text-blue-500 transition-colors">ENTER SITE</div>
                     </div>
                 </div>
+                <i class="fa-solid fa-arrow-right text-slate-300 text-xl group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300"></i>
             </a>
 
-            <!-- Persian Card -->
-            <a href="./fa/index.html" class="lang-card bg-white p-8 rounded-3xl flex flex-col items-center text-center group cursor-pointer relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-bl from-emerald-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                <div class="relative z-10">
-                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl font-bold mb-6 group-hover:scale-110 transition-transform duration-300" style="font-family: 'Vazirmatn';">
+            <!-- Persian Button -->
+            <a href="./fa/index.html" class="lang-btn group rounded-2xl p-6 flex flex-row-reverse items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-4 flex-row-reverse">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300" style="font-family: 'Vazirmatn';">
                         فا
                     </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-emerald-600 transition-colors" style="font-family: 'Vazirmatn';">فارسی</h2>
-                    <p class="text-slate-500 text-sm font-medium" style="font-family: 'Vazirmatn';">نسخه ایران (تومان)</p>
-                    
-                    <div class="mt-6 flex items-center justify-center gap-2 text-emerald-600 text-sm font-bold opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" style="font-family: 'Vazirmatn';">
-                        <i class="fa-solid fa-arrow-right"></i> ورود به سایت
+                    <div class="text-right">
+                        <div class="font-bold text-xl text-slate-800" style="font-family: 'Vazirmatn';">فارسی</div>
+                        <div class="text-xs text-slate-400 font-medium tracking-wider mt-0.5 group-hover:text-emerald-500 transition-colors" style="font-family: 'Vazirmatn';">ورود به سایت</div>
                     </div>
                 </div>
+                <i class="fa-solid fa-arrow-left text-slate-300 text-xl group-hover:text-emerald-600 group-hover:-translate-x-1 transition-all duration-300"></i>
             </a>
 
         </div>
 
     </div>
 
-    <!-- Minimal Footer -->
-    <footer class="absolute bottom-6 text-center w-full text-slate-400 text-xs font-medium opacity-60">
-        © IrToWeb Agency
+    <!-- Simple Footer -->
+    <footer class="fixed bottom-6 text-slate-300 text-[10px] font-bold tracking-[0.2em] uppercase select-none">
+        IrToWeb Agency
     </footer>
 
     <script>
-        // Page Load Animation
+        // Entrance Logic
         window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
-            const content = document.getElementById('content-wrapper');
+            const loader = document.getElementById('loader-bar');
+            const container = document.getElementById('main-container');
             
-            // Simulate instant fast load
             loader.style.width = '100%';
             
             setTimeout(() => {
                 loader.style.opacity = '0';
-                content.classList.remove('opacity-0', 'translate-y-4');
-            }, 400);
+                container.classList.remove('opacity-0', 'translate-y-5');
+            }, 300);
         });
 
-        // Click Handling (Smooth Exit)
+        // Exit Logic
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault(); // Stop immediate jump
+                e.preventDefault();
                 const target = this.getAttribute('href');
-                const content = document.getElementById('content-wrapper');
+                const container = document.getElementById('main-container');
                 
-                // Fade out effect
-                content.style.opacity = '0';
-                content.style.transform = 'scale(0.98)';
+                // Fade out
+                container.style.opacity = '0';
+                container.style.transform = 'scale(0.95)';
                 
                 setTimeout(() => {
                     window.location.href = target;
-                }, 300); // Wait for animation
+                }, 300);
             });
         });
     </script>
