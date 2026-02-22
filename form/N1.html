@@ -4,115 +4,276 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تکمیل فرم</title>
+    <!-- فونت وزیرمتن -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- اضافه کردن کتابخانه آیکون‌های FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary: #1e293b; 
-            --accent: #3b82f6; 
-            --success: #10b981;
-            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+            /* پالت رنگی مدرن و حرفه‌ای */
+            --primary: #0f172a; 
+            --primary-light: #1e293b;
+            --accent: #2563eb; 
+            --accent-hover: #1d4ed8;
+            --success: #059669;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --field-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
         }
         
         body { 
             font-family: 'Vazirmatn', sans-serif; 
             background: var(--bg-gradient); 
-            margin: 0; padding: 20px; 
+            margin: 0; 
+            padding: 20px; 
             min-height: 100vh; 
-            display: flex; justify-content: center; align-items: flex-start;
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start;
+            background-attachment: fixed;
         }
         
-        /* کانتینر اصلی */
+        /* کانتینر اصلی - مدرن با افکت شیشه‌ای ملایم (Glassmorphism) */
         .container { 
-            width: 100%; max-width: 600px; background: #ffffff; 
-            padding: 40px; border-radius: 16px; 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            position: relative; margin-top: 30px; border: 1px solid #e2e8f0;
+            width: 100%; 
+            max-width: 650px; 
+            background: var(--card-bg); 
+            padding: 45px; 
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255,255,255,0.4) inset;
+            position: relative; 
+            margin-top: 30px; 
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        /* لودینگ مدرن حلقه‌ای */
+        /* لودینگ بسیار مدرن و جذاب */
         .loader-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.95); z-index: 9999;
+            background: rgba(255, 255, 255, 0.85); z-index: 9999;
             justify-content: center; align-items: center; flex-direction: column;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
         }
-        .ring-loader {
-            display: inline-block; position: relative; width: 80px; height: 80px;
+        .modern-loader-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .ring-loader div {
-            box-sizing: border-box; display: block; position: absolute;
-            width: 64px; height: 64px; margin: 8px;
-            border: 4px solid var(--accent); border-radius: 50%;
-            animation: ring-spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-            border-color: var(--accent) transparent transparent transparent;
+        .modern-loader-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: var(--accent);
+            border-bottom-color: var(--accent);
+            animation: spin 1.5s linear infinite;
         }
-        .ring-loader div:nth-child(1) { animation-delay: -0.45s; }
-        .ring-loader div:nth-child(2) { animation-delay: -0.3s; }
-        .ring-loader div:nth-child(3) { animation-delay: -0.15s; }
-        @keyframes ring-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .modern-loader-circle-inner {
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-left-color: var(--primary);
+            border-right-color: var(--primary);
+            animation: spin-reverse 1s linear infinite;
         }
-        .loading-text { margin-top: 20px; font-weight: 600; color: var(--primary); letter-spacing: 0.5px; }
+        .modern-loader-icon {
+            font-size: 24px;
+            color: var(--accent);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } }
+        
+        .loading-text { 
+            margin-top: 25px; 
+            font-weight: 800; 
+            color: var(--primary); 
+            font-size: 1.2rem;
+            letter-spacing: 0.5px; 
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
 
         /* بخش موفقیت */
-        #success-view { display: none; text-align: center; padding: 20px 0; }
+        #success-view { display: none; text-align: center; padding: 30px 0; }
         .success-icon { 
-            width: 80px; height: 80px; background: #dcfce7; color: var(--success); 
+            width: 90px; height: 90px; background: #d1fae5; color: var(--success); 
             border-radius: 50%; display: flex; justify-content: center; align-items: center; 
-            margin: 0 auto 20px; font-size: 40px;
+            margin: 0 auto 25px; font-size: 45px;
+            box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.2);
+            animation: scaleIn 0.5s ease-out forwards;
         }
-        .success-title { font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; font-weight: 800; }
-        .success-msg { color: #64748b; margin-bottom: 30px; line-height: 1.6; }
-        .action-btns { display: flex; gap: 10px; justify-content: center; }
+        @keyframes scaleIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .success-title { font-size: 1.8rem; color: var(--primary); margin-bottom: 15px; font-weight: 900; }
+        .success-msg { color: var(--text-muted); margin-bottom: 35px; line-height: 1.8; font-size: 1.1rem; }
+        .action-btns { display: flex; gap: 15px; justify-content: center; }
         
         /* عناصر فرم */
-        #f-title { font-size: 1.75rem; color: var(--primary); margin-bottom: 15px; text-align: center; font-weight: 900; }
-        #f-desc { color: #475569; text-align: center; margin-bottom: 35px; line-height: 1.7; background: #f1f5f9; padding: 15px; border-radius: 12px; }
+        #f-title { font-size: 2rem; color: var(--primary); margin-bottom: 15px; text-align: center; font-weight: 900; }
+        #f-desc { color: var(--text-muted); text-align: center; margin-bottom: 40px; line-height: 1.8; background: var(--field-bg); padding: 20px; border-radius: 16px; border: 1px dashed #cbd5e1; font-size: 0.95rem; }
         
-        label { display: block; font-weight: 700; color: #334155; margin-bottom: 8px; margin-top: 25px; }
-        .req-star { color: #ef4444; margin-right: 2px; }
+        /* گروه بندی و متمایز کردن آیتم ها */
+        .field-group {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+        }
+        .field-group:hover {
+            border-color: #93c5fd;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .label-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+        .label-icon {
+            margin-left: 10px;
+            color: var(--accent);
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+        }
+
+        label { display: block; font-weight: 800; font-size: 1.05rem; margin: 0; }
+        .req-star { color: var(--danger); margin-right: 4px; font-size: 1.2rem; }
+        
+        /* استایل فیلدهای ورودی */
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .input-wrapper i.inside-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: 0.3s;
+        }
         
         input[type="text"], input[type="number"], textarea {
-            width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px;
-            font-family: inherit; font-size: 1rem; transition: border-color 0.2s;
-            box-sizing: border-box; background: #f8fafc; color: #1e293b;
+            width: 100%; 
+            padding: 16px 45px 16px 16px; /* فضای اختصاصی برای آیکون داخلی */
+            border: 2px solid var(--border-color); 
+            border-radius: 12px;
+            font-family: inherit; 
+            font-size: 1rem; 
+            transition: all 0.3s ease;
+            box-sizing: border-box; 
+            background: var(--field-bg); 
+            color: var(--text-main);
         }
-        input:focus, textarea:focus { border-color: var(--accent); background: white; outline: none; }
+        textarea {
+            padding: 16px; /* تکست اریا آیکون داخلی ندارد */
+        }
+        input:focus, textarea:focus { 
+            border-color: var(--accent); 
+            background: #ffffff; 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+        input:focus + i.inside-icon {
+            color: var(--accent);
+        }
         
+        /* دکمه ارسال */
         .submit-btn {
-            width: 100%; padding: 16px; background: var(--primary);
-            color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold;
-            cursor: pointer; margin-top: 40px; transition: opacity 0.2s;
+            width: 100%; padding: 18px; 
+            background: linear-gradient(to left, var(--accent), var(--accent-hover));
+            color: white; border: none; border-radius: 14px; 
+            font-size: 1.2rem; font-weight: 900;
+            cursor: pointer; margin-top: 20px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 15px 20px -3px rgba(37, 99, 235, 0.4);
+        }
+        .submit-btn:disabled {
+            background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none;
+        }
         
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-fill { background: var(--primary); color: white; border: none; }
-        .btn-act { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: inherit; }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-fill { background: var(--primary); color: white; border: 2px solid var(--primary); }
+        .btn-fill:hover { background: var(--primary-light); }
+        .btn-act { padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: 800; font-family: inherit; transition: 0.3s; font-size: 1rem; }
 
-        /* دکمه‌های گزینه‌ها */
+        /* دکمه‌های گزینه‌ها - مرتب شده زیر هم */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
         .option-label { 
-            display: flex; align-items: center; padding: 12px; border: 1px solid #e2e8f0; 
-            border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; background: #fff;
+            display: flex; align-items: center; padding: 15px; border: 2px solid var(--border-color); 
+            border-radius: 12px; cursor: pointer; transition: all 0.2s; background: var(--field-bg);
+            font-weight: 600; font-size: 1rem; margin: 0;
         }
         .option-label:hover { border-color: var(--accent); background: #eff6ff; }
-        .option-label input { margin-left: 10px; width: 18px; height: 18px; accent-color: var(--accent); }
+        .option-label input { margin-left: 15px; width: 22px; height: 22px; accent-color: var(--accent); cursor: pointer; }
 
+        /* لیست فرم‌ها */
         .form-list-item { 
-            background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; 
-            cursor: pointer; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; 
-            align-items: center; transition: 0.2s;
+            background: #ffffff; padding: 25px; border-radius: 16px; margin-bottom: 20px; 
+            cursor: pointer; border: 2px solid var(--border-color); display: flex; justify-content: space-between; 
+            align-items: center; transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
-        .form-list-item:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: var(--accent); }
+        .form-list-item strong { font-size: 1.2rem; color: var(--primary); font-weight: 800; }
+        .form-list-item span { background: #eff6ff; color: var(--accent); padding: 8px 15px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: 0.3s; }
+        .form-list-item:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 25px -5px rgba(0,0,0,0.1); 
+            border-color: var(--accent); 
+        }
+        .form-list-item:hover span {
+            background: var(--accent);
+            color: white;
+        }
+        .form-list-icon { margin-left: 15px; font-size: 1.5rem; color: var(--accent); }
+        .form-list-title-wrapper { display: flex; align-items: center; }
+
     </style>
 </head>
 <body>
 
-<!-- لودینگ مدرن -->
+<!-- لودینگ مدرن و حرفه ای -->
 <div class="loader-overlay" id="loader">
-    <div class="ring-loader"><div></div><div></div><div></div><div></div></div>
-    <div class="loading-text">لطفا کمی صبر کنید...</div>
+    <div class="modern-loader-container">
+        <div class="modern-loader-circle"></div>
+        <div class="modern-loader-circle-inner"></div>
+        <i class="fa-solid fa-cloud-arrow-up modern-loader-icon"></i>
+    </div>
+    <div class="loading-text">در حال پردازش اطلاعات ...</div>
 </div>
 
 <div class="container" id="main-container" style="display:none;">
@@ -126,18 +287,18 @@
 
     <!-- نمای موفقیت -->
     <div id="success-view">
-        <div class="success-icon">✓</div>
+        <div class="success-icon"><i class="fa-solid fa-check"></i></div>
         <h2 class="success-title">ارسال موفق</h2>
         <p class="success-msg" id="custom-success-msg">اطلاعات شما با موفقیت ثبت شد.</p>
         <div class="action-btns">
-            <button onclick="reloadForm()" class="btn-act btn-outline">پر کردن مجدد</button>
-            <button onclick="closeForm()" class="btn-act btn-fill">بستن</button>
+            <button onclick="reloadForm()" class="btn-act btn-outline"><i class="fa-solid fa-rotate-right" style="margin-left: 8px;"></i>پر کردن مجدد</button>
+            <button onclick="closeForm()" class="btn-act btn-fill"><i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>بستن</button>
         </div>
     </div>
 
     <!-- لیست فرم‌ها (اگر شناسه نباشد) -->
     <div id="list-view" style="display:none;">
-        <h2 style="text-align:center; color:var(--primary);">فرم‌های موجود</h2>
+        <h2 style="text-align:center; color:var(--primary); font-weight: 900; margin-bottom: 30px;"><i class="fa-solid fa-list-check" style="margin-left: 10px; color: var(--accent);"></i>فرم‌های موجود</h2>
         <div id="forms-list"></div>
     </div>
 </div>
@@ -164,10 +325,10 @@
                 if (data.status === 'success') {
                     renderForm(data.structure, formId);
                 } else {
-                    container.innerHTML = "<h3 style='text-align:center; color:#64748b;'>این فرم وجود ندارد یا حذف شده است.</h3>";
+                    container.innerHTML = "<div style='text-align:center; padding: 40px;'><i class='fa-solid fa-triangle-exclamation' style='font-size: 50px; color: #cbd5e1; margin-bottom: 20px;'></i><h3 style='color:#64748b; font-weight: 800;'>این فرم وجود ندارد یا حذف شده است.</h3></div>";
                 }
             })
-            .catch(() => { showLoader(false); container.innerHTML = "<h3 style='text-align:center'>خطا در اتصال به سرور</h3>"; });
+            .catch(() => { showLoader(false); container.innerHTML = "<div style='text-align:center; padding: 40px;'><i class='fa-solid fa-plug-circle-xmark' style='font-size: 50px; color: #ef4444; margin-bottom: 20px;'></i><h3 style='color:#1e293b; font-weight: 800;'>خطا در اتصال به سرور</h3><p style='color:#64748b;'>لطفا اتصال اینترنت خود را بررسی کنید.</p></div>"; });
         } else {
             showLoader(true);
             document.getElementById('form-view').style.display = 'none';
@@ -182,11 +343,14 @@
                 if(data.status==='success' && data.list.length > 0) {
                     data.list.forEach(f => {
                         listDiv.innerHTML += `<div class="form-list-item" onclick="location.href='?id=${f.id}'">
-                            <strong>${f.title}</strong>
-                            <span style="color:#94a3b8;">ورود ←</span>
+                            <div class="form-list-title-wrapper">
+                                <i class="fa-solid fa-file-signature form-list-icon"></i>
+                                <strong>${f.title}</strong>
+                            </div>
+                            <span>ورود <i class="fa-solid fa-arrow-left" style="margin-right: 5px;"></i></span>
                         </div>`;
                     });
-                } else listDiv.innerHTML = "<p style='text-align:center; color:#64748b;'>هیچ فرمی یافت نشد</p>";
+                } else listDiv.innerHTML = "<div style='text-align:center; padding: 30px;'><i class='fa-regular fa-folder-open' style='font-size: 40px; color:#cbd5e1; margin-bottom:15px;'></i><p style='color:#64748b; font-weight:700;'>هیچ فرمی یافت نشد</p></div>";
             });
         }
     }
@@ -195,9 +359,39 @@
         document.getElementById('loader').style.display = show ? 'flex' : 'none';
     }
 
+    // تابع کمکی برای تشخیص آیکون مناسب بر اساس نوع فیلد
+    function getIconForFieldType(type) {
+        switch(type) {
+            case 'short_text': return 'fa-solid fa-pen';
+            case 'long_text': return 'fa-solid fa-align-right';
+            case 'number': return 'fa-solid fa-hashtag';
+            case 'national_code': return 'fa-regular fa-id-card';
+            case 'phone': return 'fa-solid fa-mobile-screen-button';
+            case 'single_choice': return 'fa-regular fa-circle-dot';
+            case 'multi_choice': return 'fa-solid fa-list-check';
+            default: return 'fa-solid fa-asterisk';
+        }
+    }
+
+    // تابع بررسی صحت کد ملی ایران بر اساس الگوریتم استاندارد
+    function isValidIranianNationalCode(code) {
+        if (!/^\d{10}$/.test(code)) return false;
+        // بررسی کدهایی که همه ارقامشان تکراری است (مثل 1111111111)
+        if (/^(\d)\1{9}$/.test(code)) return false;
+        
+        const check = parseInt(code[9]);
+        let sum = 0;
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(code[i]) * (10 - i);
+        }
+        sum = sum % 11;
+        
+        return (sum < 2 && check === sum) || (sum >= 2 && check === 11 - sum);
+    }
+
     function renderForm(data, id) {
-        document.getElementById('f-title').innerText = data.title;
-        document.getElementById('f-desc').innerText = data.description;
+        document.getElementById('f-title').innerHTML = `<i class="fa-solid fa-file-lines" style="color:var(--accent); margin-left:10px;"></i>${data.title}`;
+        document.getElementById('f-desc').innerHTML = `<i class="fa-solid fa-circle-info" style="color:#94a3b8; margin-left:8px; font-size:1.1rem;"></i>${data.description}`;
         
         // ذخیره پیام سفارشی برای نمایش بعدی
         currentSuccessMsg = data.successMessage || "اطلاعات شما با موفقیت ثبت شد.";
@@ -207,13 +401,25 @@
 
         data.fields.forEach(f => {
             const div = document.createElement('div');
-            const reqHtml = f.required ? '<span class="req-star">*</span>' : '';
+            // کلاس field-group برای تفکیک و متمایز کردن هر آیتم از دیگری
+            div.className = 'field-group';
+            
+            const reqHtml = f.required ? '<span class="req-star" title="این فیلد الزامی است">*</span>' : '';
             const reqAttr = f.required ? 'required' : '';
 
             if (f.type === 'static') {
-                div.innerHTML = `<div style="background:#f1f5f9; color:#334155; padding:15px; border-radius:10px; margin:20px 0; border-left:4px solid var(--accent); line-height:1.6;">${f.content}</div>`;
+                div.style.background = '#f1f5f9';
+                div.style.borderLeft = 'none';
+                div.style.borderRight = '5px solid var(--accent)';
+                div.innerHTML = `<div style="color:#334155; line-height:1.8; font-weight:600;"><i class="fa-solid fa-bullhorn" style="color:var(--accent); margin-left:10px; font-size:1.2rem;"></i>${f.content}</div>`;
             } else {
-                div.innerHTML = `<label>${f.label} ${reqHtml}</label>`;
+                const labelIcon = getIconForFieldType(f.type);
+                
+                div.innerHTML = `
+                    <div class="label-container">
+                        <i class="${labelIcon} label-icon"></i>
+                        <label>${f.label} ${reqHtml}</label>
+                    </div>`;
                 
                 if (['short_text', 'long_text', 'number', 'national_code', 'phone'].includes(f.type)) {
                     let type = f.type === 'short_text' ? 'text' : (f.type === 'long_text' ? 'textarea' : 'number');
@@ -221,20 +427,33 @@
                     let attrs = type === 'textarea' ? 'rows="4"' : `type="${type}"`;
                     
                     // اعتبارسنجی‌های خاص
-                    if (f.type === 'national_code') attrs += ' placeholder="10 رقم" ';
-                    if (f.type === 'phone') attrs += ' placeholder="11 رقم (مثلا 0912...)" ';
+                    if (f.type === 'national_code') attrs += ' placeholder="مثال: 0123456789" ';
+                    if (f.type === 'phone') attrs += ' placeholder="مثال: 09123456789" ';
                     
-                    div.innerHTML += `<${tag} ${attrs} name="${f.label}" class="input-field" ${reqAttr} data-type="${f.type}"></${tag}>`;
+                    if(tag === 'input') {
+                        div.innerHTML += `
+                        <div class="input-wrapper">
+                            <input ${attrs} name="${f.label}" class="input-field" ${reqAttr} data-type="${f.type}">
+                            <i class="${labelIcon} inside-icon"></i>
+                        </div>`;
+                    } else {
+                        div.innerHTML += `<${tag} ${attrs} name="${f.label}" class="input-field" ${reqAttr} data-type="${f.type}"></${tag}>`;
+                    }
                 }
                 else if (f.type === 'single_choice' || f.type === 'multi_choice') {
                     let type = f.type === 'single_choice' ? 'radio' : 'checkbox';
+                    let optionsHtml = '<div class="options-container">';
+                    
                     f.options.forEach((opt, idx) => {
                         let r = (f.type === 'single_choice' && f.required && idx===0) ? 'required' : '';
-                        div.innerHTML += `<label class="option-label">
+                        optionsHtml += `<label class="option-label">
                             <input type="${type}" name="${f.label}" value="${opt}" ${r}>
                             <span>${opt}</span>
                         </label>`;
                     });
+                    
+                    optionsHtml += '</div>';
+                    div.innerHTML += optionsHtml;
                 }
             }
             form.appendChild(div);
@@ -243,7 +462,7 @@
         const btn = document.createElement('button');
         btn.type = 'submit';
         btn.className = 'submit-btn';
-        btn.innerText = 'ارسال اطلاعات';
+        btn.innerHTML = 'ارسال اطلاعات <i class="fa-regular fa-paper-plane"></i>';
         form.appendChild(btn);
     }
 
@@ -257,9 +476,13 @@
             const type = input.getAttribute('data-type');
             
             if (val && type === 'national_code') {
-                if (!/^\d{10}$/.test(val)) {
-                    alert('کد ملی باید دقیقا ۱۰ رقم عدد باشد.');
+                // استفاده از تابع اعتبارسنجی دقیق الگوریتم کد ملی
+                if (!isValidIranianNationalCode(val)) {
+                    alert('کد ملی وارد شده معتبر نیست. لطفا یک کد ملی صحیح و 10 رقمی وارد کنید.');
                     input.focus();
+                    // تغییر رنگ حاشیه برای توجه کاربر
+                    input.style.borderColor = 'var(--danger)';
+                    setTimeout(() => input.style.borderColor = '', 3000);
                     return;
                 }
             }
@@ -267,6 +490,8 @@
                 if (!/^\d{11}$/.test(val)) {
                     alert('شماره تماس باید دقیقا ۱۱ رقم عدد باشد.');
                     input.focus();
+                    input.style.borderColor = 'var(--danger)';
+                    setTimeout(() => input.style.borderColor = '', 3000);
                     return;
                 }
             }
@@ -286,7 +511,8 @@
         }
 
         const btn = document.querySelector('.submit-btn');
-        btn.innerText = "لطفا صبر کنید..."; btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> لطفا صبر کنید...'; 
+        btn.disabled = true;
         
         showLoader(true);
 
@@ -300,11 +526,13 @@
                 document.getElementById('success-view').style.display = 'block';
             } else {
                 alert("خطا: " + d.message);
-                btn.innerText = "ارسال اطلاعات"; btn.disabled = false;
+                btn.innerHTML = 'ارسال اطلاعات <i class="fa-regular fa-paper-plane"></i>'; 
+                btn.disabled = false;
             }
         }).catch(() => {
             showLoader(false); alert("خطا در ارتباط");
-            btn.innerText = "ارسال اطلاعات"; btn.disabled = false;
+            btn.innerHTML = 'ارسال اطلاعات <i class="fa-regular fa-paper-plane"></i>'; 
+            btn.disabled = false;
         });
     }
 
@@ -314,7 +542,7 @@
 
     function closeForm() {
         window.close(); // ممکن است در همه مرورگرها کار نکند (امنیت)
-        document.body.innerHTML = "<h3 style='text-align:center; margin-top:50px; color:#64748b;'>فرم بسته شد. می‌توانید این پنجره را ببندید.</h3>";
+        document.body.innerHTML = "<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh;'><i class='fa-solid fa-door-closed' style='font-size:80px; color:#cbd5e1; margin-bottom:20px;'></i><h3 style='color:#1e293b; font-weight:800; font-size:1.5rem;'>فرم بسته شد.</h3><p style='color:#64748b;'>می‌توانید این پنجره را ببندید.</p></div>";
     }
 </script>
 </body>
