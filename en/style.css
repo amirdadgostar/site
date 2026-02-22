@@ -204,7 +204,7 @@ p, input, textarea, label, select, .font-sans { font-family: 'Inter', sans-serif
 #wa-tooltip { display: none !important; }
 
 /* =========================================================================
-   WHATSAPP/EITAA BUG FIXES & STYLING (Size, Z-Index, and Dark Border)
+   WHATSAPP BUTTON FIXES (Thinner White Border & Green Glow)
    ========================================================================= */
 .whatsapp-container-fixed {
     z-index: 999999 !important;
@@ -212,12 +212,13 @@ p, input, textarea, label, select, .font-sans { font-family: 'Inter', sans-serif
 .whatsapp-btn-size {
     width: 76px !important;  
     height: 76px !important; 
-    /* ایجاد حاشیه تیره و سایه قوی طبق دستور */
-    border: 3px solid #1e293b !important; /* رنگ حاشیه تیره */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important; /* سایه تیره در اطراف */
+    /* حاشیه سفید رنگ ملایم به جای رنگ مشکی تیره */
+    border: 2px solid rgba(255, 255, 255, 0.8) !important; 
+    /* سایه ملایم و جذاب سبز رنگ برای ظاهر بهتر */
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3) !important; 
 }
 .whatsapp-btn-size:hover {
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important; /* سایه پررنگ‌تر در هاور */
+    box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4) !important; 
 }
 .whatsapp-icon-size {
     font-size: 3rem !important; 
