@@ -3,172 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IrToWeb | Select Language</title>
+    <title>Select Language | انتخاب زبان - IrToWeb</title>
     
-    <!-- Preload Logo -->
+    <!-- Preload for instant logo display -->
     <link rel="preload" href="https://amirdadgostar.github.io/site/en/%20Logo.png" as="image">
 
-    <!-- Fonts -->
+    <!-- Google Fonts: Outfit (English) & Vazirmatn (Persian) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Vazirmatn:wght@400;700;800&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body {
-            background-color: #f8fafc;
-            color: #0f172a;
-            font-family: 'Outfit', sans-serif;
-            overflow: hidden;
             margin: 0;
-        }
-
-        /* الگوی پس‌زمینه بسیار محو و روشن */
-        .bg-pattern {
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 32px 32px;
-            opacity: 0.4;
-            z-index: -1;
-        }
-
-        /* افکت نورانی وسط صفحه */
-        .glow-effect {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0) 0%, rgba(248,250,252,1) 70%);
-            z-index: -1;
-        }
-
-        /* استایل دکمه‌های انتخاب زبان */
-        .lang-btn {
-            position: relative;
-            background: white;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0;
             overflow: hidden;
+            background-color: #f8fafc; /* پس‌زمینه کاملاً روشن (Slate-50) */
+            font-family: 'Outfit', sans-serif;
         }
 
-        .lang-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-            border-color: #cbd5e1;
+        /* Subtle Animated Gradient Glow (پس‌زمینه عالی و حرفه‌ای) */
+        .bg-glow-container {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .bg-glow {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+            animation: spin-slow 20s linear infinite;
+        }
+        .bg-glow.teal {
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.08) 0%, transparent 60%);
+            animation-delay: -10s;
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        /* لودر بالای صفحه */
-        #loader-bar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 3px;
+        /* Frosted Glass Effect for LIGHT theme */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7); /* شیشه مات روشن */
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.1); /* سایه بسیار ملایم و حرفه‌ای */
+        }
+
+        /* Hover Effects for Language Options */
+        .lang-option {
+            background-color: rgba(241, 245, 249, 0.7); /* Slate-100 semi-transparent */
+            border: 1px solid #e2e8f0; /* Slate-200 */
+            transition: all 0.3s ease-in-out;
+        }
+        .lang-option:hover {
+            transform: translateY(-4px) scale(1.02);
+            background-color: #ffffff;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Loader Animation */
+        .loader-bar {
             width: 0%;
-            background: linear-gradient(90deg, #2563eb, #10b981);
+            height: 3px;
+            background: #2563eb;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.5s ease-out;
             z-index: 100;
-            transition: width 0.5s ease;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen items-center justify-center p-6">
+<body class="flex items-center justify-center min-h-screen p-4">
 
     <!-- Background Elements -->
-    <div class="bg-pattern"></div>
-    <div class="glow-effect"></div>
-    <div id="loader-bar"></div>
+    <div class="bg-glow-container">
+        <div class="bg-glow" style="top: -20%; left: -20%;"></div>
+        <div class="bg-glow teal" style="bottom: -20%; right: -20%;"></div>
+    </div>
+    
+    <!-- Top Loader -->
+    <div id="loader" class="loader-bar"></div>
 
-    <!-- Main Content Container -->
-    <div class="w-full max-w-2xl relative z-10 text-center opacity-0 translate-y-5 transition-all duration-700 ease-out" id="main-container">
-        
-        <!-- Logo & Welcome -->
-        <div class="mb-12 flex flex-col items-center">
-            <div class="w-24 h-24 bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 flex items-center justify-center mb-6 p-4 border border-slate-50">
-                <img src="https://amirdadgostar.github.io/site/en/%20Logo.png" alt="IrToWeb" class="w-full h-full object-contain">
+    <!-- Main Card -->
+    <div id="main-card" class="w-full max-w-lg opacity-0 translate-y-5 transition-all duration-700">
+        <div class="glass-card rounded-3xl p-6 md:p-12 text-center">
+            
+            <!-- Logo & Welcome Message -->
+            <div class="mb-8 flex justify-center flex-col items-center">
+                <img src="https://amirdadgostar.github.io/site/en/%20Logo.png" alt="IrToWeb Logo" class="w-16 h-16 object-contain mb-4 drop-shadow-md">
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">Welcome to <span class="text-blue-600">IrToWeb</span></h1>
+                <p class="text-slate-500 text-sm md:text-base mt-2">Please select your language<br><span style="font-family: 'Vazirmatn', sans-serif;">لطفاً زبان خود را انتخاب کنید</span></p>
             </div>
-            
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
-                Welcome <span class="text-slate-300 font-light px-2">|</span> <span style="font-family: 'Vazirmatn';">خوش‌آمدید</span>
-            </h1>
-            <p class="text-slate-500 font-medium text-sm md:text-base tracking-wide uppercase">
-                Select Your Language / انتخاب زبان
-            </p>
+
+            <!-- Language Buttons -->
+            <div class="space-y-4">
+                
+                <!-- English -->
+                <a href="./en/index.html" class="lang-option block group rounded-2xl p-4 cursor-pointer">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold border border-blue-200">EN</div>
+                            <div class="text-left">
+                                <div class="font-bold text-lg text-slate-800">English</div>
+                                <div class="text-xs text-slate-500 font-medium tracking-wide">International</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                </a>
+
+                <!-- Persian -->
+                <a href="./fa/index.html" class="lang-option block group rounded-2xl p-4 cursor-pointer">
+                    <div class="flex items-center justify-between flex-row-reverse">
+                        <div class="flex items-center gap-4 flex-row-reverse">
+                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold border border-emerald-200" style="font-family: 'Vazirmatn', sans-serif;">فا</div>
+                            <div class="text-right">
+                                <div class="font-bold text-lg text-slate-800" style="font-family: 'Vazirmatn', sans-serif;">فارسی</div>
+                                <div class="text-xs text-slate-500 font-medium tracking-wide" style="font-family: 'Vazirmatn', sans-serif;">ایران</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left text-slate-400 group-hover:text-emerald-600 transition-colors"></i>
+                    </div>
+                </a>
+
+            </div>
         </div>
-
-        <!-- Language Selectors -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
-            
-            <!-- English Button -->
-            <a href="./en/index.html" class="lang-btn group rounded-2xl p-6 flex items-center justify-between cursor-pointer">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                        EN
-                    </div>
-                    <div class="text-left">
-                        <div class="font-bold text-xl text-slate-800">English</div>
-                        <div class="text-xs text-slate-400 font-medium tracking-wider mt-0.5 group-hover:text-blue-500 transition-colors">ENTER SITE</div>
-                    </div>
-                </div>
-                <i class="fa-solid fa-arrow-right text-slate-300 text-xl group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300"></i>
-            </a>
-
-            <!-- Persian Button -->
-            <a href="./fa/index.html" class="lang-btn group rounded-2xl p-6 flex flex-row-reverse items-center justify-between cursor-pointer">
-                <div class="flex items-center gap-4 flex-row-reverse">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300" style="font-family: 'Vazirmatn';">
-                        فا
-                    </div>
-                    <div class="text-right">
-                        <div class="font-bold text-xl text-slate-800" style="font-family: 'Vazirmatn';">فارسی</div>
-                        <div class="text-xs text-slate-400 font-medium tracking-wider mt-0.5 group-hover:text-emerald-500 transition-colors" style="font-family: 'Vazirmatn';">ورود به سایت</div>
-                    </div>
-                </div>
-                <i class="fa-solid fa-arrow-left text-slate-300 text-xl group-hover:text-emerald-600 group-hover:-translate-x-1 transition-all duration-300"></i>
-            </a>
-
-        </div>
-
     </div>
 
-    <!-- Simple Footer -->
-    <footer class="fixed bottom-6 text-slate-300 text-[10px] font-bold tracking-[0.2em] uppercase select-none">
-        IrToWeb Agency
-    </footer>
-
     <script>
-        // Entrance Logic
+        // Entrance Animation
         window.addEventListener('load', () => {
-            const loader = document.getElementById('loader-bar');
-            const container = document.getElementById('main-container');
+            const loader = document.getElementById('loader');
+            const card = document.getElementById('main-card');
             
             loader.style.width = '100%';
             
             setTimeout(() => {
                 loader.style.opacity = '0';
-                container.classList.remove('opacity-0', 'translate-y-5');
+                card.classList.remove('opacity-0', 'translate-y-5');
             }, 300);
         });
 
-        // Exit Logic
+        // Click Transition Effect
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = this.getAttribute('href');
-                const container = document.getElementById('main-container');
+                const card = document.getElementById('main-card');
                 
-                // Fade out
-                container.style.opacity = '0';
-                container.style.transform = 'scale(0.95)';
+                // Exit animation
+                document.body.style.opacity = '0';
+                document.body.style.transition = 'opacity 0.4s ease-out';
                 
                 setTimeout(() => {
                     window.location.href = target;
-                }, 300);
+                }, 400);
             });
         });
     </script>
