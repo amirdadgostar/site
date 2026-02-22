@@ -34,7 +34,7 @@ AOS.init({
 
 // 4. Typed.js Setup
 new Typed('#typed-text', {
-    strings: ['Presence.', 'Aesthetics.', 'Performance.'],
+    strings: ['Modern.', 'Fast.', 'Reliable.'],
     typeSpeed: 60,
     backSpeed: 40,
     backDelay: 2000,
@@ -215,30 +215,66 @@ document.querySelectorAll('a[href^="#"], .anchor-link').forEach(anchor => {
     });
 });
 
-// 10. Form Logic (Updated to include Email and Template Dropdown)
+// 10. Toggle Function for Socials (Requested feature)
+function toggleSocials() {
+    const container = document.getElementById('socials-container');
+    if (container) {
+        container.classList.toggle('hidden');
+    }
+}
+
+// 11. Form Logic (Reads categorized data and sends directly without copying)
 function getFormData() {
-    const fields = [
-        { id: 'f_name', label: 'Name' }, 
-        { id: 'f_email', label: 'Email' },
-        { id: 'f_biz', label: 'Business' },
-        { id: 'f_tag', label: 'Tagline' },
-        { id: 'f_template', label: 'Selected Template' },
-        { id: 'f_bio', label: 'Bio' },
-        { id: 'f_address', label: 'Address' }, 
-        { id: 'f_phone', label: 'Phone' },
-        { id: 'f_maps', label: 'Maps Link' }, 
-        { id: 'f_social', label: 'Socials' }
-    ];
-    let message = "✦ *New IrToWeb Project Inquiry* ✦\n\n";
-    fields.forEach(f => {
-        const element = document.getElementById(f.id);
-        if (element) {
-            const val = element.value.trim();
-            if (val) message += `*${f.label}:* ${val}\n`;
-        }
-    });
+    let message = "✦ *New Website Project Inquiry* ✦\n\n";
+    
+    // Personal Details
+    message += "👤 *Personal Details:*\n";
+    const f_name = document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '';
+    if(f_name) message += `Name: ${f_name}\n`;
+    const f_email = document.getElementById('f_email') ? document.getElementById('f_email').value.trim() : '';
+    if(f_email) message += `Personal Email: ${f_email}\n`;
+    
+    // Business Details
+    message += "\n💼 *Business Details (For the Website):*\n";
+    const f_biz = document.getElementById('f_biz') ? document.getElementById('f_biz').value.trim() : '';
+    if(f_biz) message += `Business Name: ${f_biz}\n`;
+    const f_tag = document.getElementById('f_tag') ? document.getElementById('f_tag').value.trim() : '';
+    if(f_tag) message += `Tagline: ${f_tag}\n`;
+    const f_template = document.getElementById('f_template') ? document.getElementById('f_template').value.trim() : '';
+    if(f_template) message += `Selected Template: ${f_template}\n`;
+    const f_bio = document.getElementById('f_bio') ? document.getElementById('f_bio').value.trim() : '';
+    if(f_bio) message += `About / Bio: ${f_bio}\n`;
+    const f_address = document.getElementById('f_address') ? document.getElementById('f_address').value.trim() : '';
+    if(f_address) message += `Business Address: ${f_address}\n`;
+    const f_phone = document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '';
+    if(f_phone) message += `Business Phone: ${f_phone}\n`;
+    const f_maps = document.getElementById('f_maps') ? document.getElementById('f_maps').value.trim() : '';
+    if(f_maps) message += `Google Maps Link: ${f_maps}\n`;
+
+    // Added Social & Contact Links (From Toggle)
+    const f_biz_email = document.getElementById('f_biz_email') ? document.getElementById('f_biz_email').value.trim() : '';
+    const f_ig = document.getElementById('f_ig') ? document.getElementById('f_ig').value.trim() : '';
+    const f_tg = document.getElementById('f_tg') ? document.getElementById('f_tg').value.trim() : '';
+    const f_wa = document.getElementById('f_wa') ? document.getElementById('f_wa').value.trim() : '';
+    const f_linkedin = document.getElementById('f_linkedin') ? document.getElementById('f_linkedin').value.trim() : '';
+    
+    if(f_biz_email || f_ig || f_tg || f_wa || f_linkedin) {
+        message += "\n📱 *Business Contact & Socials:*\n";
+        if(f_biz_email) message += `Business Email: ${f_biz_email}\n`;
+        if(f_ig) message += `Instagram: ${f_ig}\n`;
+        if(f_tg) message += `Telegram: ${f_tg}\n`;
+        if(f_wa) message += `WhatsApp: ${f_wa}\n`;
+        if(f_linkedin) message += `LinkedIn: ${f_linkedin}\n`;
+    }
+
     return encodeURIComponent(message);
 }
 
-function submitWhatsApp() { window.open(`https://wa.me/989981426633?text=${getFormData()}`, '_blank'); }
-function submitEmail() { window.location.href = `mailto:Irtoweb@gmail.com?subject=New Premium Inquiry&body=${getFormData()}`; }
+// Sends directly to the apps without clipboard copy logic
+function submitWhatsApp() { 
+    window.open(`https://wa.me/989981426633?text=${getFormData()}`, '_blank'); 
+}
+
+function submitEmail() { 
+    window.location.href = `mailto:Irtoweb@gmail.com?subject=New Website Project Inquiry&body=${getFormData()}`; 
+}
