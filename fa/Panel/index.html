@@ -2,696 +2,553 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل کاربری سفارش سایت</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پنل کاربری پروژه</title>
+    <!-- اضافه کردن فونت مدرن و رسمی وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
-        body { font-family: 'Vazirmatn', sans-serif; background-color: #f3f4f6; }
-        .hidden { display: none !important; }
+        /* 
+         * ADVANCED DESIGN SYSTEM V3 - MINIMAL LUXURY AESTHETIC
+         * Formal, fresh, and strictly professional with soft interactions.
+         */
+        :root {
+            /* پالت رنگی رسمی، شاداب و لوکس */
+            --bg-base: #f4f7f9; /* پس‌زمینه بسیار روشن، شاداب و اداری */
+            --card-bg: #ffffff; /* سفیدی مطلق برای القای حس تمیزی و لوکس بودن */
+            
+            --primary: #2563eb; /* آبی زنده و مدرن */
+            --primary-hover: #1d4ed8;
+            --primary-soft: rgba(37, 99, 235, 0.08); /* پس‌زمینه نرم آیکون‌ها */
+            
+            --text-dark: #0f172a; /* سرمه‌ای بسیار تیره برای متون اصلی (خوانایی بالا) */
+            --text-light: #64748b; /* خاکستری ملایم برای متون فرعی */
+            
+            --success: #10b981;
+            --success-soft: #d1fae5;
+            --warning: #f59e0b;
+            --warning-soft: #fef3c7;
+            --info: #3b82f6;
+            --info-soft: #dbeafe;
+            --danger: #ef4444;
+            --danger-soft: #fee2e2;
+
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+
+            /* Typography Scale */
+            --font-family: 'Vazirmatn', sans-serif;
+            --fs-base: 1rem;     /* 16px */
+            --fs-sm: 0.9rem;     /* 14.4px */
+            --fs-xs: 0.8rem;     /* 12.8px */
+            --fs-lg: 1.15rem;    /* 18.4px */
+            --fs-xl: 1.5rem;     /* 24px */
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            
+            /* Modern Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px; /* شعاع مدرن برای کانتینرها */
+            
+            /* Soft Shadows (سایه‌های نرم و عمیق) */
+            --shadow-soft: 0 10px 40px -10px rgba(15, 23, 42, 0.08);
+            --shadow-hover: 0 20px 40px -10px rgba(37, 99, 235, 0.12);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+
+            /* Micro Interactions */
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Base & Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { 
+            background-color: var(--bg-base); 
+            /* Parallax بسیار سبک و رسمی در پس‌زمینه */
+            background-image: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);
+            color: var(--text-dark); 
+            font-family: var(--font-family);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            padding: var(--spacing-4);
+            -webkit-font-smoothing: antialiased;
+            background-attachment: fixed;
+        }
         
-        .chat-bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; font-size: 0.9rem; }
-        .chat-user { background-color: #eff6ff; color: #1e3a8a; border-bottom-right-radius: 0; margin-left: auto; border: 1px solid #bfdbfe; }
-        .chat-admin { background-color: #f3f4f6; color: #374151; border-bottom-left-radius: 0; margin-right: auto; border: 1px solid #e5e7eb; }
+        /* انیمیشن‌های نرم و سینماتیک بدون نیاز به JS اضافی */
+        @keyframes fadeUpSmooth { 
+            from { opacity: 0; transform: translateY(25px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        @keyframes pulseSoft {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        
+        /* Container - Grid-Based */
+        .container { 
+            width: 100%; 
+            max-width: 900px; /* عریض‌تر برای نمایش بهتر اطلاعات */
+            animation: fadeIn 0.8s var(--transition-medium); 
+        }
+        
+        /* LOGIN SECTION STYLES - Minimal Luxury */
+        #loginSection {
+            background: var(--card-bg);
+            padding: 3.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid #ffffff; /* برای افکت تمیزی مطلق */
+            animation: fadeUpSmooth 0.7s var(--transition-medium) backwards;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .login-header { text-align: center; margin-bottom: 2.5rem; }
+        .login-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: var(--spacing-2); color: var(--text-dark); letter-spacing: -0.5px; }
+        .login-header p { color: var(--text-light); font-size: var(--fs-base); font-weight: 500; }
+
+        .form-group { margin-bottom: 1.5rem; position: relative; }
+        .form-group label { display: block; margin-bottom: var(--spacing-2); font-weight: 700; font-size: var(--fs-sm); color: var(--text-dark); }
+        .form-group input {
+            width: 100%;
+            padding: 16px 45px 16px 16px; 
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: var(--fs-base);
+            font-family: inherit;
+            transition: var(--transition-fast);
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        .form-group input::placeholder { color: #94a3b8; font-weight: 400; }
+        .form-group input:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); 
+        }
+        .input-icon {
+            position: absolute;
+            top: 45px;
+            right: 15px;
+            color: #94a3b8;
+            pointer-events: none;
+            transition: var(--transition-fast);
+        }
+        .form-group input:focus + .input-icon { color: var(--primary); }
+        
+        #password-toggle-icon {
+            left: 15px;
+            right: auto;
+            pointer-events: all;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        #password-toggle-icon:hover { color: var(--primary); }
+
+        .btn {
+            padding: 18px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 800;
+            color: white;
+            transition: var(--transition-medium);
+            font-size: var(--fs-lg);
+            width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-family: inherit;
+        }
+        .btn-primary { 
+            background: var(--primary); 
+            box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.4);
+            animation: pulseSoft 2.5s infinite; /* دکمه Pulse ملایم */
+        }
+        .btn-primary:hover:not(:disabled) { 
+            background: var(--primary-hover); 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 25px -6px rgba(37, 99, 235, 0.5); 
+        }
+        .btn:disabled { background-color: #94a3b8; cursor: not-allowed; animation: none; transform: none; box-shadow: none; }
+
+        /* DASHBOARD SECTION STYLES - Hierarchy & Grid */
+        #dashboardSection { display: none; }
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+            border: 1px solid #ffffff;
+            animation: fadeUpSmooth 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            transition: var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; right: 0; top: 0; height: 100%; width: 4px; background: transparent; transition: var(--transition-medium);
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--border); }
+        .card:hover::before { background: var(--primary); }
+        .card:nth-child(2) { animation-delay: 0.15s; }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+        .card-header h2 { margin: 0; font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 12px; color: var(--text-dark); }
+        .card-header h2 svg { color: var(--primary); background: var(--primary-soft); padding: 6px; border-radius: 8px; width: 34px; height: 34px; }
+        
+        .logout-btn { 
+            background: #ffffff; border: 2px solid var(--border); color: var(--text-dark); 
+            padding: 10px 16px; font-size: var(--fs-sm); font-weight: 700; border-radius: var(--radius-sm); 
+            cursor: pointer; display: flex; align-items: center; gap: 8px; transition: var(--transition-fast); font-family: inherit;
+        }
+        .logout-btn svg { color: var(--danger); }
+        .logout-btn:hover { background-color: var(--danger-soft); border-color: var(--danger-soft); color: var(--danger); transform: translateY(-2px); }
+
+        /* Modern Data Grid */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .info-item { 
+            background: #f8fafc; padding: 1.5rem; border-radius: var(--radius-md); 
+            border: 1px solid var(--border); display: flex; gap: 1rem; align-items: flex-start; 
+            transition: var(--transition-fast);
+            animation: fadeUpSmooth 0.5s backwards;
+        }
+        /* Staggered animation for grid items */
+        .info-item:nth-child(1) { animation-delay: 0.1s; }
+        .info-item:nth-child(2) { animation-delay: 0.2s; }
+        .info-item:nth-child(3) { animation-delay: 0.3s; }
+        .info-item:nth-child(4) { animation-delay: 0.4s; }
+        .info-item:nth-child(5) { animation-delay: 0.5s; }
+        
+        .info-item:hover { background: #ffffff; border-color: var(--primary); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1); transform: translateY(-2px); }
+        .info-item .icon { 
+            color: var(--primary); flex-shrink: 0; background: var(--primary-soft); 
+            padding: 12px; border-radius: 12px; display: flex; justify-content: center; align-items: center;
+            transition: var(--transition-fast);
+        }
+        .info-item:hover .icon { background: var(--primary); color: #ffffff; transform: scale(1.05); }
+        
+        .info-item strong { display: block; color: var(--text-light); font-size: var(--fs-sm); margin-bottom: 6px; font-weight: 600; }
+        .info-item span { font-size: var(--fs-base); word-break: break-all; font-weight: 700; color: var(--text-dark); line-height: 1.6; }
+        .info-item a { color: var(--primary); text-decoration: none; transition: var(--transition-fast); }
+        .info-item a:hover { text-decoration: underline; color: var(--primary-hover); }
+        .full-width { grid-column: 1 / -1; }
+        
+        /* Modern Soft Badges (Pill style) */
+        .badge { display: inline-block; padding: 6px 14px; border-radius: 99px; font-size: var(--fs-xs); font-weight: 800; }
+        .badge-pay-1, .badge-status-1 { background-color: var(--warning-soft); color: #b45309; border: 1px solid #fde68a; }
+        .badge-pay-2, .badge-status-3 { background-color: var(--success-soft); color: #047857; border: 1px solid #a7f3d0; }
+        .badge-status-2 { background-color: var(--info-soft); color: #1d4ed8; border: 1px solid #bfdbfe; }
+        
+        /* Conditional Content: Locked Message */
+        #projectDetailsSection { display: none; }
+        #lockedContentMessage { 
+            background: linear-gradient(135deg, var(--info-soft) 0%, #ffffff 100%); 
+            color: var(--text-dark); padding: 2.5rem; border-radius: var(--radius-md); 
+            border: 1px dashed var(--primary); font-size: var(--fs-lg); font-weight: 600;
+            text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; 
+        }
+        #lockedContentMessage svg { width: 60px; height: 60px; color: var(--primary); background: #ffffff; padding: 15px; border-radius: 50%; box-shadow: var(--shadow-soft); }
+        #lockedContentMessage strong { color: var(--primary); font-weight: 800; }
+        
+        /* Code Blocks - Cinematic Terminal Aesthetic */
+        .code-block { 
+            background: #0f172a; color: #e2e8f0; padding: 1.5rem; 
+            border-radius: var(--radius-md); font-family: 'Consolas', 'Monaco', monospace; 
+            white-space: pre-wrap; word-wrap: break-word; font-size: 0.95rem; 
+            border: 1px solid #1e293b; max-height: 250px; overflow-y: auto; 
+            margin-top: 10px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+            line-height: 1.7;
+        }
+        /* Custom Scrollbar for code blocks */
+        .code-block::-webkit-scrollbar { width: 8px; }
+        .code-block::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
+        .code-block::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
+        .code-block::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Loader Spinner - Modern Ring */
+        .spinner { 
+            border: 3px solid rgba(255,255,255,0.2); 
+            border-top: 3px solid #ffffff; 
+            border-right: 3px solid #ffffff;
+            border-radius: 50%; width: 22px; height: 22px; 
+            animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; 
+            display: none; 
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* MODERN ALERT MODAL STYLES - Glassmorphism */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+            padding: var(--spacing-4);
+            opacity: 0; visibility: hidden;
+            transition: var(--transition-medium);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-box {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: var(--transition-medium);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+        #modal-icon { margin-bottom: 1.5rem; display: flex; justify-content: center; animation: pulseSoft 2s infinite; }
+        #modal-text { font-size: var(--fs-lg); color: var(--text-dark); line-height: 1.7; margin-bottom: 2rem; font-weight: 600; }
+        .modal-btn { width: 100%; }
+        
+        /* RESPONSIVENESS */
+        @media (max-width: 768px) {
+            body { padding: 15px; align-items: flex-start; }
+            .container { margin-top: 10px; }
+            #loginSection { padding: 2rem; }
+            .card { padding: 1.5rem; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .card-header h2 { font-size: 1.25rem; }
+            .logout-btn { width: 100%; justify-content: center; }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-item { flex-direction: column; align-items: flex-start; }
+            .info-item .icon { margin-bottom: 10px; }
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
 
-<script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwQLkWRqlL9hmsua2Q1kTNtOBWDjmPF-w0GLtottMivZYkok_tZo0JWDNs5ZuuZ1EQv/exec"; 
-    const STRIPE_LINK = "https://checkout.stripe.com/pay/لینک_شما"; 
-</script>
-
-<!-- بخش احراز هویت (ورود / ثبت نام) -->
-<div id="authSection" class="min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-96">
-        <h2 class="text-2xl font-bold text-center mb-6 text-blue-600" id="authTitle">ورود به حساب</h2>
-        <input type="email" id="email" placeholder="ایمیل شما" class="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-        
-        <div class="relative w-full mb-4">
-            <input type="password" id="password" placeholder="رمز عبور" class="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-            <span onclick="togglePasswordVisibility()" class="absolute inset-y-0 left-3 flex items-center cursor-pointer text-gray-400 hover:text-blue-600">
-                <i class="fas fa-eye" id="togglePasswordIcon"></i>
-            </span>
-        </div>
-        
-        <button onclick="handleAuth()" id="authBtn" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition font-bold">ورود</button>
-        <p class="text-center mt-4 text-sm text-gray-500 cursor-pointer hover:text-blue-600" onclick="toggleAuthMode()" id="authToggleText">حساب کاربری ندارید؟ ایجاد حساب</p>
-        <p class="text-center mt-2 text-xs text-blue-500 cursor-pointer hover:underline" onclick="forgotPassword()" id="forgotPassText">رمز عبور خود را فراموش کرده‌اید؟</p>
-    </div>
-</div>
-
-<!-- بخش پنل کاربری -->
-<div id="dashboardSection" class="hidden min-h-screen">
-    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <div class="font-bold text-xl text-blue-600">پنل کاربری</div>
-        <div class="flex items-center">
-            <span id="userEmailDisplay" class="ml-4 text-sm text-gray-600 hidden md:inline"></span>
-            <button onclick="changePassword()" class="text-gray-600 hover:text-blue-600 ml-4 text-sm transition"><i class="fas fa-key"></i> تغییر رمز</button>
-            <button onclick="logout()" class="text-red-500 hover:text-red-700 text-sm"><i class="fas fa-sign-out-alt"></i> خروج</button>
-        </div>
-    </nav>
-
-    <div class="container mx-auto p-6 max-w-5xl">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">سفارشات من</h1>
-            <button onclick="showOrderForm()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-md"><i class="fas fa-plus ml-2"></i> ایجاد سفارش جدید</button>
-        </div>
-
-        <div id="ordersList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- سفارشات اینجا لود میشوند -->
-        </div>
-
-        <!-- فرم ایجاد سفارش جدید -->
-        <div id="newOrderForm" class="hidden bg-white p-6 rounded-xl shadow-lg mt-6">
-            <h2 class="text-xl font-bold mb-4 border-b pb-2">ثبت سفارش جدید</h2>
-            
-            <div id="step1">
-                <input type="text" id="siteName" placeholder="نام سایت" class="w-full mb-4 p-3 border rounded-lg">
-                <input type="text" id="slogan" placeholder="شعار سایت" class="w-full mb-4 p-3 border rounded-lg">
-                <select id="template" class="w-full mb-4 p-3 border rounded-lg">
-                    <option value="">انتخاب قالب مد نظر...</option>
-                    <option value="Personal Branding">Personal Branding (Identity)</option>
-                    <option value="Beauty & Wellness">Beauty & Wellness (Lifestyle)</option>
-                    <option value="Fitness Coach">Fitness Coach (Health)</option>
-                    <option value="Legal Consulting">Legal Consulting (Corporate)</option>
-                    <option value="Luxury Real Estate">Luxury Real Estate (Property)</option>
-                    <option value="Photography Studio">Photography Studio (Creative)</option>
-                    <option value="Interior Design">Interior Design (Architecture)</option>
-                    <option value="Language Tutors">Language Tutors (Education)</option>
-                    <option value="Gourmet & Bistro">Gourmet & Bistro (Culinary)</option>
-                </select>
-                <button onclick="submitStep1()" class="bg-blue-600 text-white px-6 py-2 rounded-lg w-full">ثبت اولیه و ادامه</button>
+    <div class="container">
+        <!-- Login Form -->
+        <section id="loginSection">
+            <div class="login-header">
+                <h1>ورود به پنل کاربری</h1>
+                <p>برای مشاهده وضعیت پروژه خود، لطفا وارد شوید.</p>
             </div>
-
-            <div id="step2" class="hidden mt-6 pt-6 border-t border-gray-200">
-                <div class="bg-yellow-50 text-yellow-800 p-3 rounded-lg mb-4 text-sm"><i class="fas fa-exclamation-triangle"></i> برای فعال شدن دکمه پرداخت، تکمیل این بخش الزامی است.</div>
-                
-                <textarea id="bio" placeholder="درباره کسب و کار / بیوگرافی (الزامی)" class="w-full mb-4 p-3 border rounded-lg h-24"></textarea>
-                
-                <p class="text-sm text-gray-600 mb-2 font-bold">راه‌های ارتباطی کسب و کار (تکمیل حداقل یک مورد الزامی است):</p>
-                <input type="text" id="contactAddress" placeholder="آدرس فیزیکی" class="w-full mb-2 p-3 border rounded-lg">
-                <input type="text" id="contactPhone" placeholder="شماره تماس" class="w-full mb-2 p-3 border rounded-lg" dir="ltr" style="text-align: left;">
-                <input type="email" id="contactEmail" placeholder="ایمیل کاری" class="w-full mb-4 p-3 border rounded-lg" dir="ltr" style="text-align: left;">
-                <input type="text" id="mapsLink" placeholder="لینک نقشه گوگل (اختیاری)" class="w-full mb-4 p-3 border rounded-lg" dir="ltr" style="text-align: left;">
-                
-                <p class="text-sm text-gray-600 mb-2">شبکه‌های اجتماعی (اختیاری - لینک وارد کنید):</p>
-                <div class="grid grid-cols-2 gap-2 mb-4">
-                    <input type="text" id="socInsta" placeholder="اینستاگرام" class="p-2 border rounded-lg text-sm" dir="ltr">
-                    <input type="text" id="socFb" placeholder="فیسبوک" class="p-2 border rounded-lg text-sm" dir="ltr">
-                    <input type="text" id="socWa" placeholder="واتساپ" class="p-2 border rounded-lg text-sm" dir="ltr">
-                    <input type="text" id="socLi" placeholder="لینکدین" class="p-2 border rounded-lg text-sm" dir="ltr">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">ایمیل (نام کاربری)</label>
+                    <div class="input-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/></svg>
+                    </div>
+                    <input type="email" id="email" required placeholder="user@example.com">
                 </div>
-
-                <!-- بخش جدید: فیلد دامنه اختصاصی -->
-                <div class="mb-6 p-4 border border-blue-200 bg-blue-50 rounded-lg">
-                    <label class="flex items-center space-x-2 space-x-reverse cursor-pointer mb-2">
-                        <input type="checkbox" id="hasDomainCheckbox" onchange="toggleDomainInput()" class="w-4 h-4 text-blue-600 border-gray-300 rounded">
-                        <span class="text-sm font-bold text-gray-700">دامنه اختصاصی دارم و می‌خواهم متصل شود</span>
-                    </label>
-                    <input type="text" id="customDomain" placeholder="مثال: www.mywebsite.com" class="w-full mt-2 p-3 border rounded-lg hidden" dir="ltr" style="text-align: left;">
+                <div class="form-group">
+                    <label for="password">رمز عبور</label>
+                    <div class="input-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div class="input-icon" id="password-toggle-icon">
+                        <!-- Eye icons will be injected here by JS -->
+                    </div>
+                    <input type="password" id="password" required placeholder="••••••••">
                 </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    ورود به داشبورد
+                    <div class="spinner"></div>
+                </button>
+            </form>
+        </section>
 
-                <div class="flex justify-between items-center mt-6">
-                    <button onclick="saveDetailsAndEnablePay()" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">ذخیره اطلاعات</button>
-                    <button id="payBtn" disabled class="bg-gray-400 text-white px-8 py-3 rounded-xl font-bold cursor-not-allowed flex items-center" onclick="goToPayment()">
-                        <i class="fas fa-euro-sign ml-2"></i> پرداخت (35 یورو)
+        <!-- User Dashboard -->
+        <section id="dashboardSection">
+            <!-- Cards will be populated here as before -->
+        </section>
+    </div>
+    
+    <!-- Modern Alert Modal -->
+    <div class="modal-overlay" id="modern-alert">
+        <div class="modal-box">
+            <div id="modal-icon"></div>
+            <p id="modal-text"></p>
+            <button class="btn btn-primary modal-btn" onclick="closeModernAlert()">متوجه شدم</button>
+        </div>
+    </div>
+
+    <script>
+        // JAVASCRIPT LOGIC IS PRESERVED AND ENHANCED, NOT REPLACED.
+        const API_URL = "https://script.google.com/macros/s/AKfycbwAN_TRwVknMCc-x05ug0L1wS1O8HsthawYEb4iLeMPCla_Rpm-U46rlBthq1Pt9w56/exec";
+        
+        const loginSection = document.getElementById('loginSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const loginBtn = document.getElementById('loginBtn');
+        const spinner = loginBtn.querySelector('.spinner');
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('password-toggle-icon');
+
+        // --- SVG Icons for dynamic use ---
+        const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>`;
+        const eyeSlashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/><path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/></svg>`;
+        const errorIcon = `<svg id="modal-icon-svg" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--danger)"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>`;
+        
+        // --- NEW: Session Persistence Logic ---
+        window.onload = () => {
+            const savedUser = localStorage.getItem('projectUser');
+            if (savedUser) {
+                const { email, password } = JSON.parse(savedUser);
+                document.getElementById('email').value = email;
+                document.getElementById('password').value = password;
+                document.querySelector('.login-header p').textContent = 'در حال ورود خودکار...';
+                loginUser(email, password);
+            }
+        };
+
+        // --- NEW: Password Toggle Visibility ---
+        passwordToggle.innerHTML = eyeIcon;
+        passwordToggle.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.innerHTML = eyeSlashIcon;
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.innerHTML = eyeIcon;
+            }
+        });
+
+        // Refactored Login Logic
+        async function loginUser(email, password, saveSession = false) {
+            loginBtn.disabled = true;
+            spinner.style.display = 'block';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'userLogin', email, password })
+                });
+                const resData = await response.json();
+
+                if (resData.success) {
+                    if (saveSession) {
+                        localStorage.setItem('projectUser', JSON.stringify({ email, password }));
+                    }
+                    displayDashboard(resData.data);
+                } else {
+                    localStorage.removeItem('projectUser'); // Clear failed login
+                    document.querySelector('.login-header p').textContent = 'برای مشاهده وضعیت پروژه خود، لطفا وارد شوید.';
+                    showModernAlert(resData.error);
+                }
+            } catch (error) {
+                localStorage.removeItem('projectUser');
+                document.querySelector('.login-header p').textContent = 'برای مشاهده وضعیت پروژه خود، لطفا وارد شوید.';
+                showModernAlert("خطای ارتباط با سرور. لطفاً اتصال اینترنت خود را بررسی کنید.");
+            }
+            
+            loginBtn.disabled = false;
+            spinner.style.display = 'none';
+        }
+
+        // Original Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            loginUser(email, password, true); // Save session on manual login
+        });
+        
+        // This function now generates the HTML dynamically
+        function displayDashboard(data) {
+            loginSection.style.display = 'none';
+            
+            const dashboardHTML = `
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L8.707 1.5z"/><path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6z"/></svg>
+                        داشبورد پروژه
+                    </h2>
+                    <button class="logout-btn" onclick="logout()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/><path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/></svg>
+                        خروج
                     </button>
                 </div>
+                <div class="info-grid">
+                    <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div><div><strong>ایمیل</strong><span>${data.email}</span></div></div>
+                    <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div><div><strong>تاریخ ثبت</strong><span>${data.date}</span></div></div>
+                    <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><div><strong>وضعیت پرداخت</strong><span class="badge ${getPaymentStatus(data.paymentStatus).class}">${getPaymentStatus(data.paymentStatus).text}</span></div></div>
+                    <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 12c0-5.25-4.25-9.5-9.5-9.5S2.5 6.75 2.5 12s4.25 9.5 9.5 9.5s9.5-4.25 9.5-9.5z"></path><polyline points="22,12 12,12 12,2"></polyline></svg></div><div><strong>وضعیت پروژه</strong><span class="badge ${getOrderStatus(data.orderStatus).class}">${getOrderStatus(data.orderStatus).text}</span></div></div>
+                    <div class="info-item full-width"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg></div><div><strong>دستورات اولیه شما</strong><span style="line-height: 1.6;">${data.instructions}</span></div></div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- مودال نمایش اطلاعات نهایی سایت -->
-<div id="finalDataModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h2 class="text-2xl font-bold mb-4 text-green-600 border-b pb-2">اطلاعات نهایی سایت شما</h2>
-        <div id="finalDataContent" class="space-y-4"></div>
-        <button onclick="closeModal('finalDataModal')" class="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg w-full">بستن</button>
-    </div>
-</div>
-
-<!-- مودال نمایش تیکت ها -->
-<div id="ticketsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col">
-        <div class="flex justify-between items-center border-b pb-3 mb-4">
-            <h2 class="text-xl font-bold text-blue-600">پشتیبانی سفارش: <span id="ticketOrderIdDisplay" class="text-sm text-gray-500"></span></h2>
-            <button onclick="closeModal('ticketsModal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
-        </div>
-        <div id="ticketsChatBox" class="flex-1 overflow-y-auto p-2 flex flex-col"></div>
-        <div class="mt-4 pt-3 border-t flex gap-2">
-            <input type="text" id="newTicketMessage" placeholder="پیام خود را بنویسید..." class="flex-1 p-2 border rounded-lg focus:outline-none focus:border-blue-500">
-            <button onclick="sendNewTicket()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-</div>
-
-<!-- مودال جدید: مشاهده و ویرایش اطلاعات سفارش + آپلود تصویر -->
-<div id="orderDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative">
-        <button onclick="closeModal('orderDetailsModal')" class="absolute top-4 left-4 text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
-        <h2 class="text-2xl font-bold mb-4 text-blue-600 border-b pb-2">جزئیات سفارش <span id="viewOrderId" class="text-sm text-gray-500"></span></h2>
-        
-        <div id="editWarningMessage" class="hidden bg-yellow-50 text-yellow-800 p-3 rounded-lg mb-4 text-sm font-bold border border-yellow-200">
-            <i class="fas fa-info-circle"></i> چون پرداخت انجام نشده است، می‌توانید اطلاعات را ویرایش کنید.
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label class="text-xs text-gray-500 block">نام سایت</label><input type="text" id="viewSiteName" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600"></div>
-            <div><label class="text-xs text-gray-500 block">شعار</label><input type="text" id="viewSlogan" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600"></div>
-            <div class="md:col-span-2"><label class="text-xs text-gray-500 block">قالب انتخابی</label><input type="text" id="viewTemplate" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600" dir="ltr" style="text-align:left;"></div>
-            <div class="md:col-span-2"><label class="text-xs text-gray-500 block">بیوگرافی / درباره</label><textarea id="viewBio" class="w-full p-2 border rounded bg-gray-50 h-20 disabled:text-gray-600"></textarea></div>
-            <div class="md:col-span-2"><label class="text-xs text-gray-500 block">اطلاعات تماس (ترکیبی)</label><input type="text" id="viewContact" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600"></div>
-            <div class="md:col-span-2"><label class="text-xs text-gray-500 block">لینک نقشه</label><input type="text" id="viewMaps" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600" dir="ltr" style="text-align:left;"></div>
-            <div class="md:col-span-2"><label class="text-xs text-gray-500 block">شبکه‌های اجتماعی</label><input type="text" id="viewSocials" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600" dir="ltr" style="text-align:left;"></div>
-            <div class="md:col-span-2"><label class="text-xs text-gray-500 block">دامنه اختصاصی (اختیاری)</label><input type="text" id="viewDomain" class="w-full p-2 border rounded bg-gray-50 disabled:text-gray-600" dir="ltr" style="text-align:left;"></div>
-        </div>
-
-        <!-- دکمه ذخیره تغییرات (فقط برای قبل از پرداخت) -->
-        <button id="saveEditBtn" onclick="saveEditedOrder()" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 font-bold mb-6 hidden">ذخیره تغییرات سفارش</button>
-
-        <!-- بخش آپلود تصاویر (فقط برای بعد از پرداخت) -->
-        <div id="imageUploadSection" class="hidden mt-6 pt-4 border-t border-gray-200">
-            <h3 class="text-lg font-bold text-gray-800 mb-2"><i class="fas fa-images text-blue-500"></i> ارسال تصاویر برای سایت</h3>
+            <div class="card">
+                <div class="card-header">
+                     <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                        اطلاعات و فایل‌های نهایی پروژه
+                    </h2>
+                </div>
+                ${data.projectDetails ? getProjectDetailsHTML(data.projectDetails) : getLockedContentHTML()}
+            </div>`;
             
-            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4 text-sm text-blue-800 leading-relaxed">
-                <i class="fas fa-lightbulb text-yellow-500 text-lg mb-1 block"></i> 
-                <strong>نکته مهم:</strong> حداکثر حجم مجاز برای هر تصویر <strong>500 کیلوبایت</strong> است. تصاویر کم‌حجم باعث افزایش شدید سرعت سایت شما می‌شوند. 
-                برای کاهش حجم تصاویر بدون افت کیفیت، حتماً از سایت <a href="https://tinypng.com/" target="_blank" class="font-bold underline text-blue-900">TinyPNG.com</a> استفاده کنید.
-            </div>
-
-            <div class="flex items-center gap-2 mb-4">
-                <input type="file" id="imageInput" accept="image/*" class="flex-1 border p-2 rounded-lg text-sm">
-                <button id="uploadImgBtn" onclick="uploadOrderImage()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
-                    <i class="fas fa-cloud-upload-alt"></i> <span>آپلود تصویر</span>
-                </button>
-            </div>
-            
-            <p class="text-xs text-gray-500 mb-2">تصاویر ارسال شده تا کنون:</p>
-            <div id="uploadedImagesGallery" class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                <!-- گالری لینک تصاویر -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let isLoginMode = true;
-    let currentUser = localStorage.getItem('userEmail');
-    let currentOrderId = null; 
-    let activeTicketOrderId = null; 
-    let activeEditOrderId = null;
-    let allLoadedOrders = []; 
-
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById('password');
-        const icon = document.getElementById('togglePasswordIcon');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+            dashboardSection.innerHTML = dashboardHTML;
+            dashboardSection.style.display = 'block';
         }
-    }
 
-    // منطق نمایش فیلد دامنه
-    function toggleDomainInput() {
-        const chk = document.getElementById('hasDomainCheckbox');
-        const inp = document.getElementById('customDomain');
-        if(chk.checked) inp.classList.remove('hidden');
-        else { inp.classList.add('hidden'); inp.value = ''; }
-    }
-
-    window.onload = function() {
-        if (currentUser) {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('userEmailDisplay').innerText = currentUser;
-            loadOrders();
-            checkPaymentReturn(); 
-        }
-    }
-
-    function checkPaymentReturn() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-        const pendingOrder = localStorage.getItem('pendingPaymentOrderId');
-
-        if (status && pendingOrder) {
-            Swal.fire({ title: 'در حال بررسی وضعیت پرداخت...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
-
-            fetch(GAS_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: "update_payment", orderId: pendingOrder, status: status })
-            })
-            .then(res => res.json())
-            .then(data => {
-                window.history.replaceState({}, document.title, window.location.pathname); 
-                localStorage.removeItem('pendingPaymentOrderId');
-                if (status === 'success') {
-                    Swal.fire('موفقیت آمیز', 'پرداخت تایید شد و سفارش در حال بررسی است.', 'success');
-                } else {
-                    Swal.fire('خطا', 'پرداخت ناموفق بود.', 'error');
-                }
-                loadOrders();
-            })
-            .catch(error => { Swal.close(); console.error("Error:", error); });
-        }
-    }
-
-    function toggleAuthMode() {
-        isLoginMode = !isLoginMode;
-        document.getElementById('authTitle').innerText = isLoginMode ? 'ورود به حساب' : 'ایجاد حساب کاربری';
-        document.getElementById('authBtn').innerText = isLoginMode ? 'ورود' : 'ثبت نام';
-        document.getElementById('authToggleText').innerText = isLoginMode ? 'حساب کاربری ندارید؟ ایجاد حساب' : 'حساب کاربری دارم (ورود)';
-        document.getElementById('forgotPassText').style.display = isLoginMode ? 'block' : 'none';
-    }
-
-    function handleAuth() {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        if (!email || !password) return Swal.fire('خطا', 'لطفا ایمیل و رمز عبور را وارد کنید.', 'warning');
-
-        Swal.fire({ title: 'در حال برقراری ارتباط با سرور...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-        const action = isLoginMode ? "login" : "register";
+        // --- Helper functions for translation (UNCHANGED) ---
+        function getPaymentStatus(status) { if (status == 1) return { text: 'قسط اول پرداخت شده', class: 'badge-pay-1' }; if (status == 2) return { text: 'تسویه کامل انجام شده', class: 'badge-pay-2' }; return { text: 'نامشخص', class: '' }; }
+        function getOrderStatus(status) { if (status == 1) return { text: 'ثبت اولیه', class: 'badge-status-1' }; if (status == 2) return { text: 'در حال انجام', class: 'badge-status-2' }; if (status == 3) return { text: 'تکمیل شده', class: 'badge-status-3' }; return { text: 'نامشخص', class: '' }; }
         
-        fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: action, email: email, password: password })
-        }).then(response => response.json()).then(data => {
-            if (data.status === "success") {
-                Swal.fire('موفق', isLoginMode ? 'با موفقیت وارد شدید' : 'حساب ساخته شد', 'success');
-                localStorage.setItem('userEmail', email);
-                setTimeout(() => window.location.reload(), 1500);
-            } else {
-                Swal.fire('خطا', data.message || "خطای نامشخص", 'error');
-            }
-        }).catch(error => {
-            Swal.close(); Swal.fire('خطای ارتباطی', 'مشکلی در ارتباط با سرور پیش آمد.', 'error');
-        });
-    }
-
-    function forgotPassword() {
-        Swal.fire({
-            title: 'فراموشی رمز عبور',
-            text: 'ایمیل حساب کاربری خود را وارد کنید:',
-            input: 'email',
-            showCancelButton: true,
-            confirmButtonText: 'ارسال رمز',
-            cancelButtonText: 'انصراف'
-        }).then((result) => {
-            if (result.isConfirmed && result.value) {
-                Swal.fire({ title: 'در حال ارسال ایمیل...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                fetch(GAS_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ action: "forgot_password", email: result.value })
-                }).then(res => res.json()).then(data => {
-                    if(data.status === 'success') Swal.fire('ارسال شد', data.message, 'success');
-                    else Swal.fire('خطا', data.message, 'error');
-                });
-            }
-        });
-    }
-
-    function changePassword() {
-        Swal.fire({
-            title: 'تغییر رمز عبور',
-            html: `
-                <input type="password" id="oldPass" class="swal2-input" placeholder="رمز عبور فعلی">
-                <input type="password" id="newPass" class="swal2-input" placeholder="رمز عبور جدید">
-            `,
-            confirmButtonText: 'تغییر رمز',
-            showCancelButton: true,
-            cancelButtonText: 'انصراف',
-            preConfirm: () => {
-                const oldPass = Swal.getPopup().querySelector('#oldPass').value;
-                const newPass = Swal.getPopup().querySelector('#newPass').value;
-                if (!oldPass || !newPass) Swal.showValidationMessage('پر کردن هر دو فیلد الزامی است');
-                return { oldPass: oldPass, newPass: newPass };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({ title: 'در حال تغییر رمز...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                fetch(GAS_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ action: "change_password", email: currentUser, oldPassword: result.value.oldPass, newPassword: result.value.newPass })
-                }).then(res => res.json()).then(data => {
-                    if(data.status === 'success') Swal.fire('موفق', data.message, 'success');
-                    else Swal.fire('خطا', data.message, 'error');
-                });
-            }
-        });
-    }
-
-    function logout() {
-        localStorage.removeItem('userEmail');
-        window.location.reload();
-    }
-
-    function showOrderForm() {
-        document.getElementById('newOrderForm').classList.remove('hidden');
-        document.getElementById('step1').classList.remove('hidden');
-        document.getElementById('step2').classList.add('hidden');
-    }
-
-    function submitStep1() {
-        const siteName = document.getElementById('siteName').value;
-        const slogan = document.getElementById('slogan').value;
-        const template = document.getElementById('template').value;
-        if (!siteName || !slogan || !template) return Swal.fire('خطا', 'همه موارد الزامی است', 'warning');
-
-        Swal.fire({ title: 'در حال ایجاد سفارش...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-        fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "create_order", email: currentUser, siteName: siteName, slogan: slogan, template: template })
-        }).then(res => res.json()).then(data => {
-            Swal.close();
-            currentOrderId = data.orderId;
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-        }).catch(error => { Swal.close(); Swal.fire('خطا', 'خطا در ارتباط با سرور', 'error'); });
-    }
-
-    function saveDetailsAndEnablePay() {
-        const bio = document.getElementById('bio').value;
-        const address = document.getElementById('contactAddress').value.trim();
-        const phone = document.getElementById('contactPhone').value.trim();
-        const email = document.getElementById('contactEmail').value.trim();
-        
-        if (!bio || (!address && !phone && !email)) {
-            return Swal.fire('خطا', 'وارد کردن بیوگرافی و حداقل یک راه ارتباطی الزامی است.', 'warning');
+        // --- NEW: Helper functions for generating dynamic HTML ---
+        function getLockedContentHTML() {
+            return `<div id="lockedContentMessage">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                        <span>اطلاعات پروژه، فایل‌ها و سورس‌کدها پس از <strong>پرداخت قسط دوم</strong> و <strong>تکمیل نهایی پروژه</strong> در این بخش قابل مشاهده خواهند بود.</span>
+                    </div>`;
         }
-
-        const combinedContact = `آدرس: ${address || '---'} | تلفن: ${phone || '---'} | ایمیل: ${email || '---'}`;
-        const mapsLink = document.getElementById('mapsLink').value;
-        const socials = `Insta:${document.getElementById('socInsta').value}, FB:${document.getElementById('socFb').value}, WA:${document.getElementById('socWa').value}, LI:${document.getElementById('socLi').value}`;
-        const domain = document.getElementById('customDomain').value.trim();
-
-        Swal.fire({ title: 'در حال ذخیره...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-
-        fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "update_order_details", orderId: currentOrderId, bio: bio, contact: combinedContact, maps: mapsLink, socials: socials, domain: domain })
-        }).then(res => res.json()).then(data => {
-            Swal.fire('ذخیره شد', 'حالا میتوانید پرداخت را انجام دهید.', 'success');
-            const payBtn = document.getElementById('payBtn');
-            payBtn.disabled = false;
-            payBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-            payBtn.classList.add('bg-green-500', 'hover:bg-green-600');
-            loadOrders(); // رفرش لیست
-        }).catch(error => { Swal.close(); Swal.fire('خطا', 'خطا در ارتباط با سرور', 'error'); });
-    }
-
-    function goToPayment() {
-        localStorage.setItem('pendingPaymentOrderId', currentOrderId);
-        window.location.href = STRIPE_LINK;
-    }
-
-    function loadOrders() {
-        fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "get_orders", email: currentUser })
-        }).then(res => res.json()).then(data => {
-            const list = document.getElementById('ordersList');
-            list.innerHTML = '';
+        
+        function getProjectDetailsHTML(details) {
+            const siteUrl = details.siteUrl.startsWith('http') ? details.siteUrl : 'http://' + details.siteUrl;
+            // Using a function to escape HTML to prevent XSS from sheet data
+            const escape = (str) => str.replace(/[&<>"']/g, (match) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[match]);
             
-            if(data.orders.length === 0) {
-                list.innerHTML = '<p class="text-gray-500">شما هنوز سفارشی ثبت نکرده‌اید.</p>';
-                return;
-            }
-
-            data.orders.reverse();
-            allLoadedOrders = data.orders;
-
-            data.orders.forEach(order => {
-                let statusColor = order.orderStatus === 'Completed' || order.orderStatus === 'تکمیل شده' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800';
-                
-                let actionBtn = '';
-                if (order.paymentStatus === 'پرداخت نشده' || order.paymentStatus === 'ناموفق') {
-                    actionBtn = `<button onclick="retryPayment('${order.orderId}')" class="mt-4 w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">تلاش مجدد برای پرداخت</button>`;
-                } else if (order.orderStatus === 'Completed' || order.orderStatus === 'تکمیل شده') {
-                    actionBtn = `<button onclick='showFinalData(${JSON.stringify(order)})' class="mt-4 w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 shadow-lg animate-pulse">مشاهده اطلاعات نهایی سایت</button>`;
-                }
-
-                // آیکون جدید مشاهده/ویرایش اطلاعات به هدر کارت اضافه شد
-                list.innerHTML += `
-                    <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100 relative">
-                        <div class="absolute top-3 left-3 flex gap-4">
-                            <span class="cursor-pointer text-gray-400 hover:text-green-600 transition" onclick="openOrderDetailsModal('${order.orderId}')" title="مشاهده و ویرایش اطلاعات"><i class="fas fa-edit text-xl"></i></span>
-                            <span class="cursor-pointer text-gray-400 hover:text-blue-500 transition" onclick="openTicketsModal('${order.orderId}')" title="تاریخچه گفتگو و پشتیبانی"><i class="fas fa-comments text-xl"></i></span>
+            return `<div id="projectDetailsSection" style="display: block;">
+                        <p style="color: var(--text-light); font-size: var(--fs-base); font-weight: 600; margin-bottom: 2rem; border-right: 4px solid var(--primary); padding-right: 15px;">پروژه شما با موفقیت تکمیل شده است. در زیر می‌توانید به تمام اطلاعات و سورس‌کدهای مربوطه دسترسی داشته باشید.</p>
+                        <div class="info-grid">
+                            <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div><div><strong>ایمیل اکانت</strong><span>${escape(details.accountEmail)}</span></div></div>
+                            <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div><div><strong>رمز عبور اکانت</strong><span>${escape(details.accountPassword)}</span></div></div>
+                            <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></div><div><strong>نام کاربری GitHub</strong><span>${escape(details.githubUser)}</span></div></div>
+                            <div class="info-item"><div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path></svg></div><div><strong>آدرس نهایی سایت</strong><span><a href="${siteUrl}" target="_blank">${escape(details.siteUrl)}</a></span></div></div>
+                            <div class="info-item full-width"><div><strong>کد HTML</strong><div class="code-block">${escape(details.htmlCode)}</div></div></div>
+                            <div class="info-item full-width"><div><strong>کد CSS</strong><div class="code-block">${escape(details.cssCode)}</div></div></div>
+                            <div class="info-item full-width"><div><strong>کد JavaScript</strong><div class="code-block">${escape(details.jsCode)}</div></div></div>
+                            <div class="info-item full-width"><div><strong>کد Backend</strong><div class="code-block">${escape(details.backendCode)}</div></div></div>
                         </div>
-                        <h3 class="font-bold text-lg mb-2">${order.siteName}</h3>
-                        <p class="text-sm text-gray-600 mb-1"><span class="font-bold">قالب:</span> ${order.template}</p>
-                        <p class="text-sm text-gray-600 mb-1"><span class="font-bold">کد سفارش:</span> ${order.orderId}</p>
-                        <p class="text-xs text-gray-500 mt-2">تاریخ ثبت: <span dir="ltr">${order.regDate}</span></p>
-                        <p class="text-xs text-gray-500">تاریخ پرداخت: <span dir="ltr">${order.payDate}</span></p>
-                        <div class="mt-3 flex gap-2">
-                            <span class="text-xs px-2 py-1 rounded ${statusColor}">${order.orderStatus}</span>
-                            <span class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-800">${order.paymentStatus}</span>
-                        </div>
-                        ${actionBtn}
-                    </div>
-                `;
-            });
-        }).catch(error => console.error("Error loading orders:", error));
-    }
-
-    // منطق جدید: باز کردن مودال مشاهده/ویرایش اطلاعات
-    function openOrderDetailsModal(orderId) {
-        const order = allLoadedOrders.find(o => o.orderId === orderId);
-        if(!order) return;
-        activeEditOrderId = orderId;
-
-        document.getElementById('viewOrderId').innerText = orderId;
-        document.getElementById('viewSiteName').value = order.siteName;
-        document.getElementById('viewSlogan').value = order.slogan;
-        document.getElementById('viewTemplate').value = order.template;
-        document.getElementById('viewBio').value = order.bio;
-        document.getElementById('viewContact').value = order.contactInfo;
-        document.getElementById('viewMaps').value = order.maps;
-        document.getElementById('viewSocials').value = order.socials;
-        document.getElementById('viewDomain').value = order.domain || '';
-
-        const isUnpaid = (order.paymentStatus === 'پرداخت نشده' || order.paymentStatus === 'ناموفق');
-        
-        // باز و بسته کردن قابلیت ویرایش فیلدها
-        const fields = ['viewSiteName', 'viewSlogan', 'viewTemplate', 'viewBio', 'viewContact', 'viewMaps', 'viewSocials', 'viewDomain'];
-        fields.forEach(f => document.getElementById(f).disabled = !isUnpaid);
-
-        if(isUnpaid) {
-            document.getElementById('editWarningMessage').classList.remove('hidden');
-            document.getElementById('saveEditBtn').classList.remove('hidden');
-            document.getElementById('imageUploadSection').classList.add('hidden');
-        } else {
-            document.getElementById('editWarningMessage').classList.add('hidden');
-            document.getElementById('saveEditBtn').classList.add('hidden');
-            document.getElementById('imageUploadSection').classList.remove('hidden'); // نمایش بخش آپلود تصویر
-            renderImagesGallery(order.images);
+                    </div>`;
         }
 
-        document.getElementById('orderDetailsModal').classList.remove('hidden');
-    }
-
-    // منطق جدید: ذخیره ویرایش قبل از پرداخت
-    function saveEditedOrder() {
-        const btn = document.getElementById('saveEditBtn');
-        btn.innerText = 'در حال ذخیره...';
-        btn.disabled = true;
-
-        const updatedData = {
-            action: "update_full_order",
-            orderId: activeEditOrderId,
-            siteName: document.getElementById('viewSiteName').value,
-            slogan: document.getElementById('viewSlogan').value,
-            template: document.getElementById('viewTemplate').value,
-            bio: document.getElementById('viewBio').value,
-            contact: document.getElementById('viewContact').value,
-            maps: document.getElementById('viewMaps').value,
-            socials: document.getElementById('viewSocials').value,
-            domain: document.getElementById('viewDomain').value
-        };
-
-        fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(updatedData)
-        }).then(res => res.json()).then(data => {
-            btn.innerText = 'ذخیره تغییرات سفارش';
-            btn.disabled = false;
-            if(data.status === 'success') {
-                Swal.fire({title: 'موفق', text: 'اطلاعات با موفقیت ویرایش شد', icon: 'success', timer: 1500, showConfirmButton: false});
-                loadOrders(); // رفرش در پس زمینه
-            } else {
-                Swal.fire('خطا', data.message, 'error');
-            }
-        }).catch(err => {
-            btn.innerText = 'ذخیره تغییرات سفارش';
-            btn.disabled = false;
-        });
-    }
-
-    // منطق جدید: آپلود تصویر (پس زمینه)
-    function uploadOrderImage() {
-        const fileInput = document.getElementById('imageInput');
-        const file = fileInput.files[0];
-        if(!file) return alert('لطفاً یک تصویر انتخاب کنید.');
+        // --- NEW: Modern Alert Functions ---
+        const modal = document.getElementById('modern-alert');
+        function showModernAlert(message) {
+            document.getElementById('modal-icon').innerHTML = errorIcon;
+            document.getElementById('modal-text').textContent = message;
+            modal.classList.add('active');
+        }
+        function closeModernAlert() { modal.classList.remove('active'); }
         
-        // محدودیت 500 کیلوبایت
-        if(file.size > 512000) {
-            return Swal.fire('حجم تصویر زیاد است', 'حجم تصویر نباید بیشتر از 500 کیلوبایت باشد. لطفاً از TinyPNG برای کاهش حجم استفاده کنید.', 'error');
+        // Original Logout function, ENHANCED
+        function logout() {
+            localStorage.removeItem('projectUser'); // Clear saved session
+            window.location.reload();
         }
 
-        const btn = document.getElementById('uploadImgBtn');
-        const originalBtnHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال آپلود...';
-        btn.disabled = true;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const base64Data = e.target.result.split(',')[1];
-            
-            fetch(GAS_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                    action: "upload_image",
-                    orderId: activeEditOrderId,
-                    fileName: file.name,
-                    mimeType: file.type,
-                    base64: base64Data
-                })
-            }).then(res => res.json()).then(data => {
-                btn.innerHTML = originalBtnHTML;
-                btn.disabled = false;
-                fileInput.value = ''; // پاک کردن اینپوت
-                if(data.status === 'success') {
-                    // بروزرسانی گالری به صورت دستی تا نیازی به رفرش کل سفارشات نباشد
-                    const orderIndex = allLoadedOrders.findIndex(o => o.orderId === activeEditOrderId);
-                    if(orderIndex > -1) {
-                        allLoadedOrders[orderIndex].images = allLoadedOrders[orderIndex].images ? allLoadedOrders[orderIndex].images + "," + data.imageUrl : data.imageUrl;
-                        renderImagesGallery(allLoadedOrders[orderIndex].images);
-                    }
-                } else {
-                    Swal.fire('خطا', data.message, 'error');
-                }
-            }).catch(err => {
-                btn.innerHTML = originalBtnHTML;
-                btn.disabled = false;
-                Swal.fire('خطا', 'خطا در ارتباط با سرور هنگام آپلود.', 'error');
-            });
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // منطق جدید: نمایش گالری تصاویر آپلود شده
-    function renderImagesGallery(imagesString) {
-        const gallery = document.getElementById('uploadedImagesGallery');
-        gallery.innerHTML = '';
-        if(!imagesString) {
-            gallery.innerHTML = '<span class="text-xs text-gray-400 col-span-full">تصویری ارسال نشده است.</span>';
-            return;
-        }
-        const links = imagesString.split(',');
-        links.forEach((url, index) => {
-            if(url.trim() !== "") {
-                gallery.innerHTML += `
-                    <a href="${url}" target="_blank" class="block bg-gray-100 border rounded-lg p-2 text-center hover:bg-blue-100 transition">
-                        <i class="fas fa-image text-gray-400 text-2xl mb-1"></i>
-                        <span class="block text-xs text-blue-600 truncate">مشاهده تصویر ${index + 1}</span>
-                    </a>
-                `;
-            }
-        });
-    }
-
-    function retryPayment(orderId) {
-        localStorage.setItem('pendingPaymentOrderId', orderId);
-        window.location.href = STRIPE_LINK;
-    }
-
-    function openTicketsModal(orderId) {
-        activeTicketOrderId = orderId;
-        document.getElementById('ticketOrderIdDisplay').innerText = orderId;
-        
-        const chatBox = document.getElementById('ticketsChatBox');
-        chatBox.innerHTML = '';
-        
-        const order = allLoadedOrders.find(o => o.orderId === orderId);
-        if(order && order.tickets && order.tickets.length > 0) {
-            order.tickets.forEach(ticket => {
-                const isUser = ticket.sender.toLowerCase() === currentUser.toLowerCase();
-                const bubbleClass = isUser ? 'chat-user' : 'chat-admin';
-                const senderName = isUser ? 'شما' : 'پشتیبانی ToWeb';
-                
-                chatBox.innerHTML += `
-                    <div class="chat-bubble ${bubbleClass}">
-                        <div class="text-xs opacity-70 mb-1 font-bold">${senderName} <span class="font-normal mx-2">${ticket.date}</span></div>
-                        <div>${ticket.message}</div>
-                    </div>
-                `;
-            });
-            setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
-        } else {
-            chatBox.innerHTML = '<p class="text-center text-gray-400 mt-10">هیچ پیامی ثبت نشده است. اولین پیام خود را بفرستید.</p>';
-        }
-        
-        document.getElementById('ticketsModal').classList.remove('hidden');
-    }
-
-    function sendNewTicket() {
-        const msgInput = document.getElementById('newTicketMessage');
-        const msg = msgInput.value.trim();
-        if(!msg || !activeTicketOrderId) return;
-        
-        msgInput.value = 'در حال ارسال...';
-        msgInput.disabled = true;
-
-        fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "submit_ticket", orderId: activeTicketOrderId, email: currentUser, message: msg })
-        }).then(res => res.json()).then(data => {
-            msgInput.value = '';
-            msgInput.disabled = false;
-            fetch(GAS_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_orders", email: currentUser }) })
-            .then(res => res.json()).then(data => {
-                allLoadedOrders = data.orders.reverse();
-                openTicketsModal(activeTicketOrderId);
-            });
-        });
-    }
-
-    function showFinalData(order) {
-        const content = `
-            <div class="bg-gray-50 p-3 rounded border mb-2"><strong class="text-gray-700">آدرس سایت:</strong> <a href="${order.siteUrl}" target="_blank" class="text-blue-500" dir="ltr">${order.siteUrl}</a></div>
-            <div class="bg-gray-50 p-3 rounded border mb-2"><strong class="text-gray-700">ایمیل مدیر:</strong> <span dir="ltr">${order.siteEmail}</span></div>
-            <div class="bg-gray-50 p-3 rounded border mb-2"><strong class="text-gray-700">رمز عبور:</strong> <span dir="ltr">${order.sitePass}</span></div>
-            <h3 class="font-bold mt-4 mb-2">سورس کدها:</h3>
-            <textarea readonly class="w-full text-left p-2 border rounded bg-gray-800 text-green-400 text-sm h-24 mb-2" dir="ltr" placeholder="HTML Code">${order.html}</textarea>
-            <textarea readonly class="w-full text-left p-2 border rounded bg-gray-800 text-yellow-300 text-sm h-24 mb-2" dir="ltr" placeholder="CSS Code">${order.css}</textarea>
-            <textarea readonly class="w-full text-left p-2 border rounded bg-gray-800 text-blue-300 text-sm h-24" dir="ltr" placeholder="JS Code">${order.js}</textarea>
-        `;
-        document.getElementById('finalDataContent').innerHTML = content;
-        document.getElementById('finalDataModal').classList.remove('hidden');
-    }
-
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-</script>
+    </script>
 </body>
 </html>
