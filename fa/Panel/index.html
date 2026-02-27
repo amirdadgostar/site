@@ -14,12 +14,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
         body { font-family: 'Vazirmatn', sans-serif; background-color: #f3f4f6; }
         .hidden { display: none !important; }
+        
+        /* استایل اختصاصی برای بخش تیکت ها */
+        .chat-bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; font-size: 0.9rem; }
+        .chat-user { background-color: #eff6ff; color: #1e3a8a; border-bottom-right-radius: 0; margin-left: auto; border: 1px solid #bfdbfe; }
+        .chat-admin { background-color: #f3f4f6; color: #374151; border-bottom-left-radius: 0; margin-right: auto; border: 1px solid #e5e7eb; }
     </style>
 </head>
 <body class="text-gray-800">
 
 <script>
-    // تنظیمات اصلی - این دو خط را حتما تنظیم کنید (لینک جدید را قرار دهید)
+    // تنظیمات اصلی - این دو خط را حتما تنظیم کنید
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwQLkWRqlL9hmsua2Q1kTNtOBWDjmPF-w0GLtottMivZYkok_tZo0JWDNs5ZuuZ1EQv/exec"; 
     const STRIPE_LINK = "https://checkout.stripe.com/pay/لینک_شما"; 
 </script>
@@ -41,6 +46,9 @@
         <button onclick="handleAuth()" id="authBtn" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition font-bold">ورود</button>
         
         <p class="text-center mt-4 text-sm text-gray-500 cursor-pointer hover:text-blue-600" onclick="toggleAuthMode()" id="authToggleText">حساب کاربری ندارید؟ ایجاد حساب</p>
+        
+        <!-- لینک جدید: فراموشی رمز عبور -->
+        <p class="text-center mt-2 text-xs text-blue-500 cursor-pointer hover:underline" onclick="forgotPassword()" id="forgotPassText">رمز عبور خود را فراموش کرده‌اید؟</p>
     </div>
 </div>
 
@@ -49,9 +57,11 @@
     <!-- هدر -->
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
         <div class="font-bold text-xl text-blue-600">پنل کاربری</div>
-        <div>
-            <span id="userEmailDisplay" class="ml-4 text-sm text-gray-600"></span>
-            <button onclick="logout()" class="text-red-500 hover:text-red-700"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        <div class="flex items-center">
+            <span id="userEmailDisplay" class="ml-4 text-sm text-gray-600 hidden md:inline"></span>
+            <!-- دکمه جدید: تغییر رمز عبور -->
+            <button onclick="changePassword()" class="text-gray-600 hover:text-blue-600 ml-4 text-sm transition"><i class="fas fa-key"></i> تغییر رمز</button>
+            <button onclick="logout()" class="text-red-500 hover:text-red-700 text-sm"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
     </nav>
 
@@ -94,15 +104,21 @@
                 <div class="bg-yellow-50 text-yellow-800 p-3 rounded-lg mb-4 text-sm"><i class="fas fa-exclamation-triangle"></i> برای فعال شدن دکمه پرداخت، تکمیل این بخش الزامی است.</div>
                 
                 <textarea id="bio" placeholder="درباره کسب و کار / بیوگرافی (الزامی)" class="w-full mb-4 p-3 border rounded-lg h-24"></textarea>
-                <input type="text" id="contactInfo" placeholder="آدرس، شماره تماس یا ایمیل کسب و کار (حداقل یک مورد الزامی)" class="w-full mb-4 p-3 border rounded-lg">
-                <input type="text" id="mapsLink" placeholder="لینک نقشه گوگل (اختیاری)" class="w-full mb-4 p-3 border rounded-lg">
+                
+                <!-- تغییر یافته: 3 فیلد جداگانه برای اطلاعات تماس -->
+                <p class="text-sm text-gray-600 mb-2 font-bold">راه‌های ارتباطی کسب و کار (تکمیل حداقل یک مورد الزامی است):</p>
+                <input type="text" id="contactAddress" placeholder="آدرس فیزیکی" class="w-full mb-2 p-3 border rounded-lg">
+                <input type="text" id="contactPhone" placeholder="شماره تماس" class="w-full mb-2 p-3 border rounded-lg" dir="ltr" style="text-align: left;">
+                <input type="email" id="contactEmail" placeholder="ایمیل کاری" class="w-full mb-4 p-3 border rounded-lg" dir="ltr" style="text-align: left;">
+                
+                <input type="text" id="mapsLink" placeholder="لینک نقشه گوگل (اختیاری)" class="w-full mb-4 p-3 border rounded-lg" dir="ltr" style="text-align: left;">
                 
                 <p class="text-sm text-gray-600 mb-2">شبکه‌های اجتماعی (اختیاری - لینک وارد کنید):</p>
                 <div class="grid grid-cols-2 gap-2 mb-4">
-                    <input type="text" id="socInsta" placeholder="اینستاگرام" class="p-2 border rounded-lg text-sm">
-                    <input type="text" id="socFb" placeholder="فیسبوک" class="p-2 border rounded-lg text-sm">
-                    <input type="text" id="socWa" placeholder="واتساپ" class="p-2 border rounded-lg text-sm">
-                    <input type="text" id="socLi" placeholder="لینکدین" class="p-2 border rounded-lg text-sm">
+                    <input type="text" id="socInsta" placeholder="اینستاگرام" class="p-2 border rounded-lg text-sm" dir="ltr">
+                    <input type="text" id="socFb" placeholder="فیسبوک" class="p-2 border rounded-lg text-sm" dir="ltr">
+                    <input type="text" id="socWa" placeholder="واتساپ" class="p-2 border rounded-lg text-sm" dir="ltr">
+                    <input type="text" id="socLi" placeholder="لینکدین" class="p-2 border rounded-lg text-sm" dir="ltr">
                 </div>
 
                 <div class="flex justify-between items-center mt-6">
@@ -126,12 +142,31 @@
     </div>
 </div>
 
+<!-- مودال جدید: نمایش تیکت ها -->
+<div id="ticketsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col">
+        <div class="flex justify-between items-center border-b pb-3 mb-4">
+            <h2 class="text-xl font-bold text-blue-600">پشتیبانی سفارش: <span id="ticketOrderIdDisplay" class="text-sm text-gray-500"></span></h2>
+            <button onclick="closeModal('ticketsModal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        
+        <div id="ticketsChatBox" class="flex-1 overflow-y-auto p-2 flex flex-col">
+            <!-- چت ها اینجا لود میشوند -->
+        </div>
+
+        <div class="mt-4 pt-3 border-t flex gap-2">
+            <input type="text" id="newTicketMessage" placeholder="پیام خود را بنویسید..." class="flex-1 p-2 border rounded-lg focus:outline-none focus:border-blue-500">
+            <button onclick="sendNewTicket()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
 <script>
     let isLoginMode = true;
     let currentUser = localStorage.getItem('userEmail');
     let currentOrderId = null; 
+    let activeTicketOrderId = null; // برای مدیریت تیکت باز شده
 
-    // منطق نمایش/مخفی کردن رمز عبور
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById('password');
         const icon = document.getElementById('togglePasswordIcon');
@@ -146,7 +181,6 @@
         }
     }
 
-    // --- منطق اجرای اولیه و برگشت از پرداخت ---
     window.onload = function() {
         if (currentUser) {
             document.getElementById('authSection').classList.add('hidden');
@@ -163,11 +197,7 @@
         const pendingOrder = localStorage.getItem('pendingPaymentOrderId');
 
         if (status && pendingOrder) {
-            Swal.fire({
-                title: 'در حال بررسی وضعیت پرداخت...',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading() }
-            });
+            Swal.fire({ title: 'در حال بررسی وضعیت پرداخت...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
 
             fetch(GAS_URL, {
                 method: "POST",
@@ -178,7 +208,6 @@
             .then(data => {
                 window.history.replaceState({}, document.title, window.location.pathname); 
                 localStorage.removeItem('pendingPaymentOrderId');
-                
                 if (status === 'success') {
                     Swal.fire('موفقیت آمیز', 'پرداخت تایید شد و سفارش در حال بررسی است.', 'success');
                 } else {
@@ -186,45 +215,31 @@
                 }
                 loadOrders();
             })
-            .catch(error => {
-                Swal.close();
-                console.error("Error:", error);
-            });
+            .catch(error => { Swal.close(); console.error("Error:", error); });
         }
     }
 
-    // --- منطق احراز هویت ---
     function toggleAuthMode() {
         isLoginMode = !isLoginMode;
         document.getElementById('authTitle').innerText = isLoginMode ? 'ورود به حساب' : 'ایجاد حساب کاربری';
         document.getElementById('authBtn').innerText = isLoginMode ? 'ورود' : 'ثبت نام';
         document.getElementById('authToggleText').innerText = isLoginMode ? 'حساب کاربری ندارید؟ ایجاد حساب' : 'حساب کاربری دارم (ورود)';
+        document.getElementById('forgotPassText').style.display = isLoginMode ? 'block' : 'none';
     }
 
     function handleAuth() {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
-        
-        if (!email || !password) {
-            return Swal.fire('خطا', 'لطفا ایمیل و رمز عبور را وارد کنید.', 'warning');
-        }
+        if (!email || !password) return Swal.fire('خطا', 'لطفا ایمیل و رمز عبور را وارد کنید.', 'warning');
 
-        Swal.fire({ 
-            title: 'در حال برقراری ارتباط با سرور...', 
-            allowOutsideClick: false, 
-            didOpen: () => { Swal.showLoading() }
-        });
-
+        Swal.fire({ title: 'در حال برقراری ارتباط با سرور...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
         const action = isLoginMode ? "login" : "register";
         
-        // ارتباط بهینه شده دقیقا مطابق متد استاندارد گوگل
         fetch(GAS_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ action: action, email: email, password: password })
-        })
-        .then(response => response.json())
-        .then(data => {
+        }).then(response => response.json()).then(data => {
             if (data.status === "success") {
                 Swal.fire('موفق', isLoginMode ? 'با موفقیت وارد شدید' : 'حساب ساخته شد', 'success');
                 localStorage.setItem('userEmail', email);
@@ -232,11 +247,64 @@
             } else {
                 Swal.fire('خطا', data.message || "خطای نامشخص", 'error');
             }
-        })
-        .catch(error => {
-            Swal.close();
-            console.error("Fetch Error:", error);
-            Swal.fire('خطای ارتباطی', 'مشکلی در ارتباط با سرور پیش آمد.', 'error');
+        }).catch(error => {
+            Swal.close(); Swal.fire('خطای ارتباطی', 'مشکلی در ارتباط با سرور پیش آمد.', 'error');
+        });
+    }
+
+    // منطق جدید: فراموشی رمز
+    function forgotPassword() {
+        Swal.fire({
+            title: 'فراموشی رمز عبور',
+            text: 'ایمیل حساب کاربری خود را وارد کنید:',
+            input: 'email',
+            showCancelButton: true,
+            confirmButtonText: 'ارسال رمز',
+            cancelButtonText: 'انصراف'
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                Swal.fire({ title: 'در حال ارسال ایمیل...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                fetch(GAS_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: "forgot_password", email: result.value })
+                }).then(res => res.json()).then(data => {
+                    if(data.status === 'success') Swal.fire('ارسال شد', data.message, 'success');
+                    else Swal.fire('خطا', data.message, 'error');
+                });
+            }
+        });
+    }
+
+    // منطق جدید: تغییر رمز
+    function changePassword() {
+        Swal.fire({
+            title: 'تغییر رمز عبور',
+            html: `
+                <input type="password" id="oldPass" class="swal2-input" placeholder="رمز عبور فعلی">
+                <input type="password" id="newPass" class="swal2-input" placeholder="رمز عبور جدید">
+            `,
+            confirmButtonText: 'تغییر رمز',
+            showCancelButton: true,
+            cancelButtonText: 'انصراف',
+            preConfirm: () => {
+                const oldPass = Swal.getPopup().querySelector('#oldPass').value;
+                const newPass = Swal.getPopup().querySelector('#newPass').value;
+                if (!oldPass || !newPass) Swal.showValidationMessage('پر کردن هر دو فیلد الزامی است');
+                return { oldPass: oldPass, newPass: newPass };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'در حال تغییر رمز...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                fetch(GAS_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: "change_password", email: currentUser, oldPassword: result.value.oldPass, newPassword: result.value.newPass })
+                }).then(res => res.json()).then(data => {
+                    if(data.status === 'success') Swal.fire('موفق', data.message, 'success');
+                    else Swal.fire('خطا', data.message, 'error');
+                });
+            }
         });
     }
 
@@ -245,7 +313,6 @@
         window.location.reload();
     }
 
-    // --- منطق سفارشات ---
     function showOrderForm() {
         document.getElementById('newOrderForm').classList.remove('hidden');
         document.getElementById('step1').classList.remove('hidden');
@@ -256,38 +323,38 @@
         const siteName = document.getElementById('siteName').value;
         const slogan = document.getElementById('slogan').value;
         const template = document.getElementById('template').value;
-
         if (!siteName || !slogan || !template) return Swal.fire('خطا', 'همه موارد الزامی است', 'warning');
 
         Swal.fire({ title: 'در حال ایجاد سفارش...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-
         fetch(GAS_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ action: "create_order", email: currentUser, siteName: siteName, slogan: slogan, template: template })
-        })
-        .then(res => res.json())
-        .then(data => {
+        }).then(res => res.json()).then(data => {
             Swal.close();
             currentOrderId = data.orderId;
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
-        })
-        .catch(error => {
-            Swal.close();
-            Swal.fire('خطا', 'خطا در ارتباط با سرور', 'error');
-        });
+        }).catch(error => { Swal.close(); Swal.fire('خطا', 'خطا در ارتباط با سرور', 'error'); });
     }
 
     function saveDetailsAndEnablePay() {
         const bio = document.getElementById('bio').value;
-        const contactInfo = document.getElementById('contactInfo').value;
-        const mapsLink = document.getElementById('mapsLink').value;
         
-        if (!bio || !contactInfo) {
-            return Swal.fire('خطا', 'وارد کردن بیوگرافی و حداقل یک راه ارتباطی الزامی است.', 'warning');
+        // منطق جدید: خواندن 3 فیلد
+        const address = document.getElementById('contactAddress').value.trim();
+        const phone = document.getElementById('contactPhone').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        
+        // بررسی اینکه حداقل یک مورد پر شده باشد
+        if (!bio || (!address && !phone && !email)) {
+            return Swal.fire('خطا', 'وارد کردن بیوگرافی و حداقل یک راه ارتباطی (آدرس، تلفن یا ایمیل) الزامی است.', 'warning');
         }
 
+        // ترکیب کردن 3 فیلد برای ثبت در شیت قبلی (بدون نیاز به تغییر ستون های شیت شما)
+        const combinedContact = `آدرس: ${address || '---'} | تلفن: ${phone || '---'} | ایمیل: ${email || '---'}`;
+        
+        const mapsLink = document.getElementById('mapsLink').value;
         const socials = `Insta:${document.getElementById('socInsta').value}, FB:${document.getElementById('socFb').value}, WA:${document.getElementById('socWa').value}, LI:${document.getElementById('socLi').value}`;
 
         Swal.fire({ title: 'در حال ذخیره...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
@@ -295,20 +362,14 @@
         fetch(GAS_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "update_order_details", orderId: currentOrderId, bio: bio, contact: contactInfo, maps: mapsLink, socials: socials })
-        })
-        .then(res => res.json())
-        .then(data => {
+            body: JSON.stringify({ action: "update_order_details", orderId: currentOrderId, bio: bio, contact: combinedContact, maps: mapsLink, socials: socials })
+        }).then(res => res.json()).then(data => {
             Swal.fire('ذخیره شد', 'حالا میتوانید پرداخت را انجام دهید.', 'success');
             const payBtn = document.getElementById('payBtn');
             payBtn.disabled = false;
             payBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
             payBtn.classList.add('bg-green-500', 'hover:bg-green-600');
-        })
-        .catch(error => {
-            Swal.close();
-            Swal.fire('خطا', 'خطا در ارتباط با سرور', 'error');
-        });
+        }).catch(error => { Swal.close(); Swal.fire('خطا', 'خطا در ارتباط با سرور', 'error'); });
     }
 
     function goToPayment() {
@@ -316,15 +377,14 @@
         window.location.href = STRIPE_LINK;
     }
 
-    // --- بارگذاری و نمایش داشبورد ---
+    let allLoadedOrders = []; // برای ذخیره کل سفارشات و دسترسی در تیکت ها
+
     function loadOrders() {
         fetch(GAS_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ action: "get_orders", email: currentUser })
-        })
-        .then(res => res.json())
-        .then(data => {
+        }).then(res => res.json()).then(data => {
             const list = document.getElementById('ordersList');
             list.innerHTML = '';
             
@@ -333,6 +393,10 @@
                 return;
             }
 
+            // منطق جدید: معکوس کردن آرایه تا سفارشات جدید در بالا قرار بگیرند
+            data.orders.reverse();
+            allLoadedOrders = data.orders; // ذخیره موقت
+
             data.orders.forEach(order => {
                 let statusColor = order.orderStatus === 'Completed' || order.orderStatus === 'تکمیل شده' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800';
                 
@@ -340,15 +404,20 @@
                 if (order.paymentStatus === 'پرداخت نشده' || order.paymentStatus === 'ناموفق') {
                     actionBtn = `<button onclick="retryPayment('${order.orderId}')" class="mt-4 w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">تلاش مجدد برای پرداخت</button>`;
                 } else if (order.orderStatus === 'Completed' || order.orderStatus === 'تکمیل شده') {
-                    actionBtn = `<button onclick='showFinalData(${JSON.stringify(order)})' class="mt-4 w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 shadow-lg animate-pulse">مشاهده اطلاعات تحویلی سایت</button>`;
+                    actionBtn = `<button onclick='showFinalData(${JSON.stringify(order)})' class="mt-4 w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 shadow-lg animate-pulse">مشاهده اطلاعات نهایی سایت</button>`;
                 }
 
+                // اضافه شدن بخش تاریخ ها به کارت
                 list.innerHTML += `
                     <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100 relative">
-                        <div class="absolute top-3 left-3 cursor-pointer text-gray-400 hover:text-blue-500" onclick="submitTicket('${order.orderId}')" title="ثبت تیکت پشتیبانی"><i class="fas fa-headset text-xl"></i></div>
+                        <div class="absolute top-3 left-3 flex gap-3">
+                            <span class="cursor-pointer text-gray-400 hover:text-blue-500" onclick="openTicketsModal('${order.orderId}')" title="تاریخچه گفتگو و پشتیبانی"><i class="fas fa-comments text-xl"></i></span>
+                        </div>
                         <h3 class="font-bold text-lg mb-2">${order.siteName}</h3>
                         <p class="text-sm text-gray-600 mb-1"><span class="font-bold">قالب:</span> ${order.template}</p>
                         <p class="text-sm text-gray-600 mb-1"><span class="font-bold">کد سفارش:</span> ${order.orderId}</p>
+                        <p class="text-xs text-gray-500 mt-2">تاریخ ثبت: <span dir="ltr">${order.regDate}</span></p>
+                        <p class="text-xs text-gray-500">تاریخ پرداخت: <span dir="ltr">${order.payDate}</span></p>
                         <div class="mt-3 flex gap-2">
                             <span class="text-xs px-2 py-1 rounded ${statusColor}">${order.orderStatus}</span>
                             <span class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-800">${order.paymentStatus}</span>
@@ -357,8 +426,7 @@
                     </div>
                 `;
             });
-        })
-        .catch(error => console.error("Error loading orders:", error));
+        }).catch(error => console.error("Error loading orders:", error));
     }
 
     function retryPayment(orderId) {
@@ -366,27 +434,60 @@
         window.location.href = STRIPE_LINK;
     }
 
-    function submitTicket(orderId) {
-        Swal.fire({
-            title: 'ثبت تیکت پشتیبانی',
-            input: 'textarea',
-            inputLabel: `پیام خود را برای سفارش ${orderId} بنویسید:`,
-            showCancelButton: true,
-            confirmButtonText: 'ارسال',
-            cancelButtonText: 'انصراف'
-        }).then((result) => {
-            if (result.isConfirmed && result.value) {
-                fetch(GAS_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ action: "submit_ticket", orderId: orderId, email: currentUser, message: result.value })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    Swal.fire('ارسال شد', 'پیام شما به پشتیبانی ارسال شد.', 'success');
-                })
-                .catch(error => Swal.fire('خطا', 'خطا در ارسال پیام', 'error'));
-            }
+    // منطق جدید: باز کردن مودال تاریخچه تیکت ها
+    function openTicketsModal(orderId) {
+        activeTicketOrderId = orderId;
+        document.getElementById('ticketOrderIdDisplay').innerText = orderId;
+        
+        const chatBox = document.getElementById('ticketsChatBox');
+        chatBox.innerHTML = '';
+        
+        const order = allLoadedOrders.find(o => o.orderId === orderId);
+        if(order && order.tickets && order.tickets.length > 0) {
+            order.tickets.forEach(ticket => {
+                // اگر فرستنده کاربر بود پیام راست، اگر ادمین بود پیام چپ
+                const isUser = ticket.sender.toLowerCase() === currentUser.toLowerCase();
+                const bubbleClass = isUser ? 'chat-user' : 'chat-admin';
+                const senderName = isUser ? 'شما' : 'پشتیبانی ToWeb';
+                
+                chatBox.innerHTML += `
+                    <div class="chat-bubble ${bubbleClass}">
+                        <div class="text-xs opacity-70 mb-1 font-bold">${senderName} <span class="font-normal mx-2">${ticket.date}</span></div>
+                        <div>${ticket.message}</div>
+                    </div>
+                `;
+            });
+            // اسکرول به پایین
+            setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
+        } else {
+            chatBox.innerHTML = '<p class="text-center text-gray-400 mt-10">هیچ پیامی ثبت نشده است. اولین پیام خود را بفرستید.</p>';
+        }
+        
+        document.getElementById('ticketsModal').classList.remove('hidden');
+    }
+
+    // ارسال تیکت جدید از درون مودال
+    function sendNewTicket() {
+        const msgInput = document.getElementById('newTicketMessage');
+        const msg = msgInput.value.trim();
+        if(!msg || !activeTicketOrderId) return;
+        
+        msgInput.value = 'در حال ارسال...';
+        msgInput.disabled = true;
+
+        fetch(GAS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "submit_ticket", orderId: activeTicketOrderId, email: currentUser, message: msg })
+        }).then(res => res.json()).then(data => {
+            msgInput.value = '';
+            msgInput.disabled = false;
+            // ریلود کردن بی سر و صدای سفارشات برای آپدیت شدن لیست چت ها
+            fetch(GAS_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_orders", email: currentUser }) })
+            .then(res => res.json()).then(data => {
+                allLoadedOrders = data.orders;
+                openTicketsModal(activeTicketOrderId);
+            });
         });
     }
 
@@ -404,9 +505,7 @@
         document.getElementById('finalDataModal').classList.remove('hidden');
     }
 
-    function closeModal(id) {
-        document.getElementById(id).classList.add('hidden');
-    }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 </script>
 </body>
 </html>
