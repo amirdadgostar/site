@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چت امن P2P</title>
+    <!-- استفاده از فونت و آیکون -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- کتابخانه برای دیتابیس دائمی مرورگر -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+
+    <style>
+        :root { --p: #0088cc; --bg: #e5ddd5; --me: #dcf8c6; --other: #fff; }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .hide { display: none !important; }
+        
+        /* فرم ورود */
+        #auth-screen { flex: 1; display: flex; justify-content: center; align-items: center; background: white; z-index: 100;}
+        .card { padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 350px; text-align: center; }
+        .inp { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; outline: none; }
+        .btn { width: 100%; padding: 12px; background: var(--p); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        /* صفحه چت */
+        #chat-screen { display: flex; flex-direction: column; height: 100%; }
+        header { background: var(--p); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        #status { font-size: 0.8rem; opacity: 0.8; }
+        #typing-ind { font-size: 0.8rem; color: #ffeb3b; height: 15px; transition: 0.3s;}
+        
+        #chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; position: relative; word-wrap: break-word; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);}
+        .me { background: var(--me); align-self: flex-end; border-bottom-right-radius: 0; }
+        .other { background: var(--other); align-self: flex-start; border-bottom-left-radius: 0; }
+        .ticks { font-size: 0.7rem; color: #888; float: left; margin-top: 5px; margin-right: 10px; }
+        .ticks.read { color: #34b7f1; }
+        
+        .media-img { max-width: 100%; border-radius: 8px; margin-bottom: 5px; }
+
+        .input-area { padding: 10px; background: #f0f0f0; display: flex; gap: 10px; align-items: center; }
+        #msg-input { flex: 1; padding: 12px; border-radius: 20px; border: none; outline: none; }
+        .icon-btn { background: none; border: none; font-size: 1.5rem; color: #555; cursor: pointer; display: flex;}
+    </style>
+</head>
+<body>
+
+<!-- صفحه ورود / ثبت نام -->
+<div id="auth-screen">
+    <div class="card" id="login-box">
+        <h2>ورود به چت امن</h2><br>
+        <input type="text" id="l-id" class="inp" placeholder="نام کاربری (انگلیسی)">
+        <input type="password" id="l-pass" class="inp" placeholder="رمز عبور">
+        <button class="btn" onclick="app.login()">ورود</button>
+        <p style="margin-top: 15px; font-size: 0.9rem; color: var(--p); cursor: pointer;" onclick="app.toggleAuth()">ثبت نام کنید</p>
+    </div>
+    
+    <div class="card hide" id="reg-box">
+        <h2>ثبت نام</h2><br>
+        <input type="text" id="r-name" class="inp" placeholder="نام شما">
+        <input type="text" id="r-id" class="inp" placeholder="نام کاربری (انگلیسی)">
+        <input type="password" id="r-pass" class="inp" placeholder="رمز عبور">
+        <button class="btn" onclick="app.register()">ثبت نام</button>
+        <p style="margin-top: 15px; font-size: 0.9rem; color: var(--p); cursor: pointer;" onclick="app.toggleAuth()">بازگشت به ورود</p>
+    </div>
+</div>
+
+<!-- صفحه چت -->
+<div id="chat-screen" class="hide">
+    <header>
+        <div>
+            <div id="chat-with" style="font-weight: bold; font-size: 1.1rem;">در حال اتصال...</div>
+            <div id="status">آفلاین 🔴</div>
+            <div id="typing-ind"></div>
+        </div>
+        <button class="icon-btn" onclick="app.copyMyLink()" style="color:white" title="کپی لینک من"><i class="ph ph-link"></i></button>
+    </header>
+
+    <div id="chat-box"></div>
+
+    <div class="input-area">
+        <label class="icon-btn">
+            <i class="ph ph-paperclip"></i>
+            <input type="file" id="file-input" class="hide" onchange="app.sendFile(this)">
+        </label>
+        <input type="text" id="msg-input" placeholder="پیام بنویسید..." oninput="app.sendTyping('text')" onkeypress="if(event.key==='Enter') app.sendMsg()">
+        <button class="icon-btn" onclick="app.sendMsg()" style="color: var(--p);"><i class="ph-fill ph-paper-plane-right"></i></button>
+    </div>
+</div>
+
+<script>
+    // ** اینجا آدرس Web App خود را بگذارید **
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzUs7wbZvp4MRoC4twyvXMAZ_vmhX2rTeZCLXhor2f7VoBeWsV4QNyct3bwrW1svmunVQ/exec';
+
+    const app = {
+        me: null,
+        targetUser: null,
+        peer: null,
+        channel: null,
+        signalingTimer: null,
+        isOnline: false,
+        typingTimeout: null,
+        messages: [], // ذخیره در رم
+        
+        init: async function() {
+            // خواندن کاربر از حافظه
+            const savedUser = await localforage.getItem('user');
+            if (savedUser) {
+                this.me = savedUser;
+                document.getElementById('auth-screen').classList.add('hide');
+                this.checkTarget();
+            }
+
+            // چک کردن لینک که آیا آیدی کسی توش هست؟ (مثلا ?u=ali)
+            const urlParams = new URLSearchParams(window.location.search);
+            const u = urlParams.get('u');
+            if(u) this.targetUser = u.toLowerCase();
+        },
+
+        toggleAuth: () => {
+            document.getElementById('login-box').classList.toggle('hide');
+            document.getElementById('reg-box').classList.toggle('hide');
+        },
+
+        callAPI: async function(act, payload) {
+            const res = await fetch(API_URL, {
+                method: 'POST', body: JSON.stringify({action: act, payload: payload})
+            });
+            return await res.json();
+        },
+
+        login: async function() {
+            const id = document.getElementById('l-id').value;
+            const pass = document.getElementById('l-pass').value;
+            if(!id || !pass) return alert('پر کردن فیلدها الزامیست');
+            
+            const res = await this.callAPI('login', {id, pass});
+            if(res.status === 'success') {
+                this.me = res.user;
+                await localforage.setItem('user', this.me);
+                document.getElementById('auth-screen').classList.add('hide');
+                this.checkTarget();
+            } else alert(res.msg);
+        },
+
+        register: async function() {
+            const name = document.getElementById('r-name').value;
+            const id = document.getElementById('r-id').value;
+            const pass = document.getElementById('r-pass').value;
+            
+            const res = await this.callAPI('register', {name, id, pass});
+            if(res.status === 'success') {
+                this.me = res.user;
+                await localforage.setItem('user', this.me);
+                document.getElementById('auth-screen').classList.add('hide');
+                this.checkTarget();
+            } else alert(res.msg);
+        },
+
+        copyMyLink: function() {
+            const link = location.origin + location.pathname + '?u=' + this.me.id;
+            navigator.clipboard.writeText(link);
+            alert('لینک اختصاصی شما کپی شد! آن را برای دوستتان بفرستید.');
+        },
+
+        checkTarget: async function() {
+            if(!this.targetUser) {
+                document.getElementById('chat-screen').classList.remove('hide');
+                document.getElementById('chat-with').innerText = 'به صفحه خودتان خوش آمدید';
+                document.getElementById('status').innerText = 'لینک خود را کپی کنید و به دوستان بدهید';
+                return;
+            }
+            document.getElementById('chat-screen').classList.remove('hide');
+            document.getElementById('chat-with').innerText = 'چت با: ' + this.targetUser;
+            
+            // بارگذاری تاریخچه چت از حافظه گوشی
+            this.messages = await localforage.getItem('chat_' + this.targetUser) || [];
+            this.renderChat();
+            
+            // شروع اتصال P2P
+            this.initWebRTC();
+        },
+
+        // ==========================================
+        // جادوی WebRTC (اتصال مستقیم)
+        // ==========================================
+        initWebRTC: function() {
+            this.peer = new RTCPeerConnection({ iceServers: [{urls: 'stun:stun.l.google.com:19302'}] });
+
+            // ساخت کانال داده برای ارسال متن و فایل
+            this.channel = this.peer.createDataChannel('chat');
+            this.setupChannel(this.channel);
+
+            // دریافت کانال از طرف مقابل
+            this.peer.ondatachannel = (event) => {
+                this.setupChannel(event.channel);
+            };
+
+            // ارسال مسیرهای اینترنتی (ICE) به سرور گوگل تا طرف مقابل پیدا کند
+            this.peer.onicecandidate = (e) => {
+                if (e.candidate) {
+                    this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'ice', data: e.candidate});
+                }
+            };
+
+            // من شروع کننده هستم (Offer می‌سازم)
+            this.peer.createOffer().then(offer => {
+                this.peer.setLocalDescription(offer);
+                this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'offer', data: offer});
+            });
+
+            // هر 3 ثانیه از گوگل می‌پرسم: "آیا کسی مسیر یا کدی برای من فرستاده؟"
+            this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
+        },
+
+        setupChannel: function(channel) {
+            channel.onopen = () => {
+                this.isOnline = true;
+                document.getElementById('status').innerText = 'آنلاین 🟢';
+                clearInterval(this.signalingTimer); // دیگه سرور گوگل رو ول میکنیم! اتصال مستقیم شد!
+                this.syncPendingMessages(); // پیام‌های تو صف رو میفرستم
+            };
+            
+            channel.onclose = () => {
+                this.isOnline = false;
+                document.getElementById('status').innerText = 'آفلاین 🔴 (در حال تلاش مجدد...)';
+                this.initWebRTC(); // تلاش مجدد برای اتصال
+            };
+
+            channel.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                
+                // هندل کردن تیک‌ها و در حال نوشتن
+                if (data.sys) {
+                    if (data.act === 'typing') this.showTyping(data.mode);
+                    if (data.act === 'read') this.markAsRead(data.msgId);
+                    if (data.act === 'delivered') this.markAsDelivered(data.msgId);
+                    return;
+                }
+
+                // پیام یا فایل واقعی دریافت شد
+                data.status = 'read'; // چون همون لحظه دیدیم
+                this.messages.push(data);
+                this.saveDb();
+                this.renderChat();
+                
+                // ارسال تیک دوتا (خوانده شد) به فرستنده
+                this.channel.send(JSON.stringify({sys: true, act: 'read', msgId: data.id}));
+            };
+        },
+
+        pollSignals: async function() {
+            const res = await this.callAPI('getSignals', {me: this.me.id});
+            if (!res.signals) return;
+
+            for (let sig of res.signals) {
+                if (sig.from !== this.targetUser) continue;
+
+                if (sig.type === 'offer') {
+                    await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
+                    const answer = await this.peer.createAnswer();
+                    await this.peer.setLocalDescription(answer);
+                    this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'answer', data: answer});
+                } 
+                else if (sig.type === 'answer') {
+                    await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
+                } 
+                else if (sig.type === 'ice') {
+                    await this.peer.addIceCandidate(new RTCIceCandidate(sig.data));
+                }
+            }
+        },
+
+        // ==========================================
+        // عملیات پیام‌ها
+        // ==========================================
+        sendMsg: function(textParam, mediaObj) {
+            const input = document.getElementById('msg-input');
+            const text = textParam || input.value.trim();
+            if (!text && !mediaObj) return;
+
+            const msg = {
+                id: Date.now().toString(),
+                sender: this.me.id,
+                text: text,
+                media: mediaObj || null, // {type: 'image', data: 'base64...'}
+                time: Date.now(),
+                status: 'wait' // wait, sent, delivered, read
+            };
+
+            this.messages.push(msg);
+            this.saveDb();
+            this.renderChat();
+            input.value = '';
+
+            this.dispatchMessage(msg);
+        },
+
+        dispatchMessage: function(msg) {
+            if (this.isOnline && this.channel.readyState === 'open') {
+                try {
+                    this.channel.send(JSON.stringify(msg));
+                    msg.status = 'sent'; // یک تیک
+                    this.saveDb();
+                    this.renderChat();
+                } catch(e) {
+                    console.log('خطا در ارسال مستقیم', e);
+                }
+            }
+        },
+
+        syncPendingMessages: function() {
+            // وقتی آنلاین شدیم، پیام‌های در انتظار رو میفرستیم
+            this.messages.forEach(m => {
+                if (m.sender === this.me.id && m.status === 'wait') {
+                    this.dispatchMessage(m);
+                }
+            });
+        },
+
+        sendFile: function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) return alert('برای دمو حجم فایل باید زیر 2 مگابایت باشد.');
+            
+            this.sendTyping('file'); // نمایش در حال ارسال فایل
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let type = 'file';
+                if(file.type.startsWith('image')) type = 'image';
+                else if(file.type.startsWith('video')) type = 'video';
+                else if(file.type.startsWith('audio')) type = 'audio';
+
+                this.sendMsg('', {type: type, data: e.target.result, name: file.name});
+            };
+            reader.readAsDataURL(file);
+        },
+
+        sendTyping: function(mode) {
+            if (this.isOnline && this.channel.readyState === 'open') {
+                this.channel.send(JSON.stringify({sys: true, act: 'typing', mode: mode}));
+            }
+        },
+
+        showTyping: function(mode) {
+            const ind = document.getElementById('typing-ind');
+            let txt = 'در حال نوشتن...';
+            if(mode === 'image') txt = 'در حال ارسال عکس...';
+            if(mode === 'audio') txt = 'در حال ارسال صدا...';
+            if(mode === 'file') txt = 'در حال ارسال فایل...';
+            
+            ind.innerText = txt;
+            clearTimeout(this.typingTimeout);
+            this.typingTimeout = setTimeout(() => { ind.innerText = ''; }, 2000);
+        },
+
+        markAsRead: function(msgId) {
+            const m = this.messages.find(x => x.id === msgId);
+            if(m) { m.status = 'read'; this.saveDb(); this.renderChat(); }
+        },
+
+        saveDb: function() {
+            localforage.setItem('chat_' + this.targetUser, this.messages);
+        },
+
+        renderChat: function() {
+            const box = document.getElementById('chat-box');
+            let html = '';
+            
+            this.messages.forEach(m => {
+                const isMe = m.sender === this.me.id;
+                let ticks = '';
+                if(isMe) {
+                    if(m.status === 'wait') ticks = '<i class="ph ph-clock"></i>';
+                    else if(m.status === 'sent' || m.status === 'delivered') ticks = '<i class="ph ph-check"></i>';
+                    else if(m.status === 'read') ticks = '<i class="ph-fill ph-checks"></i>';
+                }
+
+                let mediaHtml = '';
+                if (m.media) {
+                    if(m.media.type === 'image') mediaHtml = `<img src="${m.media.data}" class="media-img">`;
+                    else if(m.media.type === 'video') mediaHtml = `<video src="${m.media.data}" controls class="media-img"></video>`;
+                    else if(m.media.type === 'audio') mediaHtml = `<audio src="${m.media.data}" controls style="width:100%"></audio>`;
+                    else mediaHtml = `<a href="${m.media.data}" download="${m.media.name}">📄 دانلود فایل (${m.media.name})</a>`;
+                }
+
+                html += `
+                <div class="msg ${isMe ? 'me' : 'other'}">
+                    ${mediaHtml}
+                    ${m.text ? `<div>${m.text}</div>` : ''}
+                    <div class="ticks ${m.status}">${ticks}</div>
+                    <div style="font-size:0.6rem; color:#888; text-align:right; margin-top:5px;">
+                        ${new Date(m.time).toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'})}
+                    </div>
+                </div>`;
+            });
+            
+            box.innerHTML = html;
+            box.scrollTop = box.scrollHeight; // اسکرول به پایین
+        }
+    };
+
+    app.init();
+</script>
+</body>
+</html>
