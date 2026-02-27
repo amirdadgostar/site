@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>چت امن (P2P)</title>
     
-    <!-- فونت و آیکون‌ها -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 
     <style>
         :root {
-            --p: #25D366; /* سبز واتس‌اپی */
+            --p: #25D366; 
             --pd: #128C7E;
             --bg: #ece5dd;
             --me: #dcf8c6;
@@ -22,12 +21,23 @@
             --font: 'Vazirmatn', sans-serif;
         }
 
+        /* رفع مشکل فیت نشدن در مرورگر موبایل */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); -webkit-tap-highlight-color: transparent; }
-        body { background-color: #f0f2f5; color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body, html { 
+            height: 100%; 
+            height: 100dvh; /* ارتفاع داینامیک برای موبایل */
+            width: 100%;
+            background-color: #f0f2f5; 
+            color: var(--text); 
+            overflow: hidden; 
+            position: fixed; 
+            top: 0; left: 0;
+        }
+        
         .hide { display: none !important; }
 
         /* Toast Notification */
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #323232; color: white; padding: 12px 24px; border-radius: 8px; z-index: 9999; font-size: 0.9rem; opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #323232; color: white; padding: 12px 24px; border-radius: 8px; z-index: 9999; font-size: 0.9rem; opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: max-content; max-width: 90%; }
         #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* Auth Screen */
@@ -40,23 +50,23 @@
         .btn:active { transform: scale(0.98); background: var(--pd); }
         .link-text { margin-top: 15px; font-size: 0.9rem; color: var(--pd); cursor: pointer; font-weight: 600; display: inline-block; }
 
-        /* Loading Spinner */
         .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Chat Screen */
-        #chat-screen { display: flex; flex-direction: column; height: 100vh; background: var(--bg); position: relative; }
+        #chat-screen { display: flex; flex-direction: column; height: 100%; width: 100%; background: var(--bg); position: relative; }
         
         /* Header */
-        header { background: var(--pd); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 10; height: 60px; }
-        .head-info { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; background: #ccc; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: white; }
-        .head-texts { display: flex; flex-direction: column; }
+        header { background: var(--pd); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 10; height: 65px; flex-shrink: 0; }
+        .head-info { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; }
+        .avatar { width: 42px; height: 42px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: white; flex-shrink: 0; }
+        .head-texts { display: flex; flex-direction: column; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .head-name { font-weight: bold; font-size: 1.05rem; }
         .head-status { font-size: 0.75rem; color: #e0e0e0; transition: 0.3s; }
         .head-status.online { color: #81c784; font-weight: bold; }
         .head-status.typing { color: #ffeb3b; }
-        .head-btn { background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 5px; }
+        .head-actions { display: flex; gap: 10px; }
+        .head-btn { background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 5px; display: flex; align-items: center; }
 
         /* Chat Area */
         #chat-box { flex: 1; overflow-y: auto; padding: 20px 15px; display: flex; flex-direction: column; gap: 8px; }
@@ -73,28 +83,24 @@
         .msg-meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 2px; }
         .msg-time { font-size: 0.65rem; color: var(--gray); }
         .msg-ticks { font-size: 0.85rem; color: var(--gray); display: flex; }
-        .msg-ticks.read { color: #34b7f1; } /* تیک آبی */
+        .msg-ticks.read { color: #34b7f1; } 
 
         /* Input Area */
-        .input-area { background: #f0f0f0; padding: 10px 15px; display: flex; gap: 10px; align-items: flex-end; z-index: 10; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+        .input-area { background: #f0f0f0; padding: 10px 15px; display: flex; gap: 10px; align-items: flex-end; z-index: 10; padding-bottom: max(10px, env(safe-area-inset-bottom)); flex-shrink: 0; border-top: 1px solid #ddd; }
         .attach-btn { background: transparent; border: none; color: var(--gray); font-size: 1.6rem; cursor: pointer; padding: 8px 0; display: flex; }
         .input-wrap { flex: 1; background: white; border-radius: 20px; padding: 0 15px; display: flex; align-items: center; min-height: 45px; }
         #msg-input { width: 100%; border: none; outline: none; font-size: 0.95rem; background: transparent; padding: 12px 0; max-height: 100px; resize: none; font-family: var(--font); }
         .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--pd); color: white; border: none; font-size: 1.4rem; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .send-btn:active { transform: scale(0.9); }
 
-        /* Empty State */
-        .empty-state { text-align: center; margin: auto; color: var(--gray); background: rgba(255,255,255,0.6); padding: 15px 20px; border-radius: 12px; font-size: 0.9rem; }
+        .empty-state { text-align: center; margin: auto; color: var(--gray); background: rgba(255,255,255,0.6); padding: 15px 20px; border-radius: 12px; font-size: 0.9rem; line-height: 1.8; }
     </style>
 </head>
 <body>
 
-<!-- Toast Notification -->
 <div id="toast"><i class="ph ph-info"></i> <span id="toast-msg">پیام</span></div>
 
-<!-- Auth Screen (Login / Register) -->
 <div id="auth-screen">
-    <!-- Login Form -->
     <div class="auth-card" id="login-box">
         <i class="ph-fill ph-shield-check"></i>
         <h2 style="margin-bottom: 20px; font-size: 1.4rem;">ورود به چت امن</h2>
@@ -104,34 +110,33 @@
         <span class="link-text" onclick="app.toggleAuth()">حساب ندارید؟ ثبت نام کنید</span>
     </div>
     
-    <!-- Register Form -->
     <div class="auth-card hide" id="reg-box">
         <i class="ph-fill ph-user-plus"></i>
         <h2 style="margin-bottom: 20px; font-size: 1.4rem;">ثبت نام</h2>
         <input type="text" id="r-name" class="inp" placeholder="نام نمایشی شما (فارسی)">
         <input type="text" id="r-id" class="inp" placeholder="نام کاربری (انگلیسی)">
-        <input type="password" id="r-pass" class="inp" placeholder="رمز عبور (حداقل 6 کاراکتر)">
+        <input type="password" id="r-pass" class="inp" placeholder="رمز عبور">
         <button class="btn" id="btn-reg" onclick="app.register(this)"><span>ایجاد حساب</span></button>
         <span class="link-text" onclick="app.toggleAuth()">بازگشت به ورود</span>
     </div>
 </div>
 
-<!-- Main Chat Screen -->
 <div id="chat-screen" class="hide">
     <header>
         <div class="head-info">
             <div class="avatar"><i class="ph-fill ph-user"></i></div>
             <div class="head-texts">
-                <span class="head-name" id="chat-with-name">در حال اتصال...</span>
-                <span class="head-status" id="chat-status">منتظر دریافت لینک 🔗</span>
+                <span class="head-name" id="chat-with-name">در حال بررسی...</span>
+                <span class="head-status" id="chat-status">منتظر اتصال...</span>
             </div>
         </div>
-        <button class="head-btn" onclick="app.copyMyLink()" title="کپی لینک دعوت"><i class="ph ph-link"></i></button>
+        <div class="head-actions">
+            <button class="head-btn" onclick="app.copyMyLink()" title="کپی لینک دعوت من"><i class="ph ph-link"></i></button>
+            <button class="head-btn" onclick="app.logout()" title="خروج از حساب"><i class="ph ph-sign-out"></i></button>
+        </div>
     </header>
 
-    <div id="chat-box">
-        <!-- پیام‌ها اینجا رندر می‌شوند -->
-    </div>
+    <div id="chat-box"></div>
 
     <div class="input-area">
         <label class="attach-btn">
@@ -148,7 +153,7 @@
 <script>
     // **********************************************************
     // لینک Web App گوگل اسکریپت خود را اینجا قرار دهید:
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzUs7wbZvp4MRoC4twyvXMAZ_vmhX2rTeZCLXhor2f7VoBeWsV4QNyct3bwrW1svmunVQ/exec';
+    const API_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL';
     // **********************************************************
 
     const app = {
@@ -161,23 +166,44 @@
         typingTimeout: null,
         messages: [], 
         
-        // 1. راه اندازی اولیه
         init: async function() {
-            // بررسی دیتابیس لوکال گوشی
+            // رفع باگ Routing: اول یو آر ال را می‌خوانیم
+            const urlParams = new URLSearchParams(window.location.search);
+            const u = urlParams.get('u');
+
             const savedUser = await localforage.getItem('user');
+            
             if (savedUser) {
                 this.me = savedUser;
                 document.getElementById('auth-screen').classList.add('hide');
+                
+                // منطق درست تعیین هدف
+                if(u) {
+                    if(u.toLowerCase() === this.me.id.toLowerCase()) {
+                        this.targetUser = null; // این لینک خودمه
+                    } else {
+                        this.targetUser = u.toLowerCase(); // لینک یکی دیگست
+                    }
+                } else {
+                    this.targetUser = null; // لینکی در کار نیست
+                }
+                
                 this.checkTarget();
+            } else {
+                // اگر لاگین نبود، پارامتر رو ذخیره میکنیم تا بعد از لاگین اعمال بشه
+                if(u) sessionStorage.setItem('pendingTarget', u);
             }
-
-            // آیا کاربر از طریق لینک دعوت آمده؟ (مثلاً ?u=ali)
-            const urlParams = new URLSearchParams(window.location.search);
-            const u = urlParams.get('u');
-            if(u) this.targetUser = u.toLowerCase();
         },
 
-        // --- توابع رابط کاربری (UI) ---
+        logout: async function() {
+            if(confirm('آیا می‌خواهید از حساب کاربری خارج شوید؟')) {
+                clearInterval(this.signalingTimer);
+                if(this.peer) this.peer.close();
+                await localforage.removeItem('user');
+                window.location.href = location.origin + location.pathname; // رفرش تمیز بدون پارامتر
+            }
+        },
+
         showToast: function(msg, type = 'info') {
             const t = document.getElementById('toast');
             let icon = '<i class="ph ph-info"></i>';
@@ -205,7 +231,6 @@
             document.getElementById('reg-box').classList.toggle('hide');
         },
 
-        // --- توابع ارتباط با بک‌اند (GAS) ---
         callAPI: async function(act, payload) {
             try {
                 const res = await fetch(API_URL, {
@@ -213,7 +238,7 @@
                 });
                 return await res.json();
             } catch(e) {
-                return {status: 'error', msg: 'خطا در ارتباط با سرور. اینترنت را بررسی کنید.'};
+                return {status: 'error', msg: 'خطا در ارتباط با سرور'};
             }
         },
 
@@ -229,7 +254,14 @@
             if(res.status === 'success') {
                 this.me = res.user;
                 await localforage.setItem('user', this.me);
-                this.showToast('با موفقیت وارد شدید', 'success');
+                
+                // چک کردن پارامتر ذخیره شده
+                const pending = sessionStorage.getItem('pendingTarget');
+                if(pending && pending.toLowerCase() !== this.me.id.toLowerCase()) {
+                    this.targetUser = pending.toLowerCase();
+                    sessionStorage.removeItem('pendingTarget');
+                }
+
                 document.getElementById('auth-screen').classList.add('hide');
                 this.checkTarget();
             } else {
@@ -242,8 +274,7 @@
             const id = document.getElementById('r-id').value;
             const pass = document.getElementById('r-pass').value;
             
-            if(!name || !id || !pass) return this.showToast('لطفاً همه فیلدها را پر کنید', 'error');
-            if(pass.length < 6) return this.showToast('رمز عبور باید حداقل 6 حرف باشد', 'error');
+            if(!name || !id || !pass) return this.showToast('همه فیلدها را پر کنید', 'error');
 
             this.setLoading(btn, true, 'ایجاد حساب');
             const res = await this.callAPI('register', {name, id, pass});
@@ -252,7 +283,13 @@
             if(res.status === 'success') {
                 this.me = res.user;
                 await localforage.setItem('user', this.me);
-                this.showToast('حساب شما ایجاد شد!', 'success');
+                
+                const pending = sessionStorage.getItem('pendingTarget');
+                if(pending && pending.toLowerCase() !== this.me.id.toLowerCase()) {
+                    this.targetUser = pending.toLowerCase();
+                    sessionStorage.removeItem('pendingTarget');
+                }
+
                 document.getElementById('auth-screen').classList.add('hide');
                 this.checkTarget();
             } else {
@@ -265,66 +302,77 @@
             if(navigator.clipboard) {
                 navigator.clipboard.writeText(link).then(()=> this.showToast('لینک دعوت کپی شد!', 'success'));
             } else {
-                prompt('لینک زیر را کپی کرده و برای دوستتان بفرستید:', link);
+                prompt('لینک زیر را کپی کرده و بفرستید:', link);
             }
         },
 
-        // 2. آماده سازی چت
         checkTarget: async function() {
             document.getElementById('chat-screen').classList.remove('hide');
             const headName = document.getElementById('chat-with-name');
             const headStatus = document.getElementById('chat-status');
 
             if(!this.targetUser) {
-                headName.innerText = 'صفحه شخصی من';
-                headStatus.innerText = 'منتظر اتصال... (لینک خود را بفرستید)';
+                headName.innerText = this.me.name + ' (شما)';
+                headStatus.innerText = 'منتظر دریافت لینک از مخاطب...';
                 headStatus.className = 'head-status';
-                document.getElementById('chat-box').innerHTML = '<div class="empty-state"><i class="ph-fill ph-link" style="font-size:3rem; margin-bottom:10px; color:var(--p)"></i><br>لینک دعوت خود را کپی کنید<br>و برای مخاطب خود بفرستید تا متصل شوید.</div>';
-                // گوش به زنگ برای دریافت سیگنال اتصال از طرف مخاطب
-                this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
+                document.getElementById('chat-box').innerHTML = `
+                    <div class="empty-state">
+                        <i class="ph-fill ph-link" style="font-size:3rem; margin-bottom:10px; color:var(--p)"></i><br>
+                        شما در صفحه شخصی خودتان هستید.<br>
+                        برای چت کردن، لینک اختصاصی خود را (از آیکون 🔗 بالا) کپی کرده و برای دوستتان بفرستید،<br>
+                        یا لینک دوستتان را در مرورگر باز کنید.
+                    </div>`;
+                
+                // شروع گوش دادن برای اینکه کسی به ما وصل بشه
+                if(!this.signalingTimer) this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
                 return;
             }
             
             headName.innerText = 'مخاطب: ' + this.targetUser;
             headStatus.innerText = 'آفلاین 🔴 (در حال تلاش برای اتصال...)';
             
-            // بارگذاری تاریخچه پیام‌ها از حافظه
             this.messages = await localforage.getItem('chat_' + this.targetUser) || [];
             this.renderChat();
             
-            // شروع اتصال P2P تونل مستقیم
-            this.initWebRTC();
+            // اگر هدف مشخص بود، فوراً تونل را میسازیم
+            this.initWebRTC(true);
         },
 
-        // 3. هسته اصلی WebRTC (اتصال مستقیم)
-        initWebRTC: function() {
+        // رفع باگ تونل WebRTC
+        initWebRTC: function(isInitiator) {
+            // بستن اتصال قبلی اگر وجود داشت
+            if (this.peer) {
+                this.peer.onicecandidate = null;
+                this.peer.ondatachannel = null;
+                this.peer.close();
+            }
+
             this.peer = new RTCPeerConnection({ iceServers: [{urls: 'stun:stun.l.google.com:19302'}] });
 
-            // ساخت کانال داده
-            this.channel = this.peer.createDataChannel('chat');
-            this.setupChannel(this.channel);
+            if (isInitiator) {
+                this.channel = this.peer.createDataChannel('chat');
+                this.setupChannel(this.channel);
+            }
 
-            // دریافت کانال از طرف مقابل
             this.peer.ondatachannel = (event) => {
-                this.setupChannel(event.channel);
+                this.channel = event.channel;
+                this.setupChannel(this.channel);
             };
 
-            // یافتن مسیرهای اینترنتی
             this.peer.onicecandidate = (e) => {
                 if (e.candidate && this.targetUser) {
                     this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'ice', data: e.candidate});
                 }
             };
 
-            // ساخت پیشنهاد اتصال (Offer)
-            if (this.targetUser) {
-                this.peer.createOffer().then(offer => {
-                    this.peer.setLocalDescription(offer);
-                    this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'offer', data: offer});
-                });
+            if (isInitiator) {
+                this.peer.createOffer()
+                    .then(offer => this.peer.setLocalDescription(offer))
+                    .then(() => {
+                        this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'offer', data: this.peer.localDescription});
+                    });
             }
 
-            // بررسی شیت گوگل هر 3 ثانیه برای یافتن مخاطب
             if(!this.signalingTimer) {
                 this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
             }
@@ -337,79 +385,91 @@
                 statusEl.innerText = 'آنلاین';
                 statusEl.className = 'head-status online';
                 
-                // توقف درخواست به گوگل (دیگه نیاز نداریم!)
+                // وقتی وصل شدیم، درخواست به سرور را قطع میکنیم که سرعت کم نشه
                 clearInterval(this.signalingTimer); 
                 this.signalingTimer = null;
                 
-                // ارسال پیام‌هایی که وقتی آفلاین بودیم نوشتیم
                 this.syncPendingMessages(); 
             };
             
             channel.onclose = () => {
                 this.isOnline = false;
                 const statusEl = document.getElementById('chat-status');
-                statusEl.innerText = 'آفلاین 🔴';
+                statusEl.innerText = 'آفلاین 🔴 (در حال تلاش مجدد...)';
                 statusEl.className = 'head-status';
-                // تلاش مجدد برای اتصال
-                if(!this.signalingTimer) this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
-                this.initWebRTC(); 
+                
+                // اگه قطع شدیم، دوباره شروع میکنیم به گشتن دنبالش
+                if(!this.signalingTimer) {
+                    this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
+                }
+                if (this.targetUser) this.initWebRTC(true); 
             };
 
             channel.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 
-                // پیام‌های سیستمی (مثل در حال تایپ یا تیک دوم)
                 if (data.sys) {
                     if (data.act === 'typing') this.showTyping(data.mode);
                     if (data.act === 'read') this.markAsRead(data.msgId);
                     return;
                 }
 
-                // دریافت پیام واقعی
-                data.status = 'read'; // چون پیام الان رو صفحه است
+                data.status = 'read'; 
                 this.messages.push(data);
                 this.saveDb();
                 this.renderChat();
                 
-                // ارسال تیک خوانده شد به فرستنده
-                this.channel.send(JSON.stringify({sys: true, act: 'read', msgId: data.id}));
+                // ارسال تیک آبی به فرستنده
+                if(this.channel.readyState === 'open') {
+                    this.channel.send(JSON.stringify({sys: true, act: 'read', msgId: data.id}));
+                }
             };
         },
 
         pollSignals: async function() {
             const res = await this.callAPI('getSignals', {me: this.me.id});
-            if (!res.signals) return;
+            if (!res.signals || res.signals.length === 0) return;
+
+            // رفع باگ تداخل: اول offer ها، بعد answer ها، بعد ice ها بررسی میشن
+            const sortOrder = { 'offer': 1, 'answer': 2, 'ice': 3 };
+            res.signals.sort((a, b) => sortOrder[a.type] - sortOrder[b.type]);
 
             for (let sig of res.signals) {
-                // اگر شخصی ناشناس بود و ما هدف نداشتیم، او را هدف قرار میدهیم
-                if (!this.targetUser) {
+                // اگر شخصی ناشناس پیشنهاد اتصال داد
+                if (!this.targetUser && sig.type === 'offer') {
                     this.targetUser = sig.from;
                     document.getElementById('chat-with-name').innerText = 'مخاطب: ' + this.targetUser;
                     this.messages = await localforage.getItem('chat_' + this.targetUser) || [];
                     this.renderChat();
-                    this.initWebRTC();
+                    this.initWebRTC(false); // من شروع کننده نیستم، فقط جواب میدم
                 }
 
                 if (sig.from !== this.targetUser) continue;
 
-                if (sig.type === 'offer') {
-                    await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
-                    const answer = await this.peer.createAnswer();
-                    await this.peer.setLocalDescription(answer);
-                    this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'answer', data: answer});
-                } 
-                else if (sig.type === 'answer') {
-                    await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
-                } 
-                else if (sig.type === 'ice') {
-                    await this.peer.addIceCandidate(new RTCIceCandidate(sig.data));
+                try {
+                    if (sig.type === 'offer') {
+                        await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
+                        const answer = await this.peer.createAnswer();
+                        await this.peer.setLocalDescription(answer);
+                        this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'answer', data: this.peer.localDescription});
+                    } 
+                    else if (sig.type === 'answer') {
+                        await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
+                    } 
+                    else if (sig.type === 'ice') {
+                        // فقط اگه Remote مشخص شده باشه میشه ICE اضافه کرد
+                        if(this.peer.remoteDescription) {
+                            await this.peer.addIceCandidate(new RTCIceCandidate(sig.data));
+                        }
+                    }
+                } catch(err) {
+                    console.error("WebRTC Error:", err);
                 }
             }
         },
 
-        // 4. عملیات ارسال و دریافت چت
         sendMsg: function(textParam, mediaObj) {
-            if(!this.targetUser) return this.showToast('هنوز به کسی متصل نشده‌اید', 'error');
+            if(!this.targetUser) return this.showToast('هنوز به مخاطبی متصل نشده‌اید', 'error');
             
             const input = document.getElementById('msg-input');
             const text = textParam || input.value.trim();
@@ -421,7 +481,7 @@
                 text: text,
                 media: mediaObj || null,
                 time: Date.now(),
-                status: 'wait' // وضعیت اولیه: در انتظار ارسال
+                status: 'wait' 
             };
 
             this.messages.push(msg);
@@ -433,15 +493,13 @@
         },
 
         dispatchMessage: function(msg) {
-            if (this.isOnline && this.channel.readyState === 'open') {
+            if (this.isOnline && this.channel && this.channel.readyState === 'open') {
                 try {
                     this.channel.send(JSON.stringify(msg));
-                    msg.status = 'sent'; // یک تیک (ارسال شد به تونل)
+                    msg.status = 'sent'; 
                     this.saveDb();
                     this.renderChat();
-                } catch(e) {
-                    console.log('Error sending:', e);
-                }
+                } catch(e) {}
             }
         },
 
@@ -475,7 +533,7 @@
         },
 
         sendTyping: function(mode) {
-            if (this.isOnline && this.channel.readyState === 'open') {
+            if (this.isOnline && this.channel && this.channel.readyState === 'open') {
                 this.channel.send(JSON.stringify({sys: true, act: 'typing', mode: mode}));
             }
         },
@@ -494,7 +552,7 @@
             this.typingTimeout = setTimeout(() => { 
                 statusEl.innerText = this.isOnline ? 'آنلاین' : 'آفلاین 🔴';
                 statusEl.className = this.isOnline ? 'head-status online' : 'head-status';
-            }, 2500);
+            }, 2000);
         },
 
         markAsRead: function(msgId) {
@@ -510,13 +568,12 @@
             if(this.targetUser) localforage.setItem('chat_' + this.targetUser, this.messages);
         },
 
-        // رندر کردن حباب‌های چت در صفحه
         renderChat: function() {
             const box = document.getElementById('chat-box');
             let html = '';
             
             if(this.messages.length === 0 && this.targetUser) {
-                html = '<div class="empty-state">هنوز پیامی ارسال نشده است. اولین پیام را بفرستید!</div>';
+                html = '<div class="empty-state">هنوز پیامی ارسال نشده است.<br>به محض آنلاین شدن مخاطب، پیام‌های شما ارسال می‌شود.</div>';
             }
 
             this.messages.forEach(m => {
@@ -552,7 +609,6 @@
                 </div>`;
             });
             
-            // جلوگیری از رندر بی‌مورد اگر تغییری نکرده
             if(box.innerHTML !== html) {
                 box.innerHTML = html;
                 box.scrollTop = box.scrollHeight;
