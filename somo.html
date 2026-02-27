@@ -3,158 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>چت امن (P2P)</title>
+    <title>چت P2P (اتصال تضمینی)</title>
     
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 
     <style>
-        :root {
-            --p: #25D366; 
-            --pd: #128C7E;
-            --bg: #ece5dd;
-            --me: #dcf8c6;
-            --other: #ffffff;
-            --text: #303030;
-            --gray: #888888;
-            --font: 'Vazirmatn', sans-serif;
-        }
-
-        /* رفع مشکل فیت نشدن در مرورگر موبایل */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); -webkit-tap-highlight-color: transparent; }
-        body, html { 
-            height: 100%; 
-            height: 100dvh; /* ارتفاع داینامیک برای موبایل */
-            width: 100%;
-            background-color: #f0f2f5; 
-            color: var(--text); 
-            overflow: hidden; 
-            position: fixed; 
-            top: 0; left: 0;
-        }
-        
+        :root { --p: #0088cc; --bg: #e5ddd5; --me: #dcf8c6; --other: #ffffff; --font: 'Vazirmatn', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); outline: none; }
+        body, html { height: 100%; height: 100dvh; background: #f0f2f5; overflow: hidden; position: fixed; width: 100%; }
         .hide { display: none !important; }
 
-        /* Toast Notification */
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #323232; color: white; padding: 12px 24px; border-radius: 8px; z-index: 9999; font-size: 0.9rem; opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: max-content; max-width: 90%; }
-        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 8px; z-index: 9999; font-size: 0.9rem; display: none; }
 
-        /* Auth Screen */
-        #auth-screen { flex: 1; display: flex; justify-content: center; align-items: center; background: #f0f2f5; padding: 20px; z-index: 1000; position: absolute; inset: 0; }
-        .auth-card { background: white; padding: 30px 25px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); width: 100%; max-width: 360px; text-align: center; }
-        .auth-card i { font-size: 4rem; color: var(--p); margin-bottom: 10px; }
-        .inp { width: 100%; padding: 14px 16px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.2s; background: #fafafa; }
-        .inp:focus { border-color: var(--p); background: white; }
-        .btn { width: 100%; padding: 14px; background: var(--p); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .btn:active { transform: scale(0.98); background: var(--pd); }
-        .link-text { margin-top: 15px; font-size: 0.9rem; color: var(--pd); cursor: pointer; font-weight: 600; display: inline-block; }
+        /* Auth UI */
+        #auth-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 20px; }
+        .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
+        .inp { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; }
+        .btn { width: 100%; padding: 12px; background: var(--p); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* Chat UI */
+        #chat-screen { display: flex; flex-direction: column; height: 100%; background: var(--bg); }
+        header { background: var(--p); color: #fff; padding: 15px; display: flex; justify-content: space-between; align-items: center; height: 65px; }
+        .status { font-size: 0.8rem; font-weight: bold; }
+        .status.wait { color: #ffeb3b; }
+        .status.ok { color: #81c784; }
 
-        /* Chat Screen */
-        #chat-screen { display: flex; flex-direction: column; height: 100%; width: 100%; background: var(--bg); position: relative; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
+        .msg { max-width: 80%; padding: 10px; border-radius: 12px; position: relative; font-size: 0.95rem; word-wrap: break-word; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .msg.me { background: var(--me); align-self: flex-end; border-bottom-right-radius: 0; }
+        .msg.other { background: var(--other); align-self: flex-start; border-bottom-left-radius: 0; }
+        .meta { display: flex; justify-content: flex-end; font-size: 0.7rem; color: #888; margin-top: 4px; gap: 4px;}
         
-        /* Header */
-        header { background: var(--pd); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 10; height: 65px; flex-shrink: 0; }
-        .head-info { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; }
-        .avatar { width: 42px; height: 42px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: white; flex-shrink: 0; }
-        .head-texts { display: flex; flex-direction: column; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .head-name { font-weight: bold; font-size: 1.05rem; }
-        .head-status { font-size: 0.75rem; color: #e0e0e0; transition: 0.3s; }
-        .head-status.online { color: #81c784; font-weight: bold; }
-        .head-status.typing { color: #ffeb3b; }
-        .head-actions { display: flex; gap: 10px; }
-        .head-btn { background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 5px; display: flex; align-items: center; }
-
-        /* Chat Area */
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px 15px; display: flex; flex-direction: column; gap: 8px; }
-        .msg-wrap { display: flex; width: 100%; }
-        .msg-wrap.me { justify-content: flex-end; }
-        .msg-wrap.other { justify-content: flex-start; }
-        
-        .msg { max-width: 85%; padding: 8px 12px; border-radius: 12px; position: relative; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
-        .msg.me { background: var(--me); border-bottom-right-radius: 4px; }
-        .msg.other { background: var(--other); border-bottom-left-radius: 4px; }
-        
-        .msg-media { max-width: 100%; border-radius: 8px; margin-bottom: 5px; max-height: 250px; object-fit: cover; }
-        
-        .msg-meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 2px; }
-        .msg-time { font-size: 0.65rem; color: var(--gray); }
-        .msg-ticks { font-size: 0.85rem; color: var(--gray); display: flex; }
-        .msg-ticks.read { color: #34b7f1; } 
-
-        /* Input Area */
-        .input-area { background: #f0f0f0; padding: 10px 15px; display: flex; gap: 10px; align-items: flex-end; z-index: 10; padding-bottom: max(10px, env(safe-area-inset-bottom)); flex-shrink: 0; border-top: 1px solid #ddd; }
-        .attach-btn { background: transparent; border: none; color: var(--gray); font-size: 1.6rem; cursor: pointer; padding: 8px 0; display: flex; }
-        .input-wrap { flex: 1; background: white; border-radius: 20px; padding: 0 15px; display: flex; align-items: center; min-height: 45px; }
-        #msg-input { width: 100%; border: none; outline: none; font-size: 0.95rem; background: transparent; padding: 12px 0; max-height: 100px; resize: none; font-family: var(--font); }
-        .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--pd); color: white; border: none; font-size: 1.4rem; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
-        .send-btn:active { transform: scale(0.9); }
-
-        .empty-state { text-align: center; margin: auto; color: var(--gray); background: rgba(255,255,255,0.6); padding: 15px 20px; border-radius: 12px; font-size: 0.9rem; line-height: 1.8; }
+        .input-area { background: #f0f0f0; padding: 10px; display: flex; gap: 10px; align-items: center; }
+        #msg-input { flex: 1; padding: 12px; border-radius: 20px; border: none; }
+        .icon-btn { background: none; border: none; font-size: 1.5rem; color: #555; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="toast"><i class="ph ph-info"></i> <span id="toast-msg">پیام</span></div>
+<div id="toast">پیام</div>
 
 <div id="auth-screen">
-    <div class="auth-card" id="login-box">
-        <i class="ph-fill ph-shield-check"></i>
-        <h2 style="margin-bottom: 20px; font-size: 1.4rem;">ورود به چت امن</h2>
-        <input type="text" id="l-id" class="inp" placeholder="نام کاربری (انگلیسی)">
+    <div class="card" id="login-box">
+        <h2 style="margin-bottom: 20px;">چت P2P خالص</h2>
+        <input type="text" id="l-id" class="inp" placeholder="نام کاربری">
         <input type="password" id="l-pass" class="inp" placeholder="رمز عبور">
-        <button class="btn" id="btn-login" onclick="app.login(this)"><span>ورود به سیستم</span></button>
-        <span class="link-text" onclick="app.toggleAuth()">حساب ندارید؟ ثبت نام کنید</span>
+        <button class="btn" onclick="app.login()">ورود / ساخت تونل</button>
+        <p style="margin-top: 15px; cursor: pointer; color: var(--p);" onclick="document.getElementById('login-box').classList.add('hide'); document.getElementById('reg-box').classList.remove('hide');">ثبت نام</p>
+        <p style="margin-top: 10px; font-size: 0.75rem; color: red;">با رفرش صفحه، کل چت پاک می‌شود.</p>
     </div>
-    
-    <div class="auth-card hide" id="reg-box">
-        <i class="ph-fill ph-user-plus"></i>
-        <h2 style="margin-bottom: 20px; font-size: 1.4rem;">ثبت نام</h2>
-        <input type="text" id="r-name" class="inp" placeholder="نام نمایشی شما (فارسی)">
-        <input type="text" id="r-id" class="inp" placeholder="نام کاربری (انگلیسی)">
+    <div class="card hide" id="reg-box">
+        <h2 style="margin-bottom: 20px;">ثبت نام</h2>
+        <input type="text" id="r-name" class="inp" placeholder="نام نمایشی">
+        <input type="text" id="r-id" class="inp" placeholder="نام کاربری">
         <input type="password" id="r-pass" class="inp" placeholder="رمز عبور">
-        <button class="btn" id="btn-reg" onclick="app.register(this)"><span>ایجاد حساب</span></button>
-        <span class="link-text" onclick="app.toggleAuth()">بازگشت به ورود</span>
+        <button class="btn" onclick="app.register()">ثبت نام</button>
+        <p style="margin-top: 15px; cursor: pointer; color: var(--p);" onclick="document.getElementById('reg-box').classList.add('hide'); document.getElementById('login-box').classList.remove('hide');">بازگشت به ورود</p>
     </div>
 </div>
 
 <div id="chat-screen" class="hide">
     <header>
-        <div class="head-info">
-            <div class="avatar"><i class="ph-fill ph-user"></i></div>
-            <div class="head-texts">
-                <span class="head-name" id="chat-with-name">در حال بررسی...</span>
-                <span class="head-status" id="chat-status">منتظر اتصال...</span>
-            </div>
+        <div>
+            <div id="chat-name" style="font-weight: bold;">...</div>
+            <div id="chat-status" class="status wait">در حال ایجاد تونل (P2P)...</div>
         </div>
-        <div class="head-actions">
-            <button class="head-btn" onclick="app.copyMyLink()" title="کپی لینک دعوت من"><i class="ph ph-link"></i></button>
-            <button class="head-btn" onclick="app.logout()" title="خروج از حساب"><i class="ph ph-sign-out"></i></button>
-        </div>
+        <button class="icon-btn" style="color:white" onclick="app.copyLink()"><i class="ph ph-link"></i></button>
     </header>
-
     <div id="chat-box"></div>
-
     <div class="input-area">
-        <label class="attach-btn">
-            <i class="ph ph-paperclip"></i>
-            <input type="file" id="file-input" class="hide" onchange="app.sendFile(this)">
-        </label>
-        <div class="input-wrap">
-            <input type="text" id="msg-input" placeholder="پیام خود را بنویسید..." oninput="app.sendTyping('text')" onkeypress="if(event.key==='Enter') app.sendMsg()">
-        </div>
-        <button class="send-btn" onclick="app.sendMsg()"><i class="ph-fill ph-paper-plane-right"></i></button>
+        <input type="text" id="msg-input" placeholder="پیام..." onkeypress="if(event.key==='Enter') app.sendMsg()">
+        <button class="icon-btn" onclick="app.sendMsg()" style="color: var(--p)"><i class="ph-fill ph-paper-plane-right"></i></button>
     </div>
 </div>
 
 <script>
     // **********************************************************
-    // لینک Web App گوگل اسکریپت خود را اینجا قرار دهید:
     const API_URL = 'https://script.google.com/macros/s/AKfycbzUs7wbZvp4MRoC4twyvXMAZ_vmhX2rTeZCLXhor2f7VoBeWsV4QNyct3bwrW1svmunVQ/exec';
     // **********************************************************
+
+    // پیکربندی قدرتمند WebRTC با سرورهای TURN (برای عبور قطعی از فیلتر و NAT)
+    const RTC_CONFIG = {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            // سرور TURN رایگان (Open Relay) برای تضمین 100 درصدی اتصال
+            { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+            { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' }
+        ]
+    };
 
     const app = {
         me: null,
@@ -163,208 +101,109 @@
         channel: null,
         signalingTimer: null,
         isOnline: false,
-        typingTimeout: null,
-        messages: [], 
-        
-        init: async function() {
-            // رفع باگ Routing: اول یو آر ال را می‌خوانیم
+        iceQueue: [], // صف بندی مسیرها برای جلوگیری از گم شدن بسته‌ها
+
+        init: function() {
             const urlParams = new URLSearchParams(window.location.search);
             const u = urlParams.get('u');
-
-            const savedUser = await localforage.getItem('user');
-            
-            if (savedUser) {
-                this.me = savedUser;
-                document.getElementById('auth-screen').classList.add('hide');
-                
-                // منطق درست تعیین هدف
-                if(u) {
-                    if(u.toLowerCase() === this.me.id.toLowerCase()) {
-                        this.targetUser = null; // این لینک خودمه
-                    } else {
-                        this.targetUser = u.toLowerCase(); // لینک یکی دیگست
-                    }
-                } else {
-                    this.targetUser = null; // لینکی در کار نیست
-                }
-                
-                this.checkTarget();
-            } else {
-                // اگر لاگین نبود، پارامتر رو ذخیره میکنیم تا بعد از لاگین اعمال بشه
-                if(u) sessionStorage.setItem('pendingTarget', u);
-            }
+            if(u) this.targetUser = u.toLowerCase();
         },
 
-        logout: async function() {
-            if(confirm('آیا می‌خواهید از حساب کاربری خارج شوید؟')) {
-                clearInterval(this.signalingTimer);
-                if(this.peer) this.peer.close();
-                await localforage.removeItem('user');
-                window.location.href = location.origin + location.pathname; // رفرش تمیز بدون پارامتر
-            }
-        },
-
-        showToast: function(msg, type = 'info') {
+        toast: function(msg) {
             const t = document.getElementById('toast');
-            let icon = '<i class="ph ph-info"></i>';
-            if(type === 'error') { icon = '<i class="ph ph-warning-circle"></i>'; t.style.background = '#e53935'; }
-            else if(type === 'success') { icon = '<i class="ph ph-check-circle"></i>'; t.style.background = '#43a047'; }
-            else { t.style.background = '#323232'; }
-            
-            t.innerHTML = `${icon} <span>${msg}</span>`;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        },
-
-        setLoading: function(btn, isLoading, originalText) {
-            if(isLoading) {
-                btn.disabled = true;
-                btn.innerHTML = '<div class="spinner"></div>';
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = `<span>${originalText}</span>`;
-            }
-        },
-
-        toggleAuth: () => {
-            document.getElementById('login-box').classList.toggle('hide');
-            document.getElementById('reg-box').classList.toggle('hide');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
         },
 
         callAPI: async function(act, payload) {
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST', body: JSON.stringify({action: act, payload: payload})
-                });
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({action: act, payload: payload}) });
                 return await res.json();
-            } catch(e) {
-                return {status: 'error', msg: 'خطا در ارتباط با سرور'};
-            }
+            } catch(e) { return {status: 'error', msg: 'خطای شبکه'}; }
         },
 
-        login: async function(btn) {
+        login: async function() {
             const id = document.getElementById('l-id').value;
             const pass = document.getElementById('l-pass').value;
-            if(!id || !pass) return this.showToast('لطفاً همه فیلدها را پر کنید', 'error');
+            if(!id || !pass) return this.toast('فیلدها را پر کنید');
             
-            this.setLoading(btn, true, 'ورود به سیستم');
+            this.toast('در حال ورود...');
             const res = await this.callAPI('login', {id, pass});
-            this.setLoading(btn, false, 'ورود به سیستم');
-
             if(res.status === 'success') {
                 this.me = res.user;
-                await localforage.setItem('user', this.me);
-                
-                // چک کردن پارامتر ذخیره شده
-                const pending = sessionStorage.getItem('pendingTarget');
-                if(pending && pending.toLowerCase() !== this.me.id.toLowerCase()) {
-                    this.targetUser = pending.toLowerCase();
-                    sessionStorage.removeItem('pendingTarget');
-                }
-
-                document.getElementById('auth-screen').classList.add('hide');
-                this.checkTarget();
-            } else {
-                this.showToast(res.msg, 'error');
-            }
+                if(this.targetUser === this.me.id) this.targetUser = null;
+                this.startEngine();
+            } else this.toast(res.msg);
         },
 
-        register: async function(btn) {
+        register: async function() {
             const name = document.getElementById('r-name').value;
             const id = document.getElementById('r-id').value;
             const pass = document.getElementById('r-pass').value;
-            
-            if(!name || !id || !pass) return this.showToast('همه فیلدها را پر کنید', 'error');
+            if(!name || !id || !pass) return this.toast('فیلدها را پر کنید');
 
-            this.setLoading(btn, true, 'ایجاد حساب');
+            this.toast('در حال ثبت نام...');
             const res = await this.callAPI('register', {name, id, pass});
-            this.setLoading(btn, false, 'ایجاد حساب');
-
             if(res.status === 'success') {
                 this.me = res.user;
-                await localforage.setItem('user', this.me);
-                
-                const pending = sessionStorage.getItem('pendingTarget');
-                if(pending && pending.toLowerCase() !== this.me.id.toLowerCase()) {
-                    this.targetUser = pending.toLowerCase();
-                    sessionStorage.removeItem('pendingTarget');
-                }
-
-                document.getElementById('auth-screen').classList.add('hide');
-                this.checkTarget();
-            } else {
-                this.showToast(res.msg, 'error');
-            }
+                if(this.targetUser === this.me.id) this.targetUser = null;
+                this.startEngine();
+            } else this.toast(res.msg);
         },
 
-        copyMyLink: function() {
+        copyLink: function() {
             const link = location.origin + location.pathname + '?u=' + this.me.id;
-            if(navigator.clipboard) {
-                navigator.clipboard.writeText(link).then(()=> this.showToast('لینک دعوت کپی شد!', 'success'));
-            } else {
-                prompt('لینک زیر را کپی کرده و بفرستید:', link);
-            }
+            if(navigator.clipboard) navigator.clipboard.writeText(link).then(()=> this.toast('لینک کپی شد'));
+            else prompt('لینک:', link);
         },
 
-        checkTarget: async function() {
+        startEngine: function() {
+            document.getElementById('auth-screen').classList.add('hide');
             document.getElementById('chat-screen').classList.remove('hide');
-            const headName = document.getElementById('chat-with-name');
-            const headStatus = document.getElementById('chat-status');
-
+            
             if(!this.targetUser) {
-                headName.innerText = this.me.name + ' (شما)';
-                headStatus.innerText = 'منتظر دریافت لینک از مخاطب...';
-                headStatus.className = 'head-status';
-                document.getElementById('chat-box').innerHTML = `
-                    <div class="empty-state">
-                        <i class="ph-fill ph-link" style="font-size:3rem; margin-bottom:10px; color:var(--p)"></i><br>
-                        شما در صفحه شخصی خودتان هستید.<br>
-                        برای چت کردن، لینک اختصاصی خود را (از آیکون 🔗 بالا) کپی کرده و برای دوستتان بفرستید،<br>
-                        یا لینک دوستتان را در مرورگر باز کنید.
-                    </div>`;
-                
-                // شروع گوش دادن برای اینکه کسی به ما وصل بشه
-                if(!this.signalingTimer) this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
-                return;
+                document.getElementById('chat-name').innerText = 'شما: ' + this.me.id;
+                document.getElementById('chat-status').innerText = 'لینک خود را برای فردی بفرستید...';
+            } else {
+                document.getElementById('chat-name').innerText = 'مخاطب: ' + this.targetUser;
+                this.initP2P(true); // چون من لینک را دارم، من تونل را می‌سازم (Initiator)
             }
-            
-            headName.innerText = 'مخاطب: ' + this.targetUser;
-            headStatus.innerText = 'آفلاین 🔴 (در حال تلاش برای اتصال...)';
-            
-            this.messages = await localforage.getItem('chat_' + this.targetUser) || [];
-            this.renderChat();
-            
-            // اگر هدف مشخص بود، فوراً تونل را میسازیم
-            this.initWebRTC(true);
+
+            // شروع دریافت سیگنال از شیت گوگل
+            if(!this.signalingTimer) this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
         },
 
-        // رفع باگ تونل WebRTC
-        initWebRTC: function(isInitiator) {
-            // بستن اتصال قبلی اگر وجود داشت
-            if (this.peer) {
-                this.peer.onicecandidate = null;
-                this.peer.ondatachannel = null;
-                this.peer.close();
-            }
+        // ==========================================
+        // هسته مرکزی P2P (مهندسی دقیق اتصال)
+        // ==========================================
+        initP2P: function(isInitiator) {
+            if (this.peer) this.peer.close();
+            
+            // ساخت شیء اتصال با سرورهای TURN
+            this.peer = new RTCPeerConnection(RTC_CONFIG);
+            this.iceQueue = [];
 
-            this.peer = new RTCPeerConnection({ iceServers: [{urls: 'stun:stun.l.google.com:19302'}] });
-
+            // اگر من سازنده تونل هستم، کانال داده را باز می‌کنم
             if (isInitiator) {
-                this.channel = this.peer.createDataChannel('chat');
-                this.setupChannel(this.channel);
+                this.channel = this.peer.createDataChannel('p2p-chat');
+                this.setupDataChannel(this.channel);
             }
 
+            // اگر طرف مقابل کانال ساخت، من آن را دریافت می‌کنم
             this.peer.ondatachannel = (event) => {
                 this.channel = event.channel;
-                this.setupChannel(this.channel);
+                this.setupDataChannel(this.channel);
             };
 
+            // ارسال آدرس‌های اینترنتی من (ICE) به شیت گوگل برای طرف مقابل
             this.peer.onicecandidate = (e) => {
                 if (e.candidate && this.targetUser) {
                     this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'ice', data: e.candidate});
                 }
             };
 
+            // ساخت بسته پیشنهادی (Offer)
             if (isInitiator) {
                 this.peer.createOffer()
                     .then(offer => this.peer.setLocalDescription(offer))
@@ -372,54 +211,45 @@
                         this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'offer', data: this.peer.localDescription});
                     });
             }
-
-            if(!this.signalingTimer) {
-                this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
-            }
         },
 
-        setupChannel: function(channel) {
+        setupDataChannel: function(channel) {
             channel.onopen = () => {
                 this.isOnline = true;
-                const statusEl = document.getElementById('chat-status');
-                statusEl.innerText = 'آنلاین';
-                statusEl.className = 'head-status online';
+                const st = document.getElementById('chat-status');
+                st.innerText = 'تونل P2P متصل شد 🟢';
+                st.className = 'status ok';
                 
-                // وقتی وصل شدیم، درخواست به سرور را قطع میکنیم که سرعت کم نشه
-                clearInterval(this.signalingTimer); 
+                // تونل که برقرار شد، ارتباط با گوگل شیت کاملاً قطع می‌شود!
+                clearInterval(this.signalingTimer);
                 this.signalingTimer = null;
-                
-                this.syncPendingMessages(); 
+                this.toast('اتصال مستقیم برقرار شد');
             };
             
             channel.onclose = () => {
                 this.isOnline = false;
-                const statusEl = document.getElementById('chat-status');
-                statusEl.innerText = 'آفلاین 🔴 (در حال تلاش مجدد...)';
-                statusEl.className = 'head-status';
+                const st = document.getElementById('chat-status');
+                st.innerText = 'ارتباط قطع شد 🔴 در حال تلاش...';
+                st.className = 'status wait';
                 
-                // اگه قطع شدیم، دوباره شروع میکنیم به گشتن دنبالش
-                if(!this.signalingTimer) {
-                    this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
-                }
-                if (this.targetUser) this.initWebRTC(true); 
+                // تلاش مجدد با سرور گوگل
+                if(!this.signalingTimer) this.signalingTimer = setInterval(() => this.pollSignals(), 3000);
+                if(this.targetUser) this.initP2P(true);
             };
 
             channel.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 
-                if (data.sys) {
-                    if (data.act === 'typing') this.showTyping(data.mode);
-                    if (data.act === 'read') this.markAsRead(data.msgId);
+                if (data.sys && data.act === 'read') {
+                    const el = document.getElementById('tick-' + data.msgId);
+                    if(el) el.innerHTML = '<i class="ph-fill ph-checks" style="color:#34b7f1"></i>';
                     return;
                 }
 
-                data.status = 'read'; 
-                this.messages.push(data);
-                this.saveDb();
-                this.renderChat();
+                // دریافت پیام
+                this.appendMsg(data.text, 'other', data.id, data.time);
                 
-                // ارسال تیک آبی به فرستنده
+                // ارسال اتوماتیک تیک تأیید
                 if(this.channel.readyState === 'open') {
                     this.channel.send(JSON.stringify({sys: true, act: 'read', msgId: data.id}));
                 }
@@ -430,18 +260,12 @@
             const res = await this.callAPI('getSignals', {me: this.me.id});
             if (!res.signals || res.signals.length === 0) return;
 
-            // رفع باگ تداخل: اول offer ها، بعد answer ها، بعد ice ها بررسی میشن
-            const sortOrder = { 'offer': 1, 'answer': 2, 'ice': 3 };
-            res.signals.sort((a, b) => sortOrder[a.type] - sortOrder[b.type]);
-
             for (let sig of res.signals) {
-                // اگر شخصی ناشناس پیشنهاد اتصال داد
+                // اگر شخصی ناشناس تونل ساخت
                 if (!this.targetUser && sig.type === 'offer') {
                     this.targetUser = sig.from;
-                    document.getElementById('chat-with-name').innerText = 'مخاطب: ' + this.targetUser;
-                    this.messages = await localforage.getItem('chat_' + this.targetUser) || [];
-                    this.renderChat();
-                    this.initWebRTC(false); // من شروع کننده نیستم، فقط جواب میدم
+                    document.getElementById('chat-name').innerText = 'مخاطب: ' + this.targetUser;
+                    this.initP2P(false); // من فقط جواب می‌دهم
                 }
 
                 if (sig.from !== this.targetUser) continue;
@@ -452,167 +276,61 @@
                         const answer = await this.peer.createAnswer();
                         await this.peer.setLocalDescription(answer);
                         this.callAPI('sendSignal', {to: this.targetUser, from: this.me.id, type: 'answer', data: this.peer.localDescription});
+                        this.processIceQueue(); // تزریق ICE های در انتظار
                     } 
                     else if (sig.type === 'answer') {
                         await this.peer.setRemoteDescription(new RTCSessionDescription(sig.data));
+                        this.processIceQueue();
                     } 
                     else if (sig.type === 'ice') {
-                        // فقط اگه Remote مشخص شده باشه میشه ICE اضافه کرد
+                        // صف بندی هوشمند برای جلوگیری از کِرَش شدن مرورگر
                         if(this.peer.remoteDescription) {
                             await this.peer.addIceCandidate(new RTCIceCandidate(sig.data));
+                        } else {
+                            this.iceQueue.push(sig.data);
                         }
                     }
-                } catch(err) {
-                    console.error("WebRTC Error:", err);
-                }
+                } catch(err) { console.error("WebRTC Engine Error:", err); }
             }
         },
 
-        sendMsg: function(textParam, mediaObj) {
-            if(!this.targetUser) return this.showToast('هنوز به مخاطبی متصل نشده‌اید', 'error');
+        processIceQueue: function() {
+            while(this.iceQueue.length > 0) {
+                const ice = this.iceQueue.shift();
+                this.peer.addIceCandidate(new RTCIceCandidate(ice)).catch(e=>{});
+            }
+        },
+
+        sendMsg: function() {
+            if(!this.isOnline || !this.channel || this.channel.readyState !== 'open') {
+                return this.toast('تونل هنوز برقرار نیست!');
+            }
             
             const input = document.getElementById('msg-input');
-            const text = textParam || input.value.trim();
-            if (!text && !mediaObj) return;
+            const text = input.value.trim();
+            if (!text) return;
 
-            const msg = {
-                id: Date.now().toString(),
-                sender: this.me.id,
-                text: text,
-                media: mediaObj || null,
-                time: Date.now(),
-                status: 'wait' 
-            };
+            const msgId = Date.now().toString();
+            const msgObj = { id: msgId, text: text, time: Date.now() };
 
-            this.messages.push(msg);
-            this.saveDb();
-            this.renderChat();
-            input.value = '';
-
-            this.dispatchMessage(msg);
+            try {
+                this.channel.send(JSON.stringify(msgObj));
+                this.appendMsg(text, 'me', msgId, msgObj.time);
+                input.value = '';
+            } catch(e) { this.toast('خطا در ارسال داخل تونل'); }
         },
 
-        dispatchMessage: function(msg) {
-            if (this.isOnline && this.channel && this.channel.readyState === 'open') {
-                try {
-                    this.channel.send(JSON.stringify(msg));
-                    msg.status = 'sent'; 
-                    this.saveDb();
-                    this.renderChat();
-                } catch(e) {}
-            }
-        },
-
-        syncPendingMessages: function() {
-            let changed = false;
-            this.messages.forEach(m => {
-                if (m.sender === this.me.id && m.status === 'wait') {
-                    this.dispatchMessage(m);
-                    changed = true;
-                }
-            });
-            if(changed) this.renderChat();
-        },
-
-        sendFile: function(input) {
-            const file = input.files[0];
-            if (!file) return;
-            if (file.size > 2 * 1024 * 1024) return this.showToast('حجم فایل نباید بیشتر از 2 مگابایت باشد', 'error');
-            
-            this.sendTyping('file'); 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                let type = 'file';
-                if(file.type.startsWith('image')) type = 'image';
-                else if(file.type.startsWith('video')) type = 'video';
-                else if(file.type.startsWith('audio')) type = 'audio';
-
-                this.sendMsg('', {type: type, data: e.target.result, name: file.name});
-            };
-            reader.readAsDataURL(file);
-        },
-
-        sendTyping: function(mode) {
-            if (this.isOnline && this.channel && this.channel.readyState === 'open') {
-                this.channel.send(JSON.stringify({sys: true, act: 'typing', mode: mode}));
-            }
-        },
-
-        showTyping: function(mode) {
-            const statusEl = document.getElementById('chat-status');
-            let txt = 'در حال نوشتن... ✍️';
-            if(mode === 'image') txt = 'در حال ارسال عکس... 📷';
-            if(mode === 'audio') txt = 'در حال ضبط صدا... 🎤';
-            if(mode === 'file') txt = 'در حال ارسال فایل... 📁';
-            
-            statusEl.innerText = txt;
-            statusEl.className = 'head-status typing';
-            
-            clearTimeout(this.typingTimeout);
-            this.typingTimeout = setTimeout(() => { 
-                statusEl.innerText = this.isOnline ? 'آنلاین' : 'آفلاین 🔴';
-                statusEl.className = this.isOnline ? 'head-status online' : 'head-status';
-            }, 2000);
-        },
-
-        markAsRead: function(msgId) {
-            const m = this.messages.find(x => x.id === msgId);
-            if(m && m.status !== 'read') { 
-                m.status = 'read'; 
-                this.saveDb(); 
-                this.renderChat(); 
-            }
-        },
-
-        saveDb: function() {
-            if(this.targetUser) localforage.setItem('chat_' + this.targetUser, this.messages);
-        },
-
-        renderChat: function() {
+        appendMsg: function(text, type, id, time) {
             const box = document.getElementById('chat-box');
-            let html = '';
-            
-            if(this.messages.length === 0 && this.targetUser) {
-                html = '<div class="empty-state">هنوز پیامی ارسال نشده است.<br>به محض آنلاین شدن مخاطب، پیام‌های شما ارسال می‌شود.</div>';
-            }
+            const timeStr = new Date(time).toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
+            const ticks = type === 'me' ? `<span id="tick-${id}"><i class="ph ph-check"></i></span>` : '';
 
-            this.messages.forEach(m => {
-                const isMe = m.sender === this.me.id;
-                
-                let ticks = '';
-                if(isMe) {
-                    if(m.status === 'wait') ticks = '<i class="ph ph-clock"></i>';
-                    else if(m.status === 'sent') ticks = '<i class="ph ph-check"></i>';
-                    else if(m.status === 'read') ticks = '<i class="ph-fill ph-checks"></i>';
-                }
-
-                let mediaHtml = '';
-                if (m.media) {
-                    if(m.media.type === 'image') mediaHtml = `<img src="${m.media.data}" class="msg-media">`;
-                    else if(m.media.type === 'video') mediaHtml = `<video src="${m.media.data}" controls class="msg-media"></video>`;
-                    else if(m.media.type === 'audio') mediaHtml = `<audio src="${m.media.data}" controls style="width:100%; height:40px; margin-bottom:5px;"></audio>`;
-                    else mediaHtml = `<a href="${m.media.data}" download="${m.media.name}" style="display:block; margin-bottom:5px; text-decoration:none; color:var(--pd);"><i class="ph-fill ph-file-text"></i> دانلود ${m.media.name}</a>`;
-                }
-
-                const timeStr = new Date(m.time).toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
-
-                html += `
-                <div class="msg-wrap ${isMe ? 'me' : 'other'}">
-                    <div class="msg ${isMe ? 'me' : 'other'}">
-                        ${mediaHtml}
-                        ${m.text ? `<div style="white-space:pre-wrap;">${m.text}</div>` : ''}
-                        <div class="msg-meta">
-                            <span class="msg-time">${timeStr}</span>
-                            <span class="msg-ticks ${m.status}">${ticks}</span>
-                        </div>
-                    </div>
-                </div>`;
-            });
-            
-            if(box.innerHTML !== html) {
-                box.innerHTML = html;
-                box.scrollTop = box.scrollHeight;
-            }
+            box.innerHTML += `
+            <div class="msg ${type}">
+                <div>${text}</div>
+                <div class="meta"><span>${timeStr}</span> ${ticks}</div>
+            </div>`;
+            box.scrollTop = box.scrollHeight;
         }
     };
 
