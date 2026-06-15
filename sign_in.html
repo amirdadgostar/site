@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* START OF ORIGINAL CSS FOR SIGN IN */
+    body{ 
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+      background-color: #fff;
+    }
+
+    .container{ 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .row{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: column;
+      margin: 70px 0;
+      background-color: #F1ECE6;
+      width: 400px;
+      height: 467px;
+      border-radius: 30px;
+      -webkit-border-radius: 30px;
+      -moz-border-radius: 30px;
+      -ms-border-radius: 30px;
+      -o-border-radius: 30px;
+    }
+    .header{ 
+      margin: 40px 0;
+    }
+
+    /* strat forms style */
+    .login-form{ 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .email-group,
+    .password-group{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .error-msg {
+      color: #dc3545;
+      font-size: 0.8rem;
+      display: none;
+      position: absolute;
+      bottom: -20px;
+      font-family:sans-serif;
+    }
+
+    input.error {
+      border: 1px solid #dc3545;
+    }
+
+    .get-email__text,
+    .get-password__text{
+      color: #737373;
+      font-weight: bold;
+    }
+
+    .get-email__input,
+    .get-password__input{ 
+      width: 300px;
+      padding: 13px 5px;
+      border-radius: 10px;
+      outline: none;
+      border: 1px solid #8598d491;
+      background-color: #F1ECE6;
+    }
+
+    .password-see{ 
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      opacity: 0.4;
+      cursor: pointer;
+      transition: color 3ms ease;
+      color: #737373;
+    }
+
+    .password-see:hover{ 
+      opacity: 1;
+    }
+
+    .login-btn{
+      display: block;
+      text-decoration: none;
+      border: 1px solid #8598d491;
+      background-color: #737373;
+      padding: 13px 44px;
+      font-weight: bold;
+      border-radius: 10px;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+      margin-top: 4px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .lost-password{ 
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      margin-top: 13px;
+      gap: 34px;
+    }
+
+    .lost-password__link{
+      font-size: 13px;
+      text-decoration: none;
+      color: #737373;
+      transition: all 40ms ease;
+      -webkit-transition: all 40ms ease;
+      -moz-transition: all 40ms ease;
+      -ms-transition: all 40ms ease;
+      -o-transition: all 40ms ease;
+    }
+    .lost-password__link:hover{
+      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
+      -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      -o-transform: scale(1.1);
+    }
+    .remember-account{ 
+      color: #737373;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .sign-up{ 
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      margin-top: 20px;
+      gap: 5px;
+      color:#737373;
+    }
+    .sign-up__link{
+      text-decoration: none;
+      color:#737373;
+      transition: all 40ms ease;
+      -webkit-transition: all 40ms ease;
+      -moz-transition: all 40ms ease;
+      -ms-transition: all 40ms ease;
+      -o-transition: all 40ms ease;
+    }
+
+    .sign-up__link:hover{
+      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
+      -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      -o-transform: scale(1.1);
+    }
+    /* Start Responsive */
+    @media (min-width: 344px){ 
+      .row {
+        width: 310px;
+      }
+      .get-email__input,
+      .get-password__input{ 
+        width: 245px;
+        padding: 9px 5px;
+      }
+      .header img { 
+        width: 150px;
+        height: 40px
+      }
+      .get-email__text,
+      .get-password__text{ 
+        font-size: 14px;
+      }
+      .login-btn{ 
+        font-size: 14px;
+      }
+
+      .lost-password__link {
+        font-size: 12px;
+      }
+      .remember-account{ 
+        font-size: 12px;
+      }
+      .sign-up{ 
+        font-size: 12px;
+      }
+    }
+
+    @media (min-width: 500px){ 
+      .row{ 
+        width: 380px;
+      }
+      .get-email__input,
+      .get-password__input{ 
+        width: 270px;
+        padding: 11px 5px;
+      }
+      .header img { 
+        width: 180px;
+        height: 50px;
+      }
+      .get-email__text, .get-password__text {
+        font-size: 16px;
+      }
+      .login-btn{ 
+        font-size: 16px;
+      }
+
+      .lost-password__link {
+        font-size: 13px;
+      }
+      .remember-account{ 
+        font-size: 13px;
+      }
+      .sign-up{ 
+        font-size: 13px;
+      }
+    }
+    /* END OF ORIGINAL CSS FOR SIGN IN */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="header">
+        <img src="imges/To-Do-Logo 2.png" alt="Logo page" class="header-logo">
+      </div>
+  
+      <form id="loginForm" novalidate class="login-form">
+        <div class="email-group">
+          <label for="text" class="get-email__text">USERNAME</label>
+          <input type="text" id="username" class="get-email__input" required>
+          <small class="error-msg" id="usernameError"></small>
+        </div>
+      
+        <div class="password-group">
+          <label for="password" class="get-password__text">PASSWORD</label>
+          <input type="password" class="get-password__input" id="password">
+          <small class="error-msg" id="passwordError"></small>
+          <span class="password-see" id="passwordSee">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+      
+        <button type="submit" class="login-btn">Sign in</button>
+      </form>
+
+      <div class="lost-password">
+        <a href="./recover.html" class="lost-password__link">Forgot your password?!</a>
+        <span class="remember-account">
+          Remember me.
+          <input type="checkbox">
+        </span>
+      </div>
+      <div class="sign-up">
+        You do not have an account?
+        <a href="./sign up.html" class="sign-up__link">Make one right now.</a>
+      </div>
+    </div> 
+    
+  </div>
+  
+  <script>
+    /* START OF ORIGINAL JS FOR SIGN IN */
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyUCEMdaukDMdWeC6RovqXNRtukCfprYT5Ut5Iw6bcD7jJkPldBoC0eUo9tTCdundMN-w/exec";
+
+    const password = document.getElementById("password");
+    const passwordSee = document.getElementById("passwordSee");
+    let visible = false;
+
+    passwordSee.addEventListener("click", () => { 
+      visible = !visible;
+      password.type = visible ? "text" : "password";
+      passwordSee.innerHTML =  visible ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    });
+
+
+    // Login form
+    const loginForm = document.getElementById("loginForm");
+    const username = document.getElementById("username");
+    const usernameError = document.getElementById("usernameError");
+    const passwordError = document.getElementById("passwordError");
+
+    loginForm.addEventListener("submit", (e) => { 
+      e.preventDefault();
+
+      // پاک کردن خطاها
+      usernameError.style.display = "none";
+      passwordError.style.display = "none";
+      username.classList.remove("invalid");
+      password.classList.remove("invalid");
+
+      const usernameValue = username.value.trim();
+      const passwordValue = password.value.trim();
+
+      let hasError = false;
+
+      if (!usernameValue) {
+        usernameError.textContent = "Enter username.";
+        usernameError.style.display = "block";
+        username.classList.add("invalid");
+        hasError = true;
+      
+      } else if  (!/^[a-zA-Z0-9_]{3,16}$/.test(usernameValue)) {
+        usernameError.textContent = "Username must be 3 and 16 characters.";
+        usernameError.style.display = "block";
+        username.classList.add("invalid");
+        hasError = true;
+      }
+
+      if (!passwordValue) {
+        passwordError.textContent = "Enter password.";
+        passwordError.style.display = "block";
+        password.classList.add("invalid");
+        hasError = true;
+      } else if (passwordValue.length < 6 || passwordValue.length > 20) {
+        passwordError.textContent = "The password must be between 6 and 20.";
+        passwordError.style.display = "block";
+        password.classList.add("invalid");
+        hasError = true;
+      }
+
+      if (!hasError) {
+        console.log("اطلاعات معتبر هستند، آماده ارسال...");
+        // دقیقا جایگزین شده با کدهای ورود کاربر طبق درخواست
+        const loginBtn = document.querySelector(".login-btn");
+        const originalBtnText = loginBtn.textContent;
+        loginBtn.textContent = "Loading...";
+
+        fetch(GAS_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "login",
+            username: usernameValue,
+            password: passwordValue
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            localStorage.setItem("loggedInUser", data.username);
+            window.location.href = "./index.html";
+          } else {
+            alert("خطا: " + data.message);
+            loginBtn.textContent = originalBtnText;
+          }
+        })
+        .catch(err => {
+          alert("خطا در ارتباط با سرور");
+          loginBtn.textContent = originalBtnText;
+        });
+      }
+    });
+    /* END OF ORIGINAL JS FOR SIGN IN */
+  </script>
+</body>
+</html>
