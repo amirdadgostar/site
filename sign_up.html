@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login page</title>
+  <title>ثبت نام</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     /* START OF ORIGINAL CSS FOR SIGN UP */
@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: sans-serif;
+      font-family: Tahoma, Arial, sans-serif;
       background-color: #fff;
     }
 
@@ -67,8 +67,7 @@
       display: none;
       position: absolute;
       bottom: -28px;
-      left: 90px;
-      font-family:sans-serif;
+      right: 90px; /* Swapped to right for RTL */
     }
 
     input.error {
@@ -95,7 +94,7 @@
 
     .password-see{ 
       position: absolute;
-      right: 10px;
+      left: 10px; /* Swapped to left for RTL */
       top: 34px;
       opacity: 0.4;
       cursor: pointer;
@@ -269,21 +268,21 @@
   
       <form id="loginForm" novalidate class="login-form">
         <div class="username-group">
-          <label for="text" class="get-username__text">USERNAME</label>
+          <label for="text" class="get-username__text">نام کاربری</label>
           <input type="text" id="username" class="get-username__input" required>
           <small class="error-msg" id="usernameError"></small>
         </div>
 
         <div class="email-group">
-          <label for="email" class="get-email__text">EMAIL</label>
+          <label for="email" class="get-email__text">ایمیل</label>
           <input type="email" id="email" class="get-email__input" required>
           <small class="error-msg" id="emailError"></small>
         </div>
       
         <div class="password-group">
-          <label for="password" class="get-password__text">PASSWORD</label>
+          <label for="password" class="get-password__text">رمز عبور</label>
           <input type="password" id="password" class="get-password__input" required>
-          <label for="confirmPassword" class="get-password__text">PASSWORD</label>
+          <label for="confirmPassword" class="get-password__text">تکرار رمز عبور</label>
           <input type="password" id="confirmPassword" class="get-password__input" required>
           <span class="password-see" id="passwordSee">
             <i class="fas fa-eye"></i>
@@ -291,12 +290,12 @@
           <small class="error-msg" id="passwordError"></small>
         </div>
 
-        <button type="submit" class="login-btn" id="submitBtn">Sign in</button>
+        <button type="submit" class="login-btn" id="submitBtn">ثبت نام</button>
       </form>
 
       <div class="sign-in">
-        Do you have an account?
-        <a href="./sign_in.html" class="sign-in__link">Login now.</a>
+        حساب کاربری دارید؟
+        <a href="./sign_in.html" class="sign-in__link">وارد شوید.</a>
       </div>
     </div> 
   </div>
@@ -317,7 +316,6 @@
       passwordSee.innerHTML = visible ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
     })
 
-    // Login form (Sign Up Logic)
     document.addEventListener("DOMContentLoaded",()=> {
       const loginForm = document.getElementById("loginForm");
       const username = document.getElementById("username")
@@ -332,7 +330,6 @@
       loginForm.addEventListener("submit", (e) => { 
         e.preventDefault();
 
-        // پاک کردن خطاها
         usernameError.style.display = "none";
         emailError.style.display = "none"
         passwordError.textContent = "";
@@ -349,55 +346,51 @@
         let hasError = false;
 
         if (!usernameValue) {
-          usernameError.textContent = "Enter username.";
+          usernameError.textContent = "نام کاربری را وارد کنید.";
           usernameError.style.display = "block";
           username.classList.add("invalid");
           hasError = true;
       
         } else if  (!/^[a-zA-Z0-9_]{3,16}$/.test(usernameValue)) {
-          usernameError.textContent = "Username must be between 3 and 16 characters.";
+          usernameError.textContent = "نام کاربری باید بین 3 تا 16 حرف انگلیسی باشد.";
           usernameError.style.display = "block";
           username.classList.add("invalid");
           hasError = true;
         }
 
         if (!emailValue) {
-          emailError.textContent = "Enter email.";
+          emailError.textContent = "ایمیل را وارد کنید.";
           emailError.style.display = "block";
           email.classList.add("invalid");
           hasError = true;
         } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailValue)) {
-          emailError.textContent = "Please enter a valid email!";
+          emailError.textContent = "ایمیل معتبر نیست!";
           emailError.style.display = "block";
           email.classList.add("invalid");
           hasError = true;
         }
 
         if (!passwordValue || !confirmpasswordValue) {
-          passwordError.textContent = "Enter password.";
+          passwordError.textContent = "رمز عبور را وارد کنید.";
           passwordError.style.display = "block";
           password.classList.add("invalid");
           hasError = true;
 
         } else if(passwordValue.length < 3 || passwordValue.length > 20){ 
-          passwordError.textContent = "The password must be between 6 and 20.";
+          passwordError.textContent = "رمز عبور باید بین 6 تا 20 حرف باشد.";
           passwordError.style.display = "block";
           password.classList.add("invalid");
           hasError = true;
         } else if(passwordValue !== confirmpasswordValue){ 
-          passwordError.textContent = "The passwords do not match.";
+          passwordError.textContent = "رمز عبور و تکرار آن یکسان نیستند.";
           passwordError.style.display = "block";
           password.classList.add("invalid");
           hasError = true;
-        } else { 
-          console.log("Passwords are match.");
         }
       
         if (!hasError) {
-          console.log("اطلاعات معتبر هستند، آماده ارسال...");
-          // دقیقا جایگزین شده با کدهای ارسال به سرور گوگل طبق درخواست
           const originalBtnText = submitBtn.textContent;
-          submitBtn.textContent = "Loading...";
+          submitBtn.textContent = "در حال ارتباط...";
 
           fetch(GAS_URL, {
             method: "POST",
