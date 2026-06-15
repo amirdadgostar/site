@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بازیابی رمز عبور</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* START OF ORIGINAL recover.css */
+    body{ 
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Tahoma, Arial, sans-serif;
+      background-color: #fff;
+    }
+
+    .container{ 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .row{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: column;
+      margin: 70px 0;
+      background-color: #F1ECE6;
+      width: 400px;
+      height: 467px;
+      border-radius: 30px;
+      -webkit-border-radius: 30px;
+      -moz-border-radius: 30px;
+      -ms-border-radius: 30px;
+      -o-border-radius: 30px;
+    }
+    .header{ 
+      margin: 60px 0;
+    }
+
+    .login-form{ 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .email-group{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .error-msg {
+      color: #dc3545;
+      font-size: 12px;
+      display: none;
+      position: absolute;
+      bottom: -25px;
+      right: 120px; /* RTL */
+      font-family:sans-serif;
+    }
+
+    input.error {
+      border: 1px solid #dc3545;
+    }
+
+    .get-email__text{
+      color: #737373;
+      font-weight: bold;
+    }
+
+    .get-email__input{ 
+      width: 300px;
+      padding: 13px 5px;
+      border-radius: 10px;
+      outline: none;
+      border: 1px solid #8598d491;
+      background-color: #F1ECE6;
+      text-align: center; /* Better for OTP */
+    }
+
+    .login-btn{
+      display: block;
+      text-decoration: none;
+      border: 1px solid #8598d491;
+      background-color: #737373;
+      padding: 15px 44px;
+      font-weight: bold;
+      border-radius: 10px;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+      margin-top: 4px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .sign-in{ 
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      margin-top: 30px;
+      gap: 5px;
+      color:#737373;
+    }
+    .sign-in__link{
+      text-decoration: none;
+      color:#737373;
+      transition: all 40ms ease;
+      -webkit-transition: all 40ms ease;
+      -moz-transition: all 40ms ease;
+      -ms-transition: all 40ms ease;
+      -o-transition: all 40ms ease;
+    }
+
+    .sign-in__link:hover{
+      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
+      -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      -o-transform: scale(1.1);
+    }
+    
+    @media (max-width: 500px){ 
+      .row {
+        width: 310px;
+      }
+      .get-username__input,
+      .get-password__input,
+      .get-email__input{ 
+        width: 245px;
+        padding: 9px 5px;
+      }
+      .header img { 
+        width: 150px;
+        height: 40px
+      }
+      .get-username__text,
+      .get-password__text,
+      .get-email__text{ 
+        font-size: 14px;
+      }
+      .login-btn{ 
+        font-size: 14px;
+        padding: 12px 44px;
+        margin-top: 20px;
+      }
+
+      .lost-password__link {
+        font-size: 12px;
+      }
+      .remember-account{ 
+        font-size: 12px;
+      }
+      .sign-in{ 
+        font-size: 12px;
+      }
+      .error-msg{ 
+        bottom: -30px;
+        right: 55px; /* RTL */
+      }
+    }
+    /* END OF ORIGINAL recover.css */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="header">
+        <img src="imges/To-Do-Logo 2.png" alt="Logo page" class="header-logo">
+      </div>
+  
+      <form id="loginForm" novalidate class="login-form">
+        
+        <!-- Step 1: Email Input -->
+        <div class="email-group" id="step1">
+          <label for="email" class="get-email__text">ایمیل خود را برای بازیابی وارد کنید</label>
+          <input type="email" id="email" class="get-email__input" required>
+          <small class="error-msg" id="emailError"></small>
+        </div>
+
+        <!-- Step 2: OTP Input (Hidden initially) -->
+        <div class="email-group" id="step2" style="display: none;">
+          <label for="otp" class="get-email__text">کد ارسال شده به ایمیل را وارد کنید</label>
+          <input type="text" id="otp" class="get-email__input" placeholder="------">
+        </div>
+
+        <button type="submit" class="login-btn" id="submitBtn">ارسال کد تایید</button>
+      </form>
+
+      <div class="sign-in">
+        حساب کاربری دارید؟
+        <a href="./sign_in.html" class="sign-in__link">وارد شوید.</a>
+      </div>
+    </div> 
+  </div>
+  
+  <script>
+    /* START OF ORIGINAL recover.js + FETCH + OTP LOGIC */
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyUCEMdaukDMdWeC6RovqXNRtukCfprYT5Ut5Iw6bcD7jJkPldBoC0eUo9tTCdundMN-w/exec";
+    let isCodeSent = false;
+
+    document.addEventListener("DOMContentLoaded",()=> {
+      const loginForm = document.getElementById("loginForm");
+      const email = document.getElementById("email");
+      const otp = document.getElementById("otp");
+      const emailError = document.getElementById("emailError");
+      const submitBtn = document.getElementById("submitBtn");
+      
+      const step1 = document.getElementById("step1");
+      const step2 = document.getElementById("step2");
+
+      loginForm.addEventListener("submit", (e) => { 
+        e.preventDefault();
+
+        if(!isCodeSent) {
+          // مرحله 1: درخواست ارسال کد به ایمیل
+          emailError.style.display = "none";
+          email.classList.remove("invalid");
+
+          const emailValue = email.value.trim();
+          let hasError = false;
+
+          if (!emailValue) {
+            emailError.textContent = "ایمیل را وارد کنید.";
+            emailError.style.display = "block";
+            email.classList.add("invalid");
+            hasError = true;
+          } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailValue)) {
+            emailError.textContent = "فرمت ایمیل معتبر نیست!";
+            emailError.style.display = "block";
+            email.classList.add("invalid");
+            hasError = true;
+          }
+
+          if (!hasError) {
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = "در حال ارسال ایمیل...";
+
+            fetch(GAS_URL, {
+              method: "POST",
+              body: JSON.stringify({ action: "recover", email: emailValue })
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'success') {
+                alert("کد بازیابی به ایمیل شما ارسال شد.");
+                isCodeSent = true;
+                step1.style.display = "none";
+                step2.style.display = "flex";
+                submitBtn.textContent = "بررسی کد";
+              } else {
+                alert("خطا: " + data.message);
+                submitBtn.textContent = originalBtnText;
+              }
+            })
+            .catch(err => {
+              alert("خطا در ارتباط با سرور");
+              submitBtn.textContent = originalBtnText;
+            });
+          }
+        } else {
+          // مرحله 2: بررسی صحت کد وارد شده
+          const emailValue = email.value.trim();
+          const otpValue = otp.value.trim();
+          
+          if (!otpValue) {
+            alert("لطفاً کد تایید را وارد کنید.");
+            return;
+          }
+
+          const originalBtnText = submitBtn.textContent;
+          submitBtn.textContent = "در حال بررسی...";
+
+          fetch(GAS_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "verifyCode", email: emailValue, code: otpValue })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === 'success') {
+              localStorage.setItem("recoverEmail", emailValue); // برای تغییر رمز
+              window.location.href = "./New_pass.html";
+            } else {
+              alert("خطا: " + data.message);
+              submitBtn.textContent = originalBtnText;
+            }
+          })
+          .catch(err => {
+            alert("خطا در ارتباط با سرور");
+            submitBtn.textContent = originalBtnText;
+          });
+        }
+      });
+    })
+  </script>
+</body>
+</html>
